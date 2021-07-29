@@ -9,18 +9,19 @@ Created on Sat Jul 24 16:23:44 2021
 from pyecore.ecore import EReference, EClass
 import networkx as nx
 from pyecore.resources import ResourceSet, URI
-import os 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-
-print(dir_path)
 
 #Register metamodels
-rset = ResourceSet()
-resource = rset.get_resource(URI('./data/metamodels/smallEcore.ecore'))
-mm_root = resource.contents[0]
-rset.metamodel_registry[mm_root.nsURI] = mm_root
+#rset = ResourceSet()
+#resource = rset.get_resource(URI('./data/metamodels/smallEcore.ecore'))
+#mm_root = resource.contents[0]
+#rset.metamodel_registry[mm_root.nsURI] = mm_root
 
-def getGraphFromModel(pathModel):
+def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None):
+    #load meta-model
+    rset = ResourceSet()
+    resource = rset.get_resource(URI(pathMetamodel))
+    mm_root = resource.contents[0]
+    rset.metamodel_registry[mm_root.nsURI] = mm_root
     
     #load model
     resource = rset.get_resource(URI(pathModel))
@@ -67,6 +68,7 @@ def getGraphFromModel(pathModel):
 
 def getModelFromGraph(pathMetamodel, G):
     # Register metamodel
+    rset = ResourceSet()
     resource = rset.get_resource(URI(pathMetamodel))
     mm_root = resource.contents[0]
     rset.metamodel_registry[mm_root.nsURI] = mm_root
