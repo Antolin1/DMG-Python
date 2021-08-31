@@ -6,7 +6,7 @@ Created on Sat Jul 24 16:23:44 2021
 @author: Jose Antonio
 """
 
-from pyecore.ecore import EReference, EClass
+from pyecore.ecore import EReference, EClass, EAttribute
 import networkx as nx
 from pyecore.resources import ResourceSet, URI
 
@@ -43,6 +43,7 @@ def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None):
             nodes[o] = i
             i = i + 1
             G.add_node(nodes[o], type = o.eClass.name)
+        dic_attributes = {}
         for f in o.eClass.eAllStructuralFeatures():
             if (f.derived):
                 continue
@@ -80,6 +81,24 @@ def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None):
                         i = i + 1
                         G.add_node(nodes[o2], type = o2.eClass.name)
                     G.add_edge(nodes[o],nodes[o2], type = f.name)
+            #attributes
+            elif (isinstance(f, EAttribute)):
+                 if (f.many):
+                     list_att_val = []
+                     for o2 in o.eGet(f):
+                        if o2 == None: #or o2.eIsProxy
+                            list_att_val.append('<none>')   
+                        else:
+                            list_att_val.append(str(o2))
+                     dic_attributes[f.name] = list_att_val
+                 else:
+                     o2 = o.eGet(f)
+                     if o2 == None: #or o2.eIsProxy
+                         dic_attributes[f.name] = '<none>'
+                     else:
+                         dic_attributes[f.name] = str(o2)
+                     
+        G.nodes[nodes[o]]['atts'] = dic_attributes              
     return G
 
 ##create tests for this

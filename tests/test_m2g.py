@@ -25,6 +25,10 @@ def edge_match(e1,e2):
     for e in e2:
         t2.append(e2[e]['type'])
     return Multiset(t1) == Multiset(t2)
+
+def node_match_with_atts(n1,n2):
+    typess = node_match(n1, n2)
+    return typess and (n1['atts'] == n2['atts'])
     
 class Testm2g(unittest.TestCase):
 
@@ -35,13 +39,23 @@ class Testm2g(unittest.TestCase):
         
         #theorical graph
         G2 = nx.MultiDiGraph()
-        G2.add_node(0, type = 'EPackage')
-        G2.add_node(1, type = 'EClass')
-        G2.add_node(2, type = 'EDataType')
-        G2.add_node(3, type = 'EDataType')
-        G2.add_node(4, type = 'EReference')
-        G2.add_node(5, type = 'EReference')
-        G2.add_node(6, type = 'EReference')
+        G2.add_node(0, type = 'EPackage', atts = {'name':'<none>'})
+        G2.add_node(1, type = 'EClass', atts = {'name':'<none>',
+                                                'abstract':'False'})
+        G2.add_node(2, type = 'EDataType', atts = {'name':'<none>'})
+        G2.add_node(3, type = 'EDataType', atts = {'name':'<none>'})
+        G2.add_node(4, type = 'EReference', atts = {'name':'<none>',
+                                                    'containment':'True',
+                                                    'lowerBound':'0',
+                                                    'upperBound':'0'})
+        G2.add_node(5, type = 'EReference', atts = {'name':'<none>',
+                                                    'containment':'False',
+                                                    'lowerBound':'0',
+                                                    'upperBound':'0'})
+        G2.add_node(6, type = 'EReference', atts = {'name':'<none>',
+                                                    'containment':'False',
+                                                    'lowerBound':'0',
+                                                    'upperBound':'0'})
         
         G2.add_edge(0, 1, type = 'eClassifiers')
         G2.add_edge(0, 2, type = 'eClassifiers')
@@ -61,7 +75,9 @@ class Testm2g(unittest.TestCase):
         G2.add_edge(5, 1, type = 'eType')
         G2.add_edge(6, 1, type = 'eType')
         
-        self.assertTrue(is_isomorphic(G1,G2, node_match,edge_match))
+        self.assertTrue(is_isomorphic(G1, G2, 
+                                      node_match_with_atts, 
+                                      edge_match))
     
     def test_smallEcore_metafilter(self):
         metafilter_refs = ['EPackage.eClassifiers', 
@@ -69,8 +85,12 @@ class Testm2g(unittest.TestCase):
                            'ETypedElement.eType']
         metafilter_cla = ['EPackage', 'EClass','EReference']
         
+        metafilter_atts = ['ENamedElement.name',
+                           'EReference.containment',
+                           'ETypedElement.lowerBound']
+        
         metafilterobj = mf.MetaFilter(references = metafilter_refs, 
-                 attributes = None,
+                 attributes = metafilter_atts,
                  classes = metafilter_cla)
         
         #load model and transform it into a graph
@@ -80,11 +100,17 @@ class Testm2g(unittest.TestCase):
         
         #theorical graph
         G2 = nx.MultiDiGraph()
-        G2.add_node(0, type = 'EPackage')
-        G2.add_node(1, type = 'EClass')
-        G2.add_node(4, type = 'EReference')
-        G2.add_node(5, type = 'EReference')
-        G2.add_node(6, type = 'EReference')
+        G2.add_node(0, type = 'EPackage', atts = {'name':'<none>'})
+        G2.add_node(1, type = 'EClass', atts = {'name':'<none>'})
+        G2.add_node(4, type = 'EReference', atts = {'name':'<none>',
+                                                    'containment':'True',
+                                                    'lowerBound':'0'})
+        G2.add_node(5, type = 'EReference', atts = {'name':'<none>',
+                                                    'containment':'False',
+                                                    'lowerBound':'0'})
+        G2.add_node(6, type = 'EReference', atts = {'name':'<none>',
+                                                    'containment':'False',
+                                                    'lowerBound':'0'})
         
         G2.add_edge(0, 1, type = 'eClassifiers')
         
@@ -96,9 +122,14 @@ class Testm2g(unittest.TestCase):
         G2.add_edge(5, 1, type = 'eType')
         G2.add_edge(6, 1, type = 'eType')
         
-        self.assertTrue(is_isomorphic(G1,G2, node_match,edge_match))
         
         
+        self.assertTrue(is_isomorphic(G1, G2, 
+                                      node_match_with_atts,edge_match))
+        
+    
+    
+    
     def test_yakinduSimpl(self):
         self.assertTrue(True)
 
