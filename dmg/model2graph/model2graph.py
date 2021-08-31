@@ -89,19 +89,20 @@ def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None):
                         if o2 == None: #or o2.eIsProxy
                             list_att_val.append('<none>')   
                         else:
-                            list_att_val.append(str(o2))
+                            list_att_val.append(o2)
                      dic_attributes[f.name] = list_att_val
                  else:
                      o2 = o.eGet(f)
                      if o2 == None: #or o2.eIsProxy
                          dic_attributes[f.name] = '<none>'
                      else:
-                         dic_attributes[f.name] = str(o2)
+                         dic_attributes[f.name] = o2
                      
         G.nodes[nodes[o]]['atts'] = dic_attributes              
     return G
 
 ##create tests for this
+##TODO: attributes are not checked in tests
 def getModelFromGraph(pathMetamodel, G):
     # Register metamodel
     rset = ResourceSet()
@@ -118,11 +119,14 @@ def getModelFromGraph(pathMetamodel, G):
     #get eclasses and references
     name_correspondence = {}
     name_ereferences = {}
+    name_attributes = {}
     for e in list_elements:
         if isinstance(e, EClass):
             name_correspondence[e.name] = e
         if isinstance(e, EReference):
             name_ereferences[e.name] = e
+        if isinstance(e, EAttribute):
+            name_attributes[e.name] = e
     
     #graph to model
     nodes_objects = {}
@@ -136,6 +140,15 @@ def getModelFromGraph(pathMetamodel, G):
         else:
             eobj = nodes_objects[n]
         
+        atts = G.nodes[n]['atts']
+        for att_name, value in atts.items():
+            if (name_attributes[att_name].many):
+                for v in value:
+                    getattr(eobj,att_name).add(v)
+            else:
+                setattr(eobj,att_name,value)
+        
+        #references
         for n2 in G[n]:
             eobj2 = None
             if not n2 in nodes_objects:

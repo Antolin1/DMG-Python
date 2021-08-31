@@ -41,21 +41,21 @@ class Testm2g(unittest.TestCase):
         G2 = nx.MultiDiGraph()
         G2.add_node(0, type = 'EPackage', atts = {'name':'<none>'})
         G2.add_node(1, type = 'EClass', atts = {'name':'<none>',
-                                                'abstract':'False'})
+                                                'abstract':False})
         G2.add_node(2, type = 'EDataType', atts = {'name':'<none>'})
         G2.add_node(3, type = 'EDataType', atts = {'name':'<none>'})
         G2.add_node(4, type = 'EReference', atts = {'name':'<none>',
-                                                    'containment':'True',
-                                                    'lowerBound':'0',
-                                                    'upperBound':'0'})
+                                                    'containment':True,
+                                                    'lowerBound':0,
+                                                    'upperBound':0})
         G2.add_node(5, type = 'EReference', atts = {'name':'<none>',
-                                                    'containment':'False',
-                                                    'lowerBound':'0',
-                                                    'upperBound':'0'})
+                                                    'containment':False,
+                                                    'lowerBound':0,
+                                                    'upperBound':0})
         G2.add_node(6, type = 'EReference', atts = {'name':'<none>',
-                                                    'containment':'False',
-                                                    'lowerBound':'0',
-                                                    'upperBound':'0'})
+                                                    'containment':False,
+                                                    'lowerBound':0,
+                                                    'upperBound':0})
         
         G2.add_edge(0, 1, type = 'eClassifiers')
         G2.add_edge(0, 2, type = 'eClassifiers')
@@ -103,14 +103,14 @@ class Testm2g(unittest.TestCase):
         G2.add_node(0, type = 'EPackage', atts = {'name':'<none>'})
         G2.add_node(1, type = 'EClass', atts = {'name':'<none>'})
         G2.add_node(4, type = 'EReference', atts = {'name':'<none>',
-                                                    'containment':'True',
-                                                    'lowerBound':'0'})
+                                                    'containment':True,
+                                                    'lowerBound':0})
         G2.add_node(5, type = 'EReference', atts = {'name':'<none>',
-                                                    'containment':'False',
-                                                    'lowerBound':'0'})
+                                                    'containment':False,
+                                                    'lowerBound':0})
         G2.add_node(6, type = 'EReference', atts = {'name':'<none>',
-                                                    'containment':'False',
-                                                    'lowerBound':'0'})
+                                                    'containment':False,
+                                                    'lowerBound':0})
         
         G2.add_edge(0, 1, type = 'eClassifiers')
         
