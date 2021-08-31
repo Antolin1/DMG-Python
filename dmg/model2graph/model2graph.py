@@ -36,6 +36,8 @@ def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None):
     i = 0
     G = nx.MultiDiGraph()
     for o in list_elements:
+        if (metaFiler!=None) and (not metaFiler.pass_filter_object(o)):
+            continue
     #Register node
         if not o in nodes:
             nodes[o] = i
@@ -44,10 +46,19 @@ def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None):
         for f in o.eClass.eAllStructuralFeatures():
             if (f.derived):
                 continue
+            if (metaFiler!=None) and (not metaFiler.pass_filter_structural(f)):
+                continue
+            #references
             if (isinstance(f, EReference)):
                 if (f.many):
                     for o2 in o.eGet(f):
                         if o2 == None: #or o2.eIsProxy
+                            continue
+                        #avoid adding elements thar are not in the model
+                        if (not o2 in list_elements):
+                            continue
+                        if ((metaFiler!=None) and 
+                            (not metaFiler.pass_filter_object(o2))):
                             continue
                         if not o2 in nodes:
                             nodes[o2] = i
@@ -58,6 +69,12 @@ def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None):
                     o2 = o.eGet(f)
                     if o2 == None: #or o2.eIsProxy
                             continue
+                    #avoid adding elements thar are not in the model
+                    if (not o2 in list_elements):
+                            continue
+                    if ((metaFiler!=None) and 
+                            (not metaFiler.pass_filter_object(o2))):
+                            continue
                     if not o2 in nodes:
                         nodes[o2] = i
                         i = i + 1
@@ -65,7 +82,7 @@ def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None):
                     G.add_edge(nodes[o],nodes[o2], type = f.name)
     return G
 
-
+##create tests for this
 def getModelFromGraph(pathMetamodel, G):
     # Register metamodel
     rset = ResourceSet()
