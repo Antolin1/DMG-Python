@@ -62,9 +62,15 @@ class Testm2g(unittest.TestCase):
         
     
     
-    
+    #TODO: test with yakindu
     def test_yakinduSimpl(self):
-        self.assertTrue(True)
+        #load model and transform it into a graph with atts
+        G1 = m2g.getGraphFromModel('data/testmodels/yakindutest.xmi', 
+                              'data/metamodels/yakinduSimplified.ecore')
+        #check if it is isomorfic without considering atts
+        self.assertTrue(is_isomorphic(G1, ga.G_yak, 
+                                      ga.node_match, 
+                                      ga.edge_match))
 
 
 if __name__ == '__main__':

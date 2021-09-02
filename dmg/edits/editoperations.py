@@ -6,54 +6,17 @@ Created on Wed Sep  1 16:22:25 2021
 """
 import networkx as nx
 import numpy as np
+from itertools import combinations
 
 class EditOperation:
     #: list(nx.Graph), set(str)
-    def __init__(self, patterns, 
-                 identifiers):
+    def __init__(self, patterns):
         self.patterns = patterns
-        self.identifiers = identifiers
-        ##check the vality patterns with identifiers
     
     #there should be nodes with attribute 'ids'
     # nx.Graph
     def canApply(self, G) -> bool:
-        pairs_G = []
-        for n in G.nodes():
-            if 'ids' in G.nodes[n]:
-                pairs_G.append((G.nodes[n]['type'],G.nodes[n]['ids']))
-                
-        pairsSelf = self.getPairTypeIds()
-        for p in pairsSelf:
-            if (len(p) != len(pairs_G)):
-                continue
-            if len([pg for pg in pairs_G if not pg in p]) == 0:
-                return True
-        return False
-        
-    def getPairTypeIds(self):
-        result = []
-        for p in self.patterns:
-            pairs = []
-            for n in p.nodes():
-                if 'ids' in p.nodes[n]:
-                    pairs.append((p.nodes[n]['type'],p.nodes[n]['ids']))
-            result.append(pairs)
-        return result
-    
-    def selectPattern(self, G):
-        pairs_G = []
-        for n in G.nodes():
-            if 'ids' in G.nodes[n]:
-                pairs_G.append((G.nodes[n]['type'],G.nodes[n]['ids']))
-                
-        pairsSelf = self.getPairTypeIds()
-        for j,p in enumerate(pairsSelf):
-            if (len(p) != len(pairs_G)):
-                continue
-            if len([pg for pg in pairs_G if not pg in p]) == 0:
-                return self.patterns[j]
-        return None
+        return self.selectPattern(G) != None
     
     # return the result of the edit. It removes the 'ids' attrs.
     def applyEdit(self, G):
@@ -88,7 +51,7 @@ class EditOperation:
         new_pat = nx.relabel_nodes(new_pat, map_edit)
         new_G = nx.relabel_nodes(new_G, map_G)
         
-        G_compose = nx.compose(new_G, new_pat)
+        G_compose = nx.compose(new_pat, new_G)
         #fix ids
         new_map = {}
         j = 0
@@ -97,11 +60,55 @@ class EditOperation:
             j = j + 1
             if ('ids' in G_compose.nodes[n]):
                 del G_compose.nodes[n]['ids']
+            
                 
         G_compose_final = nx.relabel_nodes(G_compose, new_map)
         return G_compose_final
 
+    def selectPattern(self, G):
+        dic_spe_nodes_G = {}
+        for n in G.nodes():
+            if 'ids' in G.nodes[n]:
+                for idd in G.nodes[n]['ids']:
+                    dic_spe_nodes_G[idd] = n
         
+                    
+        dic_patterns = self.getDictNodes()
+        for j,dp in enumerate(dic_patterns):
+            #check keys
+            if (set(dp.keys()) != set(dic_spe_nodes_G.keys())):
+                continue
+            
+            valid = True
+            #check combinations
+            for k1,k2 in combinations(dp.keys(), 2):
+                if (dp[k1] == dp[k2]) != (dic_spe_nodes_G[k1] == dic_spe_nodes_G[k2]):
+                    valid = False
+                    break
+            if not valid:
+                continue
+            #check types
+            valid = True
+            for k,v in dic_spe_nodes_G.items():
+                node_G = G.nodes[v]
+                node_p = self.patterns[j].nodes[dp[k]]
+                if not node_G['type'] in node_p['type']:
+                    valid = False
+            if valid:
+                return self.patterns[j]
+        return None
+            
+                    
+    def getDictNodes(self):
+        result = []
+        for G in self.patterns:
+            dic_spe = {}
+            for n in G.nodes():
+                if 'ids' in G.nodes[n]:
+                    for idd in G.nodes[n]['ids']:
+                        dic_spe[idd] = n
+            result.append(dic_spe)
+        return result
                     
         
         
