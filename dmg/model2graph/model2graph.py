@@ -16,7 +16,8 @@ from pyecore.resources import ResourceSet, URI
 #mm_root = resource.contents[0]
 #rset.metamodel_registry[mm_root.nsURI] = mm_root
 
-def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None):
+def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None, 
+                      consider_atts = True):
     #load meta-model
     rset = ResourceSet()
     resource = rset.get_resource(URI(pathMetamodel))
@@ -97,8 +98,8 @@ def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None):
                          dic_attributes[f.name] = '<none>'
                      else:
                          dic_attributes[f.name] = o2
-                     
-        G.nodes[nodes[o]]['atts'] = dic_attributes              
+        if consider_atts:             
+            G.nodes[nodes[o]]['atts'] = dic_attributes              
     return G
 
 ##create tests for this

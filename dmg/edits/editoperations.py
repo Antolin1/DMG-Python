@@ -55,6 +55,7 @@ class EditOperation:
                 return self.patterns[j]
         return None
     
+    # return the result of the edit. It removes the 'ids' attrs.
     def applyEdit(self, G):
         pat = self.selectPattern(G)
         if pat == None:

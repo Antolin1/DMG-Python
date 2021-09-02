@@ -17,12 +17,25 @@ from networkx.algorithms.isomorphism import is_isomorphic
 class Testm2g(unittest.TestCase):
 
     def test_smallEcore(self):
-        #load model and transform it into a graph
+        #load model and transform it into a graph with atts
         G1 = m2g.getGraphFromModel('data/testmodels/smallecoretest.xmi', 
                               'data/metamodels/smallEcore.ecore')
-        
+        #check if it is isomorfic considering atts
         self.assertTrue(is_isomorphic(G1, ga.G_test_small_ecore, 
                                       ga.node_match_with_atts, 
+                                      ga.edge_match))
+        
+        #load model and transform it into a graph without atts
+        G1_wAtt = m2g.getGraphFromModel('data/testmodels/smallecoretest.xmi', 
+                              'data/metamodels/smallEcore.ecore', 
+                              consider_atts = False)
+        #check no atts
+        for n in G1_wAtt:
+             self.assertFalse('atts' in G1_wAtt.nodes[n])
+        
+        #check if it is isomorfic without considering atts
+        self.assertTrue(is_isomorphic(G1_wAtt, ga.G_test_small_ecore, 
+                                      ga.node_match, 
                                       ga.edge_match))
     
     def test_smallEcore_metafilter(self):
