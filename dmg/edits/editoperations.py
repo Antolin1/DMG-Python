@@ -81,13 +81,24 @@ class EditOperation:
                 map_edit[m] = max_id_add
                 max_id_add = max_id_add + 1
                 
-        new_pat = nx.MultiGraph(pat)
-        new_G = nx.MultiGraph(G)
+        new_pat = nx.MultiDiGraph(pat)
+        new_G = nx.MultiDiGraph(G)
         
         new_pat = nx.relabel_nodes(new_pat, map_edit)
         new_G = nx.relabel_nodes(new_G, map_G)
         
-        return nx.compose(new_G, new_pat)
+        G_compose = nx.compose(new_G, new_pat)
+        #fix ids
+        new_map = {}
+        j = 0
+        for n in G_compose:
+            new_map[n] = j
+            j = j + 1
+            if ('ids' in G_compose.nodes[n]):
+                del G_compose.nodes[n]['ids']
+                
+        G_compose_final = nx.relabel_nodes(G_compose, new_map)
+        return G_compose_final
 
         
                     
