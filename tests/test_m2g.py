@@ -94,6 +94,21 @@ class Testm2g(unittest.TestCase):
         self.assertTrue(is_isomorphic(G1, ga.G_yak_meta, 
                                       ga.node_match, 
                                       ga.edge_match))
+        
+    def test_getModelFromGraph(self):
+        #load model and transform it into a graph with atts
+        G1 = m2g.getGraphFromModel('data/testmodels/smallecoretest.xmi', 
+                              'data/metamodels/smallEcore.ecore')
+        list_elements = m2g.getModelFromGraph('data/metamodels/smallEcore.ecore',
+                                          G1)
+        self.assertEqual(len(G1), len(list_elements))
+        
+        
+        G2 = m2g.getGraphFromModelElements(list_elements.values())
+        
+        self.assertTrue(is_isomorphic(G1, G2, 
+                                      ga.node_match_with_atts,
+                                      ga.edge_match))
 
 
 if __name__ == '__main__':

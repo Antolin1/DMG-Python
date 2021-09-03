@@ -31,7 +31,13 @@ def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None,
     for root in resource.contents:
         list_elements.append(root)
         list_elements = list_elements + list(root.eAllContents())
+    
+    return getGraphFromModelElements(list_elements, metaFiler = metaFiler, 
+                      consider_atts = consider_atts)
         
+   
+def getGraphFromModelElements(list_elements, metaFiler = None, 
+                      consider_atts = True):
     #obtain graph
     nodes = {}
     i = 0
