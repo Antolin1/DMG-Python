@@ -105,6 +105,19 @@ G_yak.add_edge(4, 2, type = 'source')
 G_yak.add_edge(4, 3, type = 'target')
 G_yak.add_edge(3, 4, type = 'incomingTransitions')
 
+#G for yakindu metafiler
+G_yak_meta = nx.MultiDiGraph()
+G_yak_meta.add_node(0, type = 'Statechart')
+G_yak_meta.add_node(1, type = 'Region')
+G_yak_meta.add_node(2, type = 'Entry')
+G_yak_meta.add_node(3, type = 'State')
+G_yak_meta.add_node(4, type = 'Transition')
+        
+G_yak_meta.add_edge(0, 1, type = 'regions')
+G_yak_meta.add_edge(1, 2, type = 'vertices')
+G_yak_meta.add_edge(1, 3, type = 'vertices')
+G_yak_meta.add_edge(2, 4, type = 'outgoingTransitions')
+G_yak_meta.add_edge(4, 3, type = 'target')
 
 ##### graphs for test edits
 

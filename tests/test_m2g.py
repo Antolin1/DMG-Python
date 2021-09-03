@@ -71,6 +71,29 @@ class Testm2g(unittest.TestCase):
         self.assertTrue(is_isomorphic(G1, ga.G_yak, 
                                       ga.node_match, 
                                       ga.edge_match))
+    
+    def test_yakinduSimpl_metafiter(self):
+        metafilter_refs = ['Region.vertices', 
+                           'CompositeElement.regions',
+                           'Vertex.outgoingTransitions',
+                           'Transition.target']
+        metafilter_cla = None
+        
+        metafilter_atts = None
+        
+        metafilterobj = mf.MetaFilter(references = metafilter_refs, 
+                 attributes = metafilter_atts,
+                 classes = metafilter_cla)
+        
+        #load model and transform it into a graph withput atts
+        G1 = m2g.getGraphFromModel('data/testmodels/yakindutest.xmi', 
+                              'data/metamodels/yakinduSimplified.ecore',
+                              metafilterobj,
+                              consider_atts = False)
+        #check if it is isomorfic without considering atts
+        self.assertTrue(is_isomorphic(G1, ga.G_yak_meta, 
+                                      ga.node_match, 
+                                      ga.edge_match))
 
 
 if __name__ == '__main__':

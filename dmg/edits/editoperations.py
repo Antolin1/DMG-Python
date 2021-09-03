@@ -12,7 +12,8 @@ class EditOperation:
     #: list(nx.Graph), set(str)
     def __init__(self, patterns):
         self.patterns = patterns
-    
+        #TODO: consistency of the patterns
+        
     #there should be nodes with attribute 'ids'
     # nx.Graph
     def canApply(self, G) -> bool:
