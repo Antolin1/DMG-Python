@@ -108,8 +108,7 @@ def getGraphFromModelElements(list_elements, metaFiler = None,
             G.nodes[nodes[o]]['atts'] = dic_attributes              
     return G
 
-##create tests for this
-##TODO: attributes are not checked in tests
+
 def getModelFromGraph(pathMetamodel, G):
     # Register metamodel
     rset = ResourceSet()

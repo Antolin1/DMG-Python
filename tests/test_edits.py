@@ -18,6 +18,7 @@ class TestEditOperations(unittest.TestCase):
         
     def test_canApply(self):
         self.assertFalse(addReference.canApply(ga.G_with_one_id))
+        self.assertFalse(addReference.canApply(ga.G_with_nonsenseid))
         self.assertTrue(addReference.canApply(ga.G_wo_ref_itself))
         self.assertTrue(addReference.canApply(ga.G_wo_ref))
         
@@ -38,6 +39,24 @@ class TestEditOperations(unittest.TestCase):
                                       ga.node_match, ga.edge_match))
         self.assertFalse(is_isomorphic(applied_edit_1, ga.G_wo_ref_itself, 
                                       ga.node_match, ga.edge_match))
+        
+    def test_removeEdit(self):
+        applied_edit = addSuperType.applyEdit(ga.G_wo_ref)
+        #(applied_edit_3.nodes(data= True))
+        #print(applied_edit_3.edges(data= True))
+        remove_edit,_ = addSuperType.removeEdit(applied_edit)
+        
+        applied_edit_1 = addReference.applyEdit(ga.G_wo_ref_itself)
+        remove_edit_1,_ = addReference.removeEdit(applied_edit_1)
+        
+        self.assertTrue(is_isomorphic(ga.G_wo_ref, 
+                                      remove_edit, 
+                                      ga.node_match,ga.edge_match))
+        self.assertTrue(is_isomorphic(ga.G_wo_ref_itself, 
+                                      remove_edit_1, 
+                                      ga.node_match,ga.edge_match))
+        
+        self.assertTrue(addSuperType.removeEdit(applied_edit_1) == None)
         
 if __name__ == '__main__':
     unittest.main()

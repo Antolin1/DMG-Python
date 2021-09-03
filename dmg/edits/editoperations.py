@@ -7,19 +7,47 @@ Created on Wed Sep  1 16:22:25 2021
 import networkx as nx
 import numpy as np
 from itertools import combinations
+from networkx.algorithms.isomorphism import GraphMatcher
+import random
+
+from multiset import Multiset
+
+def node_match(n1,n2):
+    if ('ids' in n2):
+        return n1['type'] in n2['type']
+    else:
+        return ((n1['type'] == n2['type']) and
+                n1['out'] == n2['out'] and
+                n1['in'] == n2['in'])
+
+def edge_match(e1,e2):
+    t1 = []
+    t2 = []
+    for e in e1:
+        t1.append(e1[e]['type'])
+    for e in e2:
+        t2.append(e2[e]['type'])
+    return Multiset(t1) == Multiset(t2)
 
 class EditOperation:
     #: list(nx.Graph), set(str)
+    # Constructor
     def __init__(self, patterns):
         self.patterns = patterns
         #TODO: consistency of the patterns
         
-    #there should be nodes with attribute 'ids'
-    # nx.Graph
+    #there should be nodes with attribute 'ids' in G
+    #nx.Graph
+    #return true if the editOperation can be applied
+    #some nodes in G must be labeled with 'ids'
     def canApply(self, G) -> bool:
         return self.selectPattern(G) != None
     
-    # return the result of the edit. It removes the 'ids' attrs.
+    #there should be nodes with attribute 'ids' in G
+    #return the result of the edit. It removes the 'ids' attrs.
+    #apply the edit operation if it is possible (if not, None is returned).
+    #The nodes of the resultant graph does not contain 'ids'
+    #the nodes are relabed to 0,1,...,len(g)
     def applyEdit(self, G):
         pat = self.selectPattern(G)
         if pat == None:
@@ -65,7 +93,11 @@ class EditOperation:
                 
         G_compose_final = nx.relabel_nodes(G_compose, new_map)
         return G_compose_final
-
+    
+    #there should be nodes with attribute 'ids' in G
+    #select one of the possible patters 
+    #of the editOperation that can be applied
+    #return none if no one can be applied
     def selectPattern(self, G):
         dic_spe_nodes_G = {}
         for n in G.nodes():
@@ -99,7 +131,8 @@ class EditOperation:
                 return self.patterns[j]
         return None
             
-                    
+    #return a list of dics. In each dic, the key is the 'ids'
+    #and the value is the node that has this id.
     def getDictNodes(self):
         result = []
         for G in self.patterns:
@@ -110,6 +143,79 @@ class EditOperation:
                         dic_spe[idd] = n
             result.append(dic_spe)
         return result
+    
+    #add in/out degree for each node. Useful to compute the isomorfism
+    def __addInOut(self,G):
+        for n in G:
+            G.nodes[n]['in'] = G.in_degree(n)
+            G.nodes[n]['out'] = G.out_degree(n)
+        return G
+    
+    #TODO: check how to manage random seed
+    #given a pattern of the edit operation and a graph. It returns a new graph
+    #that corresponds to the action of removing an edit operation.
+    #this graph has nodes with 'ids' indicating the border nodes.
+    def __removeEditPattern(self, pat, G):
+        new_G = self.__addInOut(nx.MultiDiGraph(G))
+        pat_en = self.__addInOut(nx.MultiDiGraph(pat))
+
+        GM = GraphMatcher(new_G, pat_en, node_match = node_match, 
+                                  edge_match = edge_match)
+        dics = []
+        for subgraph in GM.subgraph_isomorphisms_iter():
+            dics.append(subgraph)
+        ##No match, return none
+        if len(dics) == 0:
+            return None
+        chosen = random.sample(dics,1)[0]
+        
+        ## remove not border nodes
+        border_nodes = []
+        for n1,n2 in chosen.items():
+            if not ('ids' in pat_en.nodes[n2]):
+                new_G.remove_node(n1)
+            else:
+                border_nodes.append(n1)
+        
+        remove_edges = []
+        for b1 in border_nodes:
+            for b2 in border_nodes:
+                c1 = chosen[b1]
+                c2 = chosen[b2]
+                if (b2 in new_G[b1]) and (c2 in pat_en[c1]):
+                    list_type_edges = [pat_en[c1][c2][ee]['type'] 
+                                       for ee in pat_en[c1][c2]] 
+                    for e in new_G[b1][b2]:
+                        ty = new_G[b1][b2][e]['type']
+                        if ty in list_type_edges:
+                            remove_edges.append((b1,b2,e))
+                            list_type_edges.remove(ty)
+        
+        for a,b,e in remove_edges:
+            new_G.remove_edge(a,b,e)
+        # remove useless atts
+        for n in new_G:
+            del new_G.nodes[n]['in']
+            del new_G.nodes[n]['out']
+        
+        for b in border_nodes:
+            new_G.nodes[b]['ids'] = pat_en.nodes[chosen[b]]['ids']
+        
+        return new_G
+    
+    #given a graph it returns a new graph and the pattern used (that belongs
+    # to the editoperation object). The graph
+    #corresponds to the action of removing an edit operation.
+    #this graph has nodes with 'ids' indicating the border nodes.
+    def removeEdit(self, G):
+        pats = self.patterns.copy()
+        random.shuffle(pats)
+        for p in pats:
+            re = self.__removeEditPattern(p,G)
+            if re != None:
+                return re, p
+        return None
+        
                     
         
         

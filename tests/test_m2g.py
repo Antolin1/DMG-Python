@@ -62,7 +62,7 @@ class Testm2g(unittest.TestCase):
         
     
     
-    #TODO: test with yakindu
+
     def test_yakinduSimpl(self):
         #load model and transform it into a graph with atts
         G1 = m2g.getGraphFromModel('data/testmodels/yakindutest.xmi', 

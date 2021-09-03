@@ -193,6 +193,31 @@ G_with_one_id.add_edge(4, 1, type = 'eType')
 G_with_one_id.add_edge(5, 1, type = 'eType')
 G_with_one_id.add_edge(6, 1, type = 'eType')
 
+############################ to check false
+G_with_nonsenseid = nx.MultiDiGraph()
+G_with_nonsenseid.add_node(0, type = 'EPackage')
+G_with_nonsenseid.add_node(1, type = 'EClass', ids = {1})
+G_with_nonsenseid.add_node(2, type = 'EClass')
+G_with_nonsenseid.add_node(4, type = 'EReference', ids = {2})
+G_with_nonsenseid.add_node(5, type = 'EReference')
+G_with_nonsenseid.add_node(6, type = 'EReference')
+        
+G_with_nonsenseid.add_edge(0, 1, type = 'eClassifiers')
+G_with_nonsenseid.add_edge(1, 0, type = 'ePackage')
+G_with_nonsenseid.add_edge(0, 2, type = 'eClassifiers')
+G_with_nonsenseid.add_edge(2, 0, type = 'ePackage')
+        
+G_with_nonsenseid.add_edge(1, 4, type = 'eStructuralFeatures')
+G_with_nonsenseid.add_edge(1, 5, type = 'eStructuralFeatures')
+G_with_nonsenseid.add_edge(1, 6, type = 'eStructuralFeatures')
+G_with_nonsenseid.add_edge(4, 1, type = 'eContainingClass')
+G_with_nonsenseid.add_edge(5, 1, type = 'eContainingClass')
+G_with_nonsenseid.add_edge(6, 1, type = 'eContainingClass')
+        
+G_with_nonsenseid.add_edge(4, 1, type = 'eType')
+G_with_nonsenseid.add_edge(5, 1, type = 'eType')
+G_with_nonsenseid.add_edge(6, 1, type = 'eType')
+
 #########################graph5
 
 G_expected_added_ref_itself = nx.MultiDiGraph()
