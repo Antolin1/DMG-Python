@@ -8,9 +8,8 @@ import networkx as nx
 import numpy as np
 from itertools import combinations
 from networkx.algorithms.isomorphism import GraphMatcher
+from dmg.graphUtils import edge_match_type as edge_match
 import random
-
-from multiset import Multiset
 
 def node_match(n1,n2):
     if ('ids' in n2):
@@ -19,15 +18,6 @@ def node_match(n1,n2):
         return ((n1['type'] == n2['type']) and
                 n1['out'] == n2['out'] and
                 n1['in'] == n2['in'])
-
-def edge_match(e1,e2):
-    t1 = []
-    t2 = []
-    for e in e1:
-        t1.append(e1[e]['type'])
-    for e in e2:
-        t2.append(e2[e]['type'])
-    return Multiset(t1) == Multiset(t2)
 
 class EditOperation:
     #: list(nx.Graph), set(str)
@@ -115,7 +105,8 @@ class EditOperation:
             valid = True
             #check combinations
             for k1,k2 in combinations(dp.keys(), 2):
-                if (dp[k1] == dp[k2]) != (dic_spe_nodes_G[k1] == dic_spe_nodes_G[k2]):
+                if (dp[k1] == dp[k2]) != (dic_spe_nodes_G[k1] 
+                                          == dic_spe_nodes_G[k2]):
                     valid = False
                     break
             if not valid:
@@ -207,12 +198,19 @@ class EditOperation:
     # to the editoperation object). The graph
     #corresponds to the action of removing an edit operation.
     #this graph has nodes with 'ids' indicating the border nodes.
+    #the nodes are relabed to 0,1,...,len(g)
     def removeEdit(self, G):
         pats = self.patterns.copy()
         random.shuffle(pats)
         for p in pats:
             re = self.__removeEditPattern(p,G)
             if re != None:
+                new_map = {}
+                j = 0
+                for n in re:
+                    new_map[n] = j
+                    j = j + 1                                            
+                re = nx.relabel_nodes(re, new_map)
                 return re, p
         return None
         

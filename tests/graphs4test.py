@@ -284,6 +284,36 @@ G_expected_added_super.add_edge(5, 1, type = 'eType')
 G_expected_added_super.add_edge(6, 1, type = 'eType')
 G_expected_added_super.add_edge(1, 2, type = 'eSuperTypes')
 
+################ initial graph
+
+G_initial = nx.MultiDiGraph()
+G_initial.add_node(0, type = 'EPackage')
+G_initial.add_node(1, type = 'EClass')
+        
+G_initial.add_edge(0, 1, type = 'eClassifiers')
+G_initial.add_edge(1, 0, type = 'ePackage')
+
+
+############### for graph2sequence
+G_g2s = nx.MultiDiGraph()
+G_g2s.add_node(0, type = 'EPackage')
+G_g2s.add_node(1, type = 'EClass')
+G_g2s.add_node(2, type = 'EClass')
+G_g2s.add_node(4, type = 'EReference')
+
+        
+G_g2s.add_edge(0, 1, type = 'eClassifiers')
+G_g2s.add_edge(1, 0, type = 'ePackage')
+G_g2s.add_edge(0, 2, type = 'eClassifiers')
+G_g2s.add_edge(2, 0, type = 'ePackage')
+        
+G_g2s.add_edge(1, 4, type = 'eStructuralFeatures')
+G_g2s.add_edge(4, 1, type = 'eContainingClass')
+        
+G_g2s.add_edge(4, 1, type = 'eType')
+G_g2s.add_edge(1, 2, type = 'eSuperTypes')
+
+
 ################ patterns for add a reference
 pattern1_ref = nx.MultiDiGraph()
 pattern1_ref.add_node(0, type = ['EClass'], ids = {1,2})
@@ -307,3 +337,10 @@ pattern1_st.add_node(0, type = ['EClass'], ids = {1})
 pattern1_st.add_node(1, type = ['EClass'], ids = {2})
 pattern1_st.add_edge(0, 1, type = 'eSuperTypes')
 
+################ patterns for addClass
+
+pattern1_ac = nx.MultiDiGraph()
+pattern1_ac.add_node(0, type = ['EPackage'], ids = {1})
+pattern1_ac.add_node(1, type = 'EClass')
+pattern1_ac.add_edge(0, 1, type = 'eClassifiers')
+pattern1_ac.add_edge(1, 0, type = 'ePackage')
