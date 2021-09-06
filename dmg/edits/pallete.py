@@ -13,11 +13,16 @@ from dmg.graphUtils import node_match_type as node_match
 import networkx as nx
 
 class Pallete:
-    
+    #editOperations: {x:y} x is id and y is object edit op
+    #dic_nodes: {x:y} x is str and y is id (same to dic_edges)
     def __init__(self, editOperations,
+                 dic_nodes,
+                 dic_edges,
                  initialGraph):
         self.editOperations = editOperations
         self.initialGraph = initialGraph
+        self.dic_nodes = dic_nodes
+        self.dic_edges = dic_edges
         #TODO: check consistency
         
     def graphToSequence(self, G):
@@ -40,6 +45,9 @@ class Pallete:
     
     def applyEdit(self, G, idd):
         return self.editOperations[idd].applyEdit(G)
+    
+    def getSpecialNodes(self, idd):
+        return self.editOperations[idd].ids
         
         
     

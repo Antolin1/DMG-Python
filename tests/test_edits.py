@@ -12,9 +12,9 @@ from networkx.algorithms.isomorphism import is_isomorphic
 import dmg.graphUtils as gu
 from dmg.edits.pallete import Pallete
 
-addReference = ed.EditOperation([g4t.pattern1_ref,g4t.pattern2_ref])
-addSuperType = ed.EditOperation([g4t.pattern1_st])
-addClass = ed.EditOperation([g4t.pattern1_ac])
+addReference = ed.EditOperation([g4t.pattern1_ref,g4t.pattern2_ref], [0,1])
+addSuperType = ed.EditOperation([g4t.pattern1_st], [0,1])
+addClass = ed.EditOperation([g4t.pattern1_ac], [0])
 
 class TestEditOperations(unittest.TestCase):
 
@@ -72,7 +72,7 @@ class TestEditOperations(unittest.TestCase):
                           1: addSuperType,
                           2: addClass}
         
-        pallete = Pallete(dic_operations, g4t.G_initial)
+        pallete = Pallete(dic_operations, None, None, g4t.G_initial)
         
         sequence = pallete.graphToSequence(g4t.G_g2s)
         

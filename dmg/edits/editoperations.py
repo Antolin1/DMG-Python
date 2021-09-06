@@ -22,8 +22,9 @@ def node_match(n1,n2):
 class EditOperation:
     #: list(nx.Graph), set(str)
     # Constructor
-    def __init__(self, patterns):
+    def __init__(self, patterns, ids):
         self.patterns = patterns
+        self.ids = ids
         #TODO: consistency of the patterns
         
     #there should be nodes with attribute 'ids' in G
