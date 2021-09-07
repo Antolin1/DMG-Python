@@ -16,12 +16,15 @@ def generateTensorsFromGraph(G, pallete, max_length_special_nodes):
         nodeTypes.append(pallete.dic_nodes[G.nodes[n]['type']])
     
     # special nodes, shape: max_len x nodes
-    special_nodes = [[0 for i in range(len(G))]
-                     for j in range(max_length_special_nodes)]
+    # special_nodes = [[0 for i in range(len(G))]
+    #                 for j in range(max_length_special_nodes)]
+    # special nodes, shape: nodes x max_len
+    special_nodes = [[0 for j in range(max_length_special_nodes)]
+                     for i in range(len(G))]
     for n in range(len(G)):
         if 'ids' in G.nodes[n]:
             for idd in G.nodes[n]['ids']:
-                special_nodes[idd][n] = 1
+                special_nodes[n][idd] = 1
     # edges
     edges = []
     edges_lab = []
@@ -52,7 +55,8 @@ def sequence2data(sequence, pallete, max_length_special_nodes):
                 edge_attr = edges_lab,
                 action = torch.tensor(id_edit),
                 nodes = torch.tensor(len(G)),
-                sequence = sN)
+                sequence = sN,
+                len_seq = torch.tensor(len(pallete.getSpecialNodes(id_edit))))
         result.append(data)
     
     return result

@@ -13,6 +13,11 @@ from networkx.algorithms.isomorphism import is_isomorphic
 import dmg.graphUtils as gu
 from dmg.edits.pallete import Pallete
 from dmg.deeplearning.dataGeneration import sequence2data, data2graph
+from torch_geometric.data import DataLoader
+import numpy as np
+import torch
+from torch_scatter import scatter
+torch.manual_seed(0)
 
 addReference = ed.EditOperation([g4t.pattern1_ref,g4t.pattern2_ref], [0,1])
 addSuperType = ed.EditOperation([g4t.pattern1_st], [0,1])
@@ -62,10 +67,16 @@ class TestDeepLearning(unittest.TestCase):
                              len(sequence[j][0].edges))
             self.assertEqual(data.action.item(), 
                              sequence[j][1])
-            self.assertEqual(data.sequence.shape[0], 
-                             max_len)
             self.assertEqual(data.sequence.shape[1], 
+                             max_len)
+            self.assertEqual(data.sequence.shape[0], 
                              len(sequence[j][0]))
+            
+            self.assertEqual(data.nodes.item(), 
+                             len(sequence[j][0]))
+            
+            self.assertEqual(data.len_seq.item(), 
+                             len(pallete.getSpecialNodes(sequence[j][1])))
             
             graph_inv = data2graph(data, pallete)
             self.assertTrue(is_isomorphic(graph_inv, 
@@ -76,19 +87,42 @@ class TestDeepLearning(unittest.TestCase):
             for i,l in enumerate(np_seq):
                 for t,c in enumerate(l):
                     if (c == 1):
-                        if ('ids' in graph_inv.nodes[t]):
-                            graph_inv.nodes[t]['ids'].add(i)
+                        if ('ids' in graph_inv.nodes[i]):
+                            graph_inv.nodes[i]['ids'].add(t)
                         else:
-                            graph_inv.nodes[t]['ids'] = set([i])
+                            graph_inv.nodes[i]['ids'] = set([t])
                             
             self.assertTrue(is_isomorphic(graph_inv, 
                                       sequence[j][0], 
                                       node_match_type_ids, 
                                       gu.edge_match_type))
-            
+        
+        loader = DataLoader(listDatas, batch_size=len(listDatas), 
+                            num_workers = 0, 
+                            shuffle=False)
+        d = 4 
+        example_emb = torch.rand((np.sum([len(s[0]) for s in sequence]), d))
+        for data in loader:
             #print(data.x)
+            #print(example_emb)
+            #print(data.sequence)
+            emb_seq = (torch.unsqueeze(data.sequence,2)*
+                       torch.unsqueeze(example_emb, dim = 1))
+            
+            #b x max_len
+            out = scatter(emb_seq, data.batch, dim=0, reduce="sum")
+            self.assertEqual(out.shape[0], len(listDatas))
+            self.assertEqual(out.shape[1], max_len)
+            
+            #out_nodes = torch.repeat_interleave(out,data.nodes, dim = 0)
+            
+            #self.assertEqual(out_nodes.shape[0], data.x.shape[0])
+            #self.assertEqual(out_nodes.shape[1], max_len)
+            #print(emb_seq)
+            #print(out)
             #print(data.edge_index)
             #print(data.edge_attr)
             #print(data.action)
-            #print(data.sequence)
+            #print(data.batch)
+            #print(data.len_seq)
             #print('-'*25)
