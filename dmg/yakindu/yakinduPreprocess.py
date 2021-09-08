@@ -12,6 +12,7 @@ def removeLayout(path_in, path_out):
     tree = ET.parse(path_in)
     root = tree.getroot()
     for child in root:
-        if child.tag == '{http://www.eclipse.org/gmf/runtime/1.0.2/notation}Diagram':
+        if (child.tag == '{http://www.eclipse.org/gmf/runtime/1.0.2/notation}Diagram' or
+            child.tag == '{http://www.eclipse.org/gmf/runtime/1.0.3/notation}Diagram') :
             child.getparent().remove(child)
     tree.write(path_out)

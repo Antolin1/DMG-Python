@@ -131,3 +131,6 @@ dmypy.json
 data/testmodels/outYak.xmi
 
 data/yakinduDataset/preprocess
+data/yakinduDataset/train
+data/yakinduDataset/test
+data/yakinduDataset/val
