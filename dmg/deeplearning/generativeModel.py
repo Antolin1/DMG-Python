@@ -9,13 +9,14 @@ Created on Tue Sep  7 14:53:01 2021
 import torch
 import torch.nn as nn
 import torch_geometric.nn as pyg_nn
-import torch_geometric.utils as pyg_utils
 import torch.nn.functional as F
 from torch_scatter import scatter
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from torch_scatter.composite import scatter_softmax
+from torch.distributions.categorical import Categorical
 
-
+#TODO: add finish layer out like in Jure's work to predict if we have to finish
+#the generation procedure
 class GenerativeModel(nn.Module):
     
     def __init__(self, hidden_dim, vocab_nodes, vocab_edges, vocab_actions):
@@ -44,6 +45,33 @@ class GenerativeModel(nn.Module):
             
         self.linNodes = nn.Linear(2 * hidden_dim, hidden_dim)
         self.linNodes_final = nn.Linear(hidden_dim, 1)
+    
+    #TODO: do it in batch
+    #TODO: fix random seed
+    #TODO: test it
+    def getAction(self, nodeTypes, edge_index, edge_attr, bs):
+        #node embeddings
+        nodeTypes = self.emb_nodes(nodeTypes)
+        nodeEmbeddings = self.convolution(nodeTypes, edge_index, edge_attr)
+        #graph embedding, bxhidden_dim
+        h_G = pyg_nn.global_mean_pool(nodeEmbeddings, bs)        
+        #infer action
+        action = F.relu(self.linAction(h_G))
+        action = self.linAction_final(action)
+        m = Categorical(F.softmax(torch.squeeze(action)))
+        return m.sample()
+    
+    #TO DO: finish it!!!!
+    def getNodes(self, nodeTypes, edge_index, edge_attr, 
+                bs, action_input):
+        #node embeddings
+        nodeTypes = self.emb_nodes(nodeTypes)
+        nodeEmbeddings = self.convolution(nodeTypes, edge_index, edge_attr)
+        #graph embedding, bxhidden_dim
+        h_G = pyg_nn.global_mean_pool(nodeEmbeddings, bs)
+        #action
+        sos = self.emb_actions(action_input)
+        sos = torch.unsqueeze(sos, dim = 1)
         
 
     
