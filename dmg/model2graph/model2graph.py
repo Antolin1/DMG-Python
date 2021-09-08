@@ -16,13 +16,15 @@ from pyecore.resources import ResourceSet, URI
 #mm_root = resource.contents[0]
 #rset.metamodel_registry[mm_root.nsURI] = mm_root
 
-def getGraphFromModel(pathModel, pathMetamodel, metaFiler = None, 
+def getGraphFromModel(pathModel, pathMetamodels, metaFiler = None, 
                       consider_atts = True):
-    #load meta-model
     rset = ResourceSet()
-    resource = rset.get_resource(URI(pathMetamodel))
-    mm_root = resource.contents[0]
-    rset.metamodel_registry[mm_root.nsURI] = mm_root
+    for pathMetamodel in pathMetamodels:
+        #load meta-model
+        resource = rset.get_resource(URI(pathMetamodel))
+        mm_root = resource.contents[0]
+        rset.metamodel_registry[mm_root.nsURI] = mm_root
+        #print(mm_root.nsURI, mm_root)
     
     #load model
     resource = rset.get_resource(URI(pathModel))

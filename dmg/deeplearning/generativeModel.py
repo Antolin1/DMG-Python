@@ -26,11 +26,14 @@ class GenerativeModel(nn.Module):
         self.emb_actions = nn.Embedding(len(vocab_actions), hidden_dim)
             
         self.convolution = pyg_nn.Sequential('x, edge_index, edge_type', [
-            (pyg_nn.GCNConv(hidden_dim, hidden_dim), 'x, edge_index, edge_type-> x'),
+            (pyg_nn.RGCNConv(hidden_dim, hidden_dim, 
+                             num_relations = len(vocab_edges)), 'x, edge_index, edge_type-> x'),
             nn.ReLU(inplace=True),
-            (pyg_nn.GCNConv(hidden_dim, hidden_dim), 'x, edge_index, edge_type-> x'),
+            (pyg_nn.RGCNConv(hidden_dim, hidden_dim,
+                             num_relations = len(vocab_edges)), 'x, edge_index, edge_type-> x'),
             nn.ReLU(inplace=True),
-            (pyg_nn.GCNConv(hidden_dim, hidden_dim), 'x, edge_index, edge_type-> x'),
+            (pyg_nn.RGCNConv(hidden_dim, hidden_dim,
+                             num_relations = len(vocab_edges)), 'x, edge_index, edge_type-> x'),
             nn.ReLU(inplace=True)
         ])
             
@@ -46,6 +49,9 @@ class GenerativeModel(nn.Module):
     
     def forward(self, nodeTypes, edge_index, edge_attr, 
                 bs, sequence_input, nodes_bs, len_seq, action_input):
+        
+        L = torch.max(len_seq)
+        sequence_input = sequence_input[:,0:L]
         
         #node embeddings
         N = nodeTypes.shape[0]
@@ -88,7 +94,7 @@ class GenerativeModel(nn.Module):
         
         input_gru = torch.cat((sos, out), dim = 1)
         assert input_gru.shape[0] == B
-        assert input_gru.shape[1] == (L + 1)
+        assert input_gru.shape[1] == L + 1
         assert input_gru.shape[2] == H
         
         #h_0 of gru
@@ -100,27 +106,27 @@ class GenerativeModel(nn.Module):
         output, h_n = self.gru(pack, h_0)
         #bxlxh
         seq_unpacked, lens_unpacked = pad_packed_sequence(output, 
-                                                          batch_first=False)
+                                                          batch_first=True)
         assert seq_unpacked.shape[0] == B
-        assert seq_unpacked.shape[1] == (L + 1)
+        assert seq_unpacked.shape[1] == L
         assert seq_unpacked.shape[2] == H
         
         
         #nxlxh
         out_gru = torch.repeat_interleave(seq_unpacked, nodes_bs, dim = 0)
         assert out_gru.shape[0] == N
-        assert out_gru.shape[1] == (L + 1)
+        assert out_gru.shape[1] == L
         assert out_gru.shape[2] == H
         
         nodeEmb_unsq = torch.unsqueeze(nodeEmbeddings, dim = 1).repeat(1,
                                                                        out_gru.shape[1],1)
         assert nodeEmb_unsq.shape[0] == N
-        assert nodeEmb_unsq.shape[1] == (L + 1)
+        assert nodeEmb_unsq.shape[1] == L
         assert nodeEmb_unsq.shape[2] == H
         
         concats = torch.cat((out_gru, nodeEmb_unsq), dim = 2)
         assert concats.shape[0] == N
-        assert concats.shape[1] == (L + 1)
+        assert concats.shape[1] == L
         assert concats.shape[2] == (2 * H)
         
         concats = F.relu(self.linNodes(concats))
@@ -130,8 +136,8 @@ class GenerativeModel(nn.Module):
         nodes_final = torch.squeeze(self.linNodes_final(concats), dim = 2)
         #n x l
         nodes_final = scatter_softmax(nodes_final, bs, dim = 0)
-        assert nodes_final.shape[0] == H
-        assert nodes_final.shape[1] == (L + 1)
+        assert nodes_final.shape[0] == N
+        assert nodes_final.shape[1] == L
         
         return action, nodes_final
         

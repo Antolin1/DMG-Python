@@ -102,6 +102,7 @@ G_yak_meta.add_edge(1, 3, type = 'vertices')
 G_yak_meta.add_edge(2, 4, type = 'outgoingTransitions')
 G_yak_meta.add_edge(4, 3, type = 'target')
 
+
 ##### graphs for test edits
 
 ##########################graph2 - add a refernece in the same class

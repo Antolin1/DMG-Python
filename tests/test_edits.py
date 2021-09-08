@@ -11,6 +11,8 @@ import tests.graphs4test as g4t
 from networkx.algorithms.isomorphism import is_isomorphic
 import dmg.graphUtils as gu
 from dmg.edits.pallete import Pallete
+import random
+random.seed(123)
 
 addReference = ed.EditOperation([g4t.pattern1_ref,g4t.pattern2_ref], [0,1])
 addSuperType = ed.EditOperation([g4t.pattern1_st], [0,1])

@@ -17,7 +17,10 @@ from torch_geometric.data import DataLoader
 import numpy as np
 import torch
 from torch_scatter import scatter
-from  dmg.deeplearning.model import GenerativeModel
+from  dmg.deeplearning.generativeModel import GenerativeModel
+import torch.nn as nn
+import random
+random.seed(123)
 torch.manual_seed(0)
 
 addReference = ed.EditOperation([g4t.pattern1_ref,g4t.pattern2_ref], [0,1])
@@ -58,11 +61,46 @@ def node_match_type_ids(n1,n2):
 class TestDeepLearning(unittest.TestCase):
     
     def test_model(self):
-        model = GenerativeModel(10, dic_nodes, dic_edges, dic_operations)
-
+        d = 10
+        model = GenerativeModel(d, dic_nodes, dic_edges, dic_operations)
+        loader = DataLoader(listDatas, batch_size=len(listDatas), 
+                            num_workers = 0, 
+                            shuffle=False)
+        
+        criterion_node = nn.CrossEntropyLoss(reduction = 'mean', 
+                                             ignore_index=-1)
+        criterion_action = nn.CrossEntropyLoss(reduction = 'mean')
+        for data in loader:
+            action, nodes = model(data.x, data.edge_index, 
+                        torch.squeeze(data.edge_attr,dim=1), 
+                data.batch, data.sequence, data.nodes, data.len_seq, data.action)
+            
+            #must be all close to one
+            sct = scatter(nodes, data.batch, dim=0, reduce="sum").detach().numpy()
+            for v in sct:
+                for j in v:
+                    self.assertAlmostEqual(j,1.,delta = 0.01)
+                    
+            #conver to classification problem of two classes
+            nodes = torch.unsqueeze(nodes, dim = 2).repeat(1,1,2)
+            nodes[:,:,0] = 1 - nodes[:,:,1]
+            
+            L = torch.max(data.len_seq).item()
+            self.assertEqual(nodes.shape[0], data.batch.shape[0])
+            self.assertEqual(nodes.shape[1], L)
+            self.assertEqual(nodes.shape[2], 2)
+            #ground truth nodes
+            gTruth = data.sequence_masked[:,0:L]
+            #print(data.sequence_masked[:,0:L])
+            #print(data.batch)
+            #print(nodes.reshape(-1,2))
+            #print(nodes)
+            #print(gTruth.flatten())
+            loss = (criterion_node(nodes.reshape(-1,2), gTruth.flatten()) +
+                    criterion_action(action, data.action)) / 2
+            print(loss.item())
         
     def test_sequence2data(self):
-        
         for j,data in enumerate(listDatas):
             self.assertEqual(data.x.shape[0], len(sequence[j][0]))
             self.assertEqual(data.edge_index.shape[1], 
