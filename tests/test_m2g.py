@@ -115,35 +115,6 @@ class Testm2g(unittest.TestCase):
                                       gu.node_match_type_atts, 
                                       gu.edge_match_type))
     
-    def test_yakinduComplete(self):
-        metafilter_refs = ['Region.vertices', 
-                           'CompositeElement.regions',
-                           'Vertex.outgoingTransitions',
-                           'Transition.target']
-        metafilter_cla = ['Region', 'CompositeElement','Vertex','Transition']
-        
-        metafilter_atts = None
-        
-        metafilterobj = mf.MetaFilter(references = metafilter_refs, 
-                 attributes = metafilter_atts,
-                 classes = metafilter_cla)
-        
-        meta_models = glob.glob("data/metamodels/yakinduComplete/*")
-        
-        removeLayout('data/testmodels/yakinduFullTest.xmi', 
-                     'data/testmodels/outYak.xmi')
-        
-        #now parse the graph
-        G1 = m2g.getGraphFromModel('data/testmodels/outYak.xmi', 
-                              meta_models, metafilterobj,
-                              consider_atts = False)
-        
-        self.assertTrue(is_isomorphic(G1, g4t.G_yak_meta, 
-                                      gu.node_match_type, 
-                                      gu.edge_match_type))
-                
-        #print(root.attrib)
-        
 
 
 if __name__ == '__main__':

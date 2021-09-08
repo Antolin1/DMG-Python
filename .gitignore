@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 data/testmodels/outYak.xmi
+
+data/yakinduDataset/preprocess
