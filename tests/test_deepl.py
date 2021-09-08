@@ -17,11 +17,32 @@ from torch_geometric.data import DataLoader
 import numpy as np
 import torch
 from torch_scatter import scatter
+from  dmg.deeplearning.model import GenerativeModel
 torch.manual_seed(0)
 
 addReference = ed.EditOperation([g4t.pattern1_ref,g4t.pattern2_ref], [0,1])
 addSuperType = ed.EditOperation([g4t.pattern1_st], [0,1])
 addClass = ed.EditOperation([g4t.pattern1_ac], [0])
+
+dic_operations = {0 : addReference,
+                  1: addSuperType,
+                  2: addClass}
+        
+dic_nodes = {'EClass' : 0,
+             'EReference' : 1,
+             'EPackage' : 2}
+        
+dic_edges = {'eClassifiers': 0,
+             'ePackage': 1,
+             'eStructuralFeatures': 2,
+             'eContainingClass': 3,
+             'eType': 4,
+             'eSuperTypes': 5}
+
+pallete = Pallete(dic_operations, dic_nodes, dic_edges, g4t.G_initial)
+sequence = pallete.graphToSequence(g4t.G_g2s)
+max_len = 3
+listDatas = sequence2data(sequence, pallete, max_len)
 
 def node_match_type_ids(n1,n2):
     typess = gu.node_match_type(n1, n2)
@@ -35,29 +56,12 @@ def node_match_type_ids(n1,n2):
 
 
 class TestDeepLearning(unittest.TestCase):
+    
+    def test_model(self):
+        model = GenerativeModel(10, dic_nodes, dic_edges, dic_operations)
 
         
     def test_sequence2data(self):
-        
-        dic_operations = {0 : addReference,
-                          1: addSuperType,
-                          2: addClass}
-        
-        dic_nodes = {'EClass' : 0,
-                     'EReference' : 1,
-                     'EPackage' : 2}
-        
-        dic_edges = {'eClassifiers': 0,
-                     'ePackage': 1,
-                     'eStructuralFeatures': 2,
-                     'eContainingClass': 3,
-                     'eType': 4,
-                     'eSuperTypes': 5}
-        
-        pallete = Pallete(dic_operations, dic_nodes, dic_edges, g4t.G_initial)
-        sequence = pallete.graphToSequence(g4t.G_g2s)
-        max_len = 3
-        listDatas = sequence2data(sequence, pallete, max_len)
         
         for j,data in enumerate(listDatas):
             self.assertEqual(data.x.shape[0], len(sequence[j][0]))
@@ -106,6 +110,7 @@ class TestDeepLearning(unittest.TestCase):
             #print(data.x)
             #print(example_emb)
             #print(data.sequence)
+            #print(data.sequence_masked)
             emb_seq = (torch.unsqueeze(data.sequence,2)*
                        torch.unsqueeze(example_emb, dim = 1))
             

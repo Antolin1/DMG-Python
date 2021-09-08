@@ -48,11 +48,18 @@ class GenerativeModel(nn.Module):
                 bs, sequence_input, nodes_bs, len_seq, action_input):
         
         #node embeddings
+        N = nodeTypes.shape[0]
         nodeTypes = self.emb_nodes(nodeTypes)
+        H  = nodeTypes.shape[1]
         nodeEmbeddings = self.convolution(nodeTypes, edge_index, edge_attr)
+        assert nodeEmbeddings.shape[0] == N
+        assert nodeEmbeddings.shape[1] == H
         
+        B = nodes_bs.shape[0]
         #graph embedding, bxhidden_dim
         h_G = pyg_nn.global_mean_pool(nodeEmbeddings, bs)
+        assert h_G.shape[0] == B
+        assert h_G.shape[1] == H
         
         #infer action
         action = F.relu(self.linAction(h_G))
@@ -61,15 +68,28 @@ class GenerativeModel(nn.Module):
         #emulate SOS token, the sos token must be the action
         #action input: bxh
         sos = self.emb_actions(action_input)
+        assert sos.shape[0] == B
+        assert sos.shape[1] == H
         sos = torch.unsqueeze(sos, dim = 1)
         
+        L = sequence_input.shape[1]
         #generate sequence
         emb_seq = (torch.unsqueeze(sequence_input,2)*
                        torch.unsqueeze(nodeEmbeddings, dim = 1))
+        assert emb_seq.shape[0] == N
+        assert emb_seq.shape[1] == L
+        assert emb_seq.shape[2] == H
         
         #b x max_len x h
         out = scatter(emb_seq, bs, dim=0, reduce="sum")
+        assert out.shape[0] == B
+        assert out.shape[1] == L
+        assert out.shape[2] == H
+        
         input_gru = torch.cat((sos, out), dim = 1)
+        assert input_gru.shape[0] == B
+        assert input_gru.shape[1] == (L + 1)
+        assert input_gru.shape[2] == H
         
         #h_0 of gru
         h_0 = torch.unsqueeze(h_G, dim = 0)
@@ -81,19 +101,37 @@ class GenerativeModel(nn.Module):
         #bxlxh
         seq_unpacked, lens_unpacked = pad_packed_sequence(output, 
                                                           batch_first=False)
+        assert seq_unpacked.shape[0] == B
+        assert seq_unpacked.shape[1] == (L + 1)
+        assert seq_unpacked.shape[2] == H
+        
         
         #nxlxh
         out_gru = torch.repeat_interleave(seq_unpacked, nodes_bs, dim = 0)
+        assert out_gru.shape[0] == N
+        assert out_gru.shape[1] == (L + 1)
+        assert out_gru.shape[2] == H
+        
         nodeEmb_unsq = torch.unsqueeze(nodeEmbeddings, dim = 1).repeat(1,
                                                                        out_gru.shape[1],1)
+        assert nodeEmb_unsq.shape[0] == N
+        assert nodeEmb_unsq.shape[1] == (L + 1)
+        assert nodeEmb_unsq.shape[2] == H
         
         concats = torch.cat((out_gru, nodeEmb_unsq), dim = 2)
+        assert concats.shape[0] == N
+        assert concats.shape[1] == (L + 1)
+        assert concats.shape[2] == (2 * H)
+        
         concats = F.relu(self.linNodes(concats))
+        assert concats.shape[2] == H
         
         #nxlx1
         nodes_final = torch.squeeze(self.linNodes_final(concats), dim = 2)
         #n x l
         nodes_final = scatter_softmax(nodes_final, bs, dim = 0)
+        assert nodes_final.shape[0] == H
+        assert nodes_final.shape[1] == (L + 1)
         
         return action, nodes_final
         

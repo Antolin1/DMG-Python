@@ -10,7 +10,7 @@ from torch_geometric.data import Data
 import torch
 import networkx as nx
 
-def generateTensorsFromGraph(G, pallete, max_length_special_nodes):
+def generateTensorsFromGraph(G, pallete, max_length_special_nodes, len_seq):
     nodeTypes = []
     for n in range(len(G)):
         nodeTypes.append(pallete.dic_nodes[G.nodes[n]['type']])
@@ -21,10 +21,13 @@ def generateTensorsFromGraph(G, pallete, max_length_special_nodes):
     # special nodes, shape: nodes x max_len
     special_nodes = [[0 for j in range(max_length_special_nodes)]
                      for i in range(len(G))]
+    special_nodes_masked = [[0 if j < len_seq else -1 for j in range(max_length_special_nodes)]
+                     for i in range(len(G))]
     for n in range(len(G)):
         if 'ids' in G.nodes[n]:
             for idd in G.nodes[n]['ids']:
                 special_nodes[n][idd] = 1
+                special_nodes_masked[n][idd] = 1
     # edges
     edges = []
     edges_lab = []
@@ -38,6 +41,7 @@ def generateTensorsFromGraph(G, pallete, max_length_special_nodes):
     
     return (torch.tensor(nodeTypes), 
             torch.tensor(special_nodes),
+            torch.tensor(special_nodes_masked),
             torch.transpose(torch.tensor(edges), 0, 1),
             torch.unsqueeze(torch.tensor(edges_lab),dim=1))
     
@@ -48,14 +52,17 @@ def generateTensorsFromGraph(G, pallete, max_length_special_nodes):
 def sequence2data(sequence, pallete, max_length_special_nodes):
     result = []
     for G, id_edit in sequence:
-        nT, sN, edges, edges_lab = generateTensorsFromGraph(G, pallete, 
-                                                            max_length_special_nodes)
+        nT, sN, sNM, edges, edges_lab = generateTensorsFromGraph(G, 
+                                                                 pallete, 
+                                                            max_length_special_nodes,
+                                                            len(pallete.getSpecialNodes(id_edit)))
         data = Data(x = nT,
                 edge_index = edges, 
                 edge_attr = edges_lab,
                 action = torch.tensor(id_edit),
                 nodes = torch.tensor(len(G)),
                 sequence = sN,
+                sequence_masked = sNM,
                 len_seq = torch.tensor(len(pallete.getSpecialNodes(id_edit))))
         result.append(data)
     
