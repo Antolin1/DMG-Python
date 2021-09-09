@@ -7,6 +7,7 @@ Created on Mon Sep  6 12:15:01 2021
 """
 
 from multiset import Multiset
+import graphviz
 
 def node_match_type(n1,n2):
     return n1['type'] == n2['type']
@@ -23,3 +24,12 @@ def edge_match_type(e1,e2):
 def node_match_type_atts(n1,n2):
     typess = node_match_type(n1, n2)
     return typess and (n1['atts'] == n2['atts'])
+
+
+def plotGraphViz(G):
+    g = graphviz.Digraph(filename='graph')
+    for e in G.edges:
+        g.node(str(e[0]), label = G.nodes[e[0]]['type'])
+        g.node(str(e[1]), label = G.nodes[e[1]]['type'])
+        g.edge(str(e[0]), str(e[1]),label=G[e[0]][e[1]][e[2]]['type'])
+    return g

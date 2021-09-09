@@ -44,18 +44,43 @@ def generateTensorsFromGraph(G, pallete, max_length_special_nodes, len_seq):
             torch.tensor(special_nodes_masked),
             torch.transpose(torch.tensor(edges), 0, 1),
             torch.unsqueeze(torch.tensor(edges_lab),dim=1))
-    
-        
+
+# graphs of the sequence must have ids 0,1,2...len(g)
+def graph2dataPreAction(G, pallete):
+     nT, sN, sNM, edges, edges_lab = generateTensorsFromGraph(G, 
+                                                              pallete, 2, 1)
+     data = Data(x = nT,
+                edge_index = edges, 
+                edge_attr = edges_lab,
+                nodes = torch.tensor(len(G)))
+     return data
+ 
+def graph2dataPostAction(G, pallete, max_length_special_nodes, len_seq):
+    nT, sN, sNM, edges, edges_lab = generateTensorsFromGraph(G,pallete, 
+                                                             max_length_special_nodes, 
+                                                             len_seq)
+    data = Data(x = nT,
+                edge_index = edges, 
+                edge_attr = edges_lab,
+                nodes = torch.tensor(len(G)),
+                sequence = sN,
+                sequence_masked = sNM)
+    return data
     
 
 # graphs of the sequence must have ids 0,1,2...len(g)
 def sequence2data(sequence, pallete, max_length_special_nodes):
     result = []
-    for G, id_edit in sequence:
+    for j, (G, id_edit) in enumerate(sequence):
         nT, sN, sNM, edges, edges_lab = generateTensorsFromGraph(G, 
                                                                  pallete, 
                                                             max_length_special_nodes,
                                                             len(pallete.getSpecialNodes(id_edit)))
+        finished = None
+        if j == 0:
+            finished = torch.tensor(1)
+        else:
+            finished = torch.tensor(0)
         data = Data(x = nT,
                 edge_index = edges, 
                 edge_attr = edges_lab,
@@ -63,10 +88,12 @@ def sequence2data(sequence, pallete, max_length_special_nodes):
                 nodes = torch.tensor(len(G)),
                 sequence = sN,
                 sequence_masked = sNM,
-                len_seq = torch.tensor(len(pallete.getSpecialNodes(id_edit))))
+                len_seq = torch.tensor(len(pallete.getSpecialNodes(id_edit))),
+                finished = finished)
         result.append(data)
     
     return result
+
 
 def data2graph(data, pallete):
     G = nx.MultiDiGraph()

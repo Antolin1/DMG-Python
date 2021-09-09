@@ -104,7 +104,7 @@ class Testm2g(unittest.TestCase):
         #load model and transform it into a graph with atts
         G1 = m2g.getGraphFromModel('data/testmodels/smallecoretest.xmi', 
                               ['data/metamodels/smallEcore.ecore'])
-        list_elements = m2g.getModelFromGraph('data/metamodels/smallEcore.ecore',
+        list_elements = m2g.getModelFromGraph(['data/metamodels/smallEcore.ecore'],
                                           G1)
         self.assertEqual(len(G1), len(list_elements))
         

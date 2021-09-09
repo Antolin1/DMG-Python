@@ -17,7 +17,7 @@ from torch_geometric.data import DataLoader
 import numpy as np
 import torch
 from torch_scatter import scatter
-from  dmg.deeplearning.generativeModel import GenerativeModel
+from dmg.deeplearning.generativeModel import GenerativeModel, sampleGraph
 import torch.nn as nn
 import random
 random.seed(123)
@@ -70,8 +70,10 @@ class TestDeepLearning(unittest.TestCase):
         criterion_node = nn.CrossEntropyLoss(reduction = 'mean', 
                                              ignore_index=-1)
         criterion_action = nn.CrossEntropyLoss(reduction = 'mean')
+        criterion_finish = nn.BCELoss(reduction = 'mean')
+        
         for data in loader:
-            action, nodes = model(data.x, data.edge_index, 
+            action, nodes, finish = model(data.x, data.edge_index, 
                         torch.squeeze(data.edge_attr,dim=1), 
                 data.batch, data.sequence, data.nodes, data.len_seq, data.action)
             
@@ -96,9 +98,20 @@ class TestDeepLearning(unittest.TestCase):
             #print(nodes.reshape(-1,2))
             #print(nodes)
             #print(gTruth.flatten())
+            #print(finish.flatten())
+            #print(data.finished)
             loss = (criterion_node(nodes.reshape(-1,2), gTruth.flatten()) +
-                    criterion_action(action, data.action)) / 2
+                    criterion_action(action, data.action) + 
+                    criterion_finish(finish.flatten(), data.finished.float())) / 3
             print(loss.item())
+    
+    def test_generation(self):
+        d = 10
+        model = GenerativeModel(d, dic_nodes, dic_edges, dic_operations)
+        sampled = sampleGraph(g4t.G_initial, pallete, model, 10)
+        print(sampled.nodes(data=True))
+        print(sampled.edges(data=True))
+        self.assertEqual(0, 0)
         
     def test_sequence2data(self):
         for j,data in enumerate(listDatas):
@@ -119,6 +132,11 @@ class TestDeepLearning(unittest.TestCase):
             
             self.assertEqual(data.len_seq.item(), 
                              len(pallete.getSpecialNodes(sequence[j][1])))
+            
+            if j == 0:
+                self.assertEqual(data.finished.item(), 1)
+            else:
+                self.assertEqual(data.finished.item(), 0)
             
             graph_inv = data2graph(data, pallete)
             self.assertTrue(is_isomorphic(graph_inv, 

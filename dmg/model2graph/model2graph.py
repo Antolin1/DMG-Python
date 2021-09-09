@@ -111,18 +111,18 @@ def getGraphFromModelElements(list_elements, metaFiler = None,
     return G
 
 
-def getModelFromGraph(pathMetamodel, G):
+def getModelFromGraph(pathMetamodels, G):
     # Register metamodel
     rset = ResourceSet()
-    resource = rset.get_resource(URI(pathMetamodel))
-    mm_root = resource.contents[0]
-    rset.metamodel_registry[mm_root.nsURI] = mm_root
-    
-    #get all elements of the metamodel
     list_elements = []
-    for root in resource.contents:
-        list_elements.append(root)
-        list_elements = list_elements + list(root.eAllContents())
+    for pathMetamodel in pathMetamodels:
+        #load meta-model
+        resource = rset.get_resource(URI(pathMetamodel))
+        mm_root = resource.contents[0]
+        rset.metamodel_registry[mm_root.nsURI] = mm_root
+        for root in resource.contents:
+            list_elements.append(root)
+            list_elements = list_elements + list(root.eAllContents())
     
     #get eclasses and references
     name_correspondence = {}
@@ -148,13 +148,14 @@ def getModelFromGraph(pathMetamodel, G):
         else:
             eobj = nodes_objects[n]
         
-        atts = G.nodes[n]['atts']
-        for att_name, value in atts.items():
-            if (name_attributes[att_name].many):
-                for v in value:
-                    getattr(eobj,att_name).add(v)
-            else:
-                setattr(eobj,att_name,value)
+        if 'atts' in G.nodes[n]:
+            atts = G.nodes[n]['atts']
+            for att_name, value in atts.items():
+                if (name_attributes[att_name].many):
+                    for v in value:
+                        getattr(eobj,att_name).add(v)
+                else:
+                    setattr(eobj,att_name,value)
         
         #references
         for n2 in G[n]:
