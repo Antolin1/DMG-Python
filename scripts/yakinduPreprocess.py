@@ -24,6 +24,7 @@ def main():
     train_path = sys.argv[3]
     test_path = sys.argv[4]
     val_path = sys.argv[5]
+    type_model = sys.argv[6]
     
     if not os.path.exists(preprodataset_path):
         os.makedirs(preprodataset_path)
@@ -39,33 +40,41 @@ def main():
     for f in files:
         p = Path(f)
         full_file_name = p.stem +'.'+f.split('.')[-1]
-        removeLayout(f,preprodataset_path+'/'+full_file_name)
+        if type_model.lower() == 'yakindu':
+            removeLayout(f,preprodataset_path+'/'+full_file_name)
     ##load and remove small models
     
-    metafilter_refs = ['Region.vertices', 
-                           'CompositeElement.regions',
-                           'Vertex.outgoingTransitions',
-                           'Vertex.incomingTransitions',
-                           'Transition.target',
-                           'Transition.source']
-    metafilter_cla = list(yp.dic_nodes_yak.keys())
-        
+    metafilter_refs = None
+    metafilter_cla = None
+    metafilterobj = None
+    meta_models = None
     metafilter_atts = None
-        
-    metafilterobj = mf.MetaFilter(references = metafilter_refs, 
-                 attributes = metafilter_atts,
-                 classes = metafilter_cla)
-        
-    meta_models = glob.glob("data/metamodels/yakinduComplete/*")
+    
+    if type_model.lower() == 'yakindu':
+        metafilter_refs = ['Region.vertices', 
+                               'CompositeElement.regions',
+                               'Vertex.outgoingTransitions',
+                               'Vertex.incomingTransitions',
+                               'Transition.target',
+                               'Transition.source']
+        metafilter_cla = list(yp.dic_nodes_yak.keys())
+            
+        metafilter_atts = None
+            
+        metafilterobj = mf.MetaFilter(references = metafilter_refs, 
+                     attributes = metafilter_atts,
+                     classes = metafilter_cla)
+            
+        meta_models = glob.glob("data/metamodels/yakinduComplete/*")
     
     files = glob.glob(preprodataset_path +'/*')
-    meta_models = glob.glob("data/metamodels/yakinduComplete/*")
     for f in files:
         G1 = m2g.getGraphFromModel(f, 
                               meta_models, metafilterobj,
                               consider_atts = False)
-        if len(G1) < 5:
-            os.remove(f)
+        if type_model.lower() == 'yakindu':
+            if len(G1) < 5:
+                os.remove(f)
     
     files = glob.glob(preprodataset_path +'/*')
     #train/test/val split

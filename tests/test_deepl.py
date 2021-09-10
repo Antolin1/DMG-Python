@@ -111,7 +111,6 @@ class TestDeepLearning(unittest.TestCase):
         sampled = sampleGraph(g4t.G_initial, pallete, model, 10)
         print(sampled.nodes(data=True))
         print(sampled.edges(data=True))
-        self.assertEqual(0, 0)
         
     def test_sequence2data(self):
         for j,data in enumerate(listDatas):
