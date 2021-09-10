@@ -134,3 +134,7 @@ data/yakinduDataset/preprocess
 data/yakinduDataset/train
 data/yakinduDataset/test
 data/yakinduDataset/val
+
+notebooks/example.xmi
+notebooks/example
+notebooks/example.pdf

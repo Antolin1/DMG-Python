@@ -137,6 +137,7 @@ def getModelFromGraph(pathMetamodels, G):
             name_attributes[e.name] = e
     
     #graph to model
+
     nodes_objects = {}
     for n in G:
         eobj = None
@@ -145,9 +146,10 @@ def getModelFromGraph(pathMetamodels, G):
             cal = name_correspondence[type]
             eobj = cal()
             nodes_objects[n] = eobj
+           
         else:
             eobj = nodes_objects[n]
-        
+        #TODO: the <none> token
         if 'atts' in G.nodes[n]:
             atts = G.nodes[n]['atts']
             for att_name, value in atts.items():
@@ -174,4 +176,14 @@ def getModelFromGraph(pathMetamodels, G):
                 else:
                     setattr(eobj,type_edge,eobj2)
     return nodes_objects
+
+def serializeGraphModel(path, pathMetamodels, mainClass, G):
+    nodes_objects = getModelFromGraph(pathMetamodels, G)
+    for n,ob in nodes_objects.items():
+        if ob.eClass.name == mainClass:
+            rset = ResourceSet()
+            resource = rset.create_resource(URI(path))  # This will create an XMI resource
+            resource.append(ob)  # we add the EPackage instance in the resource
+            resource.save()  # we then serialize it
+    
         

@@ -67,7 +67,8 @@ def sampleGraph(G_0, pallete, model, max_size):
 #the generation procedure
 class GenerativeModel(nn.Module):
     
-    def __init__(self, hidden_dim, vocab_nodes, vocab_edges, vocab_actions):
+    def __init__(self, hidden_dim, vocab_nodes, vocab_edges, vocab_actions,
+                 attention = False):
         super(GenerativeModel, self).__init__()
             
             
@@ -95,6 +96,10 @@ class GenerativeModel(nn.Module):
         self.linNodes_final = nn.Linear(hidden_dim, 1)
         self.finishedLin = nn.Linear(hidden_dim, hidden_dim)
         self.finishedFinal = nn.Linear(hidden_dim, 1)
+        
+        self.globalattention = attention
+        if self.globalattention:
+            self.globalAttentionFinish = pyg_nn.GlobalAttention(gate_nn = nn.Linear(hidden_dim, 1))
     
     #TODO: do it in batch
     #TODO: fix random seed
@@ -104,7 +109,11 @@ class GenerativeModel(nn.Module):
         nodeTypes = self.emb_nodes(nodeTypes)
         nodeEmbeddings = self.convolution(nodeTypes, edge_index, edge_attr)
         #graph embedding, bxhidden_dim
-        h_G = pyg_nn.global_mean_pool(nodeEmbeddings, bs)        
+        h_G = None
+        if self.globalattention:
+            h_G = self.globalAttentionFinish(nodeEmbeddings, bs) 
+        else:
+            h_G = pyg_nn.global_mean_pool(nodeEmbeddings, bs)
         #infer action
         action = F.relu(self.linAction(h_G))
         action = self.linAction_final(action)
@@ -180,7 +189,11 @@ class GenerativeModel(nn.Module):
         
         B = nodes_bs.shape[0]
         #graph embedding, bxhidden_dim
-        h_G = pyg_nn.global_mean_pool(nodeEmbeddings, bs)
+        h_G = None
+        if self.globalattention:
+            h_G = self.globalAttentionFinish(nodeEmbeddings, bs) 
+        else:
+            h_G = pyg_nn.global_mean_pool(nodeEmbeddings, bs)
         assert h_G.shape[0] == B
         assert h_G.shape[1] == H
         

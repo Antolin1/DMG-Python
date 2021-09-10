@@ -107,7 +107,7 @@ class TestDeepLearning(unittest.TestCase):
     
     def test_generation(self):
         d = 10
-        model = GenerativeModel(d, dic_nodes, dic_edges, dic_operations)
+        model = GenerativeModel(d, dic_nodes, dic_edges, dic_operations, True)
         sampled = sampleGraph(g4t.G_initial, pallete, model, 10)
         print(sampled.nodes(data=True))
         print(sampled.edges(data=True))

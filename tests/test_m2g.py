@@ -109,8 +109,22 @@ class Testm2g(unittest.TestCase):
         self.assertEqual(len(G1), len(list_elements))
         
         
+        
         G2 = m2g.getGraphFromModelElements(list_elements.values())
         
+        self.assertTrue(is_isomorphic(G1, G2, 
+                                      gu.node_match_type_atts, 
+                                      gu.edge_match_type))
+    
+    def test_serialization(self):
+        #load model and transform it into a graph with atts
+        G1 = m2g.getGraphFromModel('data/testmodels/smallecoretest.xmi', 
+                              ['data/metamodels/smallEcore.ecore'])
+        m2g.serializeGraphModel('data/testmodels/testSerialization.xmi', 
+                            ['data/metamodels/smallEcore.ecore'], 'EPackage', 
+                            G1)
+        G2 = m2g.getGraphFromModel('data/testmodels/testSerialization.xmi', 
+                              ['data/metamodels/smallEcore.ecore'])
         self.assertTrue(is_isomorphic(G1, G2, 
                                       gu.node_match_type_atts, 
                                       gu.edge_match_type))
