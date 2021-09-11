@@ -102,6 +102,17 @@ G_yak_meta.add_edge(1, 3, type = 'vertices')
 G_yak_meta.add_edge(2, 4, type = 'outgoingTransitions')
 G_yak_meta.add_edge(4, 3, type = 'target')
 
+#G for rds
+G_rds = nx.MultiDiGraph()
+G_rds.add_node(0, type = 'Database', atts = {'name':'model'})
+G_rds.add_node(1, type = 'Table',  atts = {'name':'CAMPUS_DEFAULTS'})
+G_rds.add_node(2, type = 'Column',  atts = {'name':'Name'})
+G_rds.add_node(3, type = 'Column',  atts = {'name':'column'})
+        
+G_rds.add_edge(0, 1, type = 'elements')
+G_rds.add_edge(1, 2, type = 'columns')
+G_rds.add_edge(1, 3, type = 'columns')
+
 
 ##### graphs for test edits
 

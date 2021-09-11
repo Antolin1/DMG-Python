@@ -30,6 +30,7 @@
         eType="#//IndexColumn" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IndexColumn">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="column" eType="#//Column"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="column" lowerBound="1"
+        eType="#//Column"/>
   </eClassifiers>
 </ecore:EPackage>
