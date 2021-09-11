@@ -135,6 +135,8 @@ data/yakinduDataset/train
 data/yakinduDataset/test
 data/yakinduDataset/val
 
+.Rhistory
+
 notebooks/example.xmi
 notebooks/example
 notebooks/example.pdf
