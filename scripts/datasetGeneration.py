@@ -18,7 +18,10 @@ from sklearn.model_selection import train_test_split
 import dmg.model2graph.model2graph as m2g
 import dmg.model2graph.metafilter as mf
 import dmg.yakindu.yakinduPallete as yp
+import dmg.rds.rdsPallete as rds
 import ntpath
+import dmg.graphUtils as gu
+from networkx.algorithms.isomorphism import is_isomorphic
 
 def main():
     dataset_path = sys.argv[1]
@@ -53,6 +56,8 @@ def main():
     metafilterobj = None
     meta_models = None
     metafilter_atts = None
+    pallete = None
+    G_initial = None
     
     if type_model.lower() == 'yakindu':
         metafilter_refs = ['Region.vertices', 
@@ -71,6 +76,9 @@ def main():
             
         meta_models = glob.glob("data/metamodels/yakinduComplete/*")
         
+        pallete = yp.yakindu_pallete
+        G_initial= yp.G_initial_yak
+        
     elif type_model.lower() == 'rds':
         metafilter_refs = ['Database.elements', 
                            'Table.indexes',
@@ -88,10 +96,12 @@ def main():
                      attributes = metafilter_atts,
                      classes = metafilter_cla)
         meta_models = ['data/metamodels/rds_manual.ecore']
+        pallete = rds.rds_pallete
+        G_initial= rds.G_initial_rds
     
     files = glob.glob(preprodataset_path +'/*')
     for f in files:
-        #TODO: solve exception in RDS
+        #TODO: solve exception in RDS and develop and take a good metamodel for RDS
         try:
             G1 = m2g.getGraphFromModel(f, 
                                   meta_models, metafilterobj,
@@ -107,6 +117,15 @@ def main():
         if type_model.lower() == 'rds':
             if len(G1) < 7:
                 os.remove(f)
+        
+        #remove models that cannot be reached
+        seq = pallete.graphToSequence(G1)
+        if not is_isomorphic(G_initial, 
+                seq[-1][0], 
+                gu.node_match_type, 
+                gu.edge_match_type):
+            os.remove(f)
+        
     
     files = glob.glob(preprodataset_path +'/*')
     #train/test/val split

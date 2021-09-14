@@ -140,6 +140,12 @@ data/yakinduDataset/val
 notebooks/example.xmi
 notebooks/example
 notebooks/example.pdf
+notebooks/example-rds.pdf
+notebooks/example-rds
+notebooks/example-rds.xmi
+notebooks/example-yakindu.pdf
+notebooks/example-yakindu
+notebooks/example-yakindu.xmi
 
 
 data/rdsDataset/preprocess

@@ -7,7 +7,7 @@ Created on Wed Sep  1 16:22:25 2021
 import networkx as nx
 import numpy as np
 from itertools import combinations
-from networkx.algorithms.isomorphism import GraphMatcher
+from networkx.algorithms.isomorphism import DiGraphMatcher
 from dmg.graphUtils import edge_match_type as edge_match
 import random
 
@@ -151,7 +151,7 @@ class EditOperation:
         new_G = self.__addInOut(nx.MultiDiGraph(G))
         pat_en = self.__addInOut(nx.MultiDiGraph(pat))
 
-        GM = GraphMatcher(new_G, pat_en, node_match = node_match, 
+        GM = DiGraphMatcher(new_G, pat_en, node_match = node_match, 
                                   edge_match = edge_match)
         dics = []
         for subgraph in GM.subgraph_isomorphisms_iter():
