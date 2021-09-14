@@ -13,6 +13,7 @@ import glob
 from pathlib import Path
 from shutil import copyfile
 from dmg.yakindu.yakinduPreprocess import removeLayout
+from dmg.rds.rdsPreprocess import removeTypes
 from sklearn.model_selection import train_test_split
 import dmg.model2graph.model2graph as m2g
 import dmg.model2graph.metafilter as mf
@@ -43,6 +44,8 @@ def main():
         full_file_name = p.stem +'.'+f.split('.')[-1]
         if type_model.lower() == 'yakindu':
             removeLayout(f,preprodataset_path+'/'+full_file_name)
+        elif type_model.lower() == 'rds':
+            removeTypes(f,preprodataset_path+'/'+full_file_name)
     ##load and remove small models
     
     metafilter_refs = None
@@ -67,14 +70,42 @@ def main():
                      classes = metafilter_cla)
             
         meta_models = glob.glob("data/metamodels/yakinduComplete/*")
+        
+    elif type_model.lower() == 'rds':
+        metafilter_refs = ['Database.elements', 
+                           'Table.indexes',
+                           'Table.columns',
+                           'Index.indexColumns',
+                           'IndexColumn.column',
+                           'Reference.primaryKeyColumns',
+                           'Reference.foreignKeyColumns',
+                           'Column.primaryReferences',
+                           'Column.foreignReferences']
+        metafilter_cla = ['Database', 'Column','Table',
+                          'Index', 'IndexColumn','Reference']  
+        metafilter_atts = None
+        metafilterobj = mf.MetaFilter(references = metafilter_refs, 
+                     attributes = metafilter_atts,
+                     classes = metafilter_cla)
+        meta_models = ['data/metamodels/rds_manual.ecore']
     
     files = glob.glob(preprodataset_path +'/*')
     for f in files:
-        G1 = m2g.getGraphFromModel(f, 
-                              meta_models, metafilterobj,
-                              consider_atts = False)
+        #TODO: solve exception in RDS
+        try:
+            G1 = m2g.getGraphFromModel(f, 
+                                  meta_models, metafilterobj,
+                                  consider_atts = False)
+        except Exception as e:
+            print(e)
+            print('Exception m2g in', f)
+            #os.remove(f)
+            continue
         if type_model.lower() == 'yakindu':
             if len(G1) < 5:
+                os.remove(f)
+        if type_model.lower() == 'rds':
+            if len(G1) < 7:
                 os.remove(f)
     
     files = glob.glob(preprodataset_path +'/*')

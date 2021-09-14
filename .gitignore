@@ -140,3 +140,9 @@ data/yakinduDataset/val
 notebooks/example.xmi
 notebooks/example
 notebooks/example.pdf
+
+
+data/rdsDataset/preprocess
+data/rdsDataset/train
+data/rdsDataset/test
+data/rdsDataset/val
