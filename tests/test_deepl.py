@@ -12,7 +12,7 @@ import tests.graphs4test as g4t
 from networkx.algorithms.isomorphism import is_isomorphic
 import dmg.graphUtils as gu
 from dmg.edits.pallete import Pallete
-from dmg.deeplearning.dataGeneration import sequence2data, data2graph
+from dmg.deeplearning.dataGeneration import sequence2data, data2graph, addInvEdges, removeInvEdges
 from torch_geometric.data import DataLoader
 import numpy as np
 import torch
@@ -40,7 +40,9 @@ dic_edges = {'eClassifiers': 0,
              'eStructuralFeatures': 2,
              'eContainingClass': 3,
              'eType': 4,
-             'eSuperTypes': 5}
+             'eSuperTypes': 5,
+             'eType_inv': 6,
+             'eSuperTypes_inv': 7}
 
 pallete = Pallete(dic_operations, dic_nodes, dic_edges, g4t.G_initial)
 sequence = pallete.graphToSequence(g4t.G_g2s)
@@ -111,6 +113,18 @@ class TestDeepLearning(unittest.TestCase):
         sampled = sampleGraph(g4t.G_initial, pallete, model, 10)
         print(sampled.nodes(data=True))
         print(sampled.edges(data=True))
+    
+    def test_add_rem_InvEdges(self):
+        G_with_inv = addInvEdges(g4t.G_g2s, pallete, '_')
+        G_without_inv = removeInvEdges(G_with_inv, pallete, '_')
+        self.assertTrue(is_isomorphic(G_without_inv, 
+                                      g4t.G_g2s, 
+                                      gu.node_match_type, 
+                                      gu.edge_match_type))
+        self.assertTrue(is_isomorphic(G_with_inv, 
+                                      g4t.G_g2s_inv, 
+                                      gu.node_match_type, 
+                                      gu.edge_match_type))
         
     def test_sequence2data(self):
         for j,data in enumerate(listDatas):

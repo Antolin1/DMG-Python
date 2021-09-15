@@ -10,6 +10,30 @@ from torch_geometric.data import Data
 import torch
 import networkx as nx
 
+
+def addInvEdges(G, pallete, sep):
+    G_new = nx.MultiDiGraph(G)
+    for edge in pallete.dic_edges:
+        if sep in edge:
+            orginial_edge = edge.split(sep)[0]
+            for e in list(G.edges.data()):
+                if e[2]['type'] == orginial_edge:
+                    G_new.add_edge(e[1],e[0], type = edge)
+    return G_new
+
+def removeInvEdges(G, pallete, sep):
+    G_new = nx.MultiDiGraph(G)
+    remove = []
+    for edge in pallete.dic_edges:
+        if sep in edge:
+            for e in G.edges:
+                if G[e[0]][e[1]][e[2]]['type'] == edge:
+                    remove.append((e[0],e[1], e[2]))
+    
+    for s, t, k in remove:
+        G_new.remove_edge(s, t, k)
+    return G_new
+
 def generateTensorsFromGraph(G, pallete, max_length_special_nodes, len_seq):
     nodeTypes = []
     for n in range(len(G)):

@@ -326,6 +326,28 @@ G_g2s.add_edge(4, 1, type = 'eType')
 G_g2s.add_edge(1, 2, type = 'eSuperTypes')
 
 
+############### for graph2sequence with inv
+G_g2s_inv = nx.MultiDiGraph()
+G_g2s_inv.add_node(0, type = 'EPackage')
+G_g2s_inv.add_node(1, type = 'EClass')
+G_g2s_inv.add_node(2, type = 'EClass')
+G_g2s_inv.add_node(4, type = 'EReference')
+
+        
+G_g2s_inv.add_edge(0, 1, type = 'eClassifiers')
+G_g2s_inv.add_edge(1, 0, type = 'ePackage')
+G_g2s_inv.add_edge(0, 2, type = 'eClassifiers')
+G_g2s_inv.add_edge(2, 0, type = 'ePackage')
+        
+G_g2s_inv.add_edge(1, 4, type = 'eStructuralFeatures')
+G_g2s_inv.add_edge(4, 1, type = 'eContainingClass')
+        
+G_g2s_inv.add_edge(4, 1, type = 'eType')
+G_g2s_inv.add_edge(1, 2, type = 'eSuperTypes')
+G_g2s_inv.add_edge(1, 4, type = 'eType_inv')
+G_g2s_inv.add_edge(2, 1, type = 'eSuperTypes_inv')
+
+
 ################ patterns for add a reference
 pattern1_ref = nx.MultiDiGraph()
 pattern1_ref.add_node(0, type = ['EClass'], ids = {0,1})
