@@ -15,19 +15,26 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from torch_scatter.composite import scatter_softmax
 from torch.distributions.categorical import Categorical
 import networkx as nx
-from dmg.deeplearning.dataGeneration import graph2dataPreAction, graph2dataPostAction
+from dmg.deeplearning.dataGeneration import graph2dataPreAction, graph2dataPostAction, addInvEdges
 
-def sampleGraph(G_0, pallete, model, max_size):
+def sampleGraph(G_0, pallete, model, max_size, sep, debug = False):
     G_aux = nx.MultiDiGraph(G_0)
     finish = False
+    step = 0
     while (len(G_aux) < max_size and (not finish)):
+        G_aux_inv = addInvEdges(G_aux, pallete, sep)
         #sample action
-        data = graph2dataPreAction(G_aux, pallete)
-        batch = torch.tensor([0]*len(G_aux))
+        data = graph2dataPreAction(G_aux_inv, pallete)
+        batch = torch.tensor([0]*len(G_aux_inv))
         sampled_action, isLast, h_G, nodeEmbeddings = model.getActionAndFinish(
             data.x, data.edge_index, 
             torch.squeeze(data.edge_attr,dim=1),
                         batch)
+        if debug:
+            print('Step', step)
+            print('Action', sampled_action.item())
+            print('Is last', isLast.item() == 1)
+        
         if isLast.item() == 1:
             finish = True
         sampled_action = sampled_action.item()
@@ -35,15 +42,17 @@ def sampleGraph(G_0, pallete, model, max_size):
         special_nodes = pallete.getSpecialNodes(sampled_action)
         for j, idd in enumerate(special_nodes):
             if idd == 0:
-                data = graph2dataPreAction(G_aux, pallete)
+                data = graph2dataPreAction(G_aux_inv, pallete)
                 sampled_node = model.getNodes(h_G, nodeEmbeddings,
                 batch, None, torch.tensor([sampled_action]), 
                 None, data.nodes)
                 G_aux.nodes[sampled_node.item()]['ids'] = {idd}
             else:
-                data = graph2dataPostAction(G_aux, pallete, 
+                G_aux_inv = addInvEdges(G_aux, pallete, sep)
+                data = graph2dataPostAction(G_aux_inv, pallete, 
                                             j + 1, 
                                             j + 1)
+                #print('Sequence:',data.sequence)
                 sampled_node = model.getNodes(h_G, nodeEmbeddings,
                 batch, data.sequence, torch.tensor([sampled_action]), 
                 torch.tensor([j + 1]), data.nodes)
@@ -51,11 +60,19 @@ def sampleGraph(G_0, pallete, model, max_size):
                     G_aux.nodes[sampled_node.item()]['ids'] = {idd}
                 else:
                     G_aux.nodes[sampled_node.item()]['ids'].add(idd)
+        if debug:
+            for n in G_aux:
+                if 'ids' in G_aux.nodes[n]:
+                    print('Node type', G_aux.nodes[n]['type'], 'Ids',G_aux.nodes[n]['ids'] )
                 
         applied = pallete.applyEdit(G_aux, sampled_action)
         if applied!= None:
             G_aux = applied
+            step = step + 1
+            if debug:
+                print()
         else:
+            #print('Cannot apply')
             for n in G_aux:
                 if ('ids' in G_aux.nodes[n]):
                     del G_aux.nodes[n]['ids']
@@ -68,7 +85,7 @@ def sampleGraph(G_0, pallete, model, max_size):
 class GenerativeModel(nn.Module):
     
     def __init__(self, hidden_dim, vocab_nodes, vocab_edges, vocab_actions,
-                 attention = False):
+                 attention = False, numGNNLayers = 2):
         super(GenerativeModel, self).__init__()
             
             
@@ -78,14 +95,8 @@ class GenerativeModel(nn.Module):
         self.convolution = pyg_nn.Sequential('x, edge_index, edge_type', [
             (pyg_nn.RGCNConv(hidden_dim, hidden_dim, 
                              num_relations = len(vocab_edges)), 'x, edge_index, edge_type-> x'),
-            nn.ReLU(inplace=True),
-            (pyg_nn.RGCNConv(hidden_dim, hidden_dim,
-                             num_relations = len(vocab_edges)), 'x, edge_index, edge_type-> x'),
-            nn.ReLU(inplace=True),
-            (pyg_nn.RGCNConv(hidden_dim, hidden_dim,
-                             num_relations = len(vocab_edges)), 'x, edge_index, edge_type-> x'),
             nn.ReLU(inplace=True)
-        ])
+        ] * numGNNLayers)
             
         self.gru = nn.GRU(hidden_dim, hidden_dim, 1, batch_first = True)
             
@@ -139,8 +150,7 @@ class GenerativeModel(nn.Module):
         else:
             emb_seq = (torch.unsqueeze(sequence_input,2)*
                        torch.unsqueeze(nodeEmbeddings, dim = 1))
-            out = scatter(emb_seq, bs, dim=0, reduce="sum")
-        
+            out = scatter(emb_seq, bs, dim=0, reduce="sum")        
             input_gru = torch.cat((sos, out), dim = 1)
         
         #h_0 of gru
@@ -166,6 +176,10 @@ class GenerativeModel(nn.Module):
         nodes_final = torch.squeeze(self.linNodes_final(concats), dim = 2)
         #n x l
         nodes_final = scatter_softmax(nodes_final, bs, dim = 0)
+        #if not self.training:
+        #    print(nodes_final)
+        #    print(nodes_final[:,-1])
+        #    print()
         m = Categorical(nodes_final[:,-1])
         
         return m.sample()

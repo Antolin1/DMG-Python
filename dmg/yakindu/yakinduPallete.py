@@ -26,7 +26,10 @@ dic_edges_yak = {'vertices': 0,
                  'outgoingTransitions': 2,
                  'target': 3,
                  'source': 4,
-                 'regions': 5}
+                 'regions': 5,
+                 'vertices_inv': 6,
+                 'regions_inv': 7
+                 }
 
 
 ################ addRegion
@@ -90,7 +93,7 @@ addFinalState = ed.EditOperation([pattern_afs], [0])
 
 pattern_ati = nx.MultiDiGraph()
 pattern_ati.add_node(0, type = ['State','Choice','Exit','FinalState',
-                    'Synchronization','Entry'], ids = {0,1})
+                    'Synchronization'], ids = {0,1})
 pattern_ati.add_node(1, type = 'Transition')
 pattern_ati.add_edge(0, 1, type = 'outgoingTransitions')
 pattern_ati.add_edge(1, 0, type = 'source')
@@ -102,7 +105,7 @@ pattern_at.add_node(0, type = ['State','Choice','Exit','FinalState',
                     'Synchronization','Entry'], ids = {0})
 pattern_at.add_node(1, type = 'Transition')
 pattern_at.add_node(2, type = ['State','Choice','Exit','FinalState',
-                    'Synchronization','Entry'], ids = {1})
+                    'Synchronization'], ids = {1})
 pattern_at.add_edge(0, 1, type = 'outgoingTransitions')
 pattern_at.add_edge(1, 0, type = 'source')
 pattern_at.add_edge(1, 2, type = 'target')
@@ -126,6 +129,8 @@ G_initial_yak = nx.MultiDiGraph()
 G_initial_yak.add_node(0, type = 'Statechart')
 G_initial_yak.add_node(1, type = 'Region')
 G_initial_yak.add_edge(0, 1, type = 'regions')
+
+yakindu_separator = '_'
 
 yakindu_pallete = Pallete(dic_operations_yak, dic_nodes_yak, 
                           dic_edges_yak, G_initial_yak)

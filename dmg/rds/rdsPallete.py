@@ -27,7 +27,13 @@ dic_edges_rds = {'elements': 0,
                  'primaryKeyColumns': 5,
                  'foreignKeyColumns': 6,
                  'primaryReferences': 7,
-                 'foreignReferences': 8}
+                 'foreignReferences': 8,
+                 'elements_inv': 9,
+                 'indexes_inv': 10,
+                 'columns_inv': 11,
+                 'indexColumns_inv': 12,
+                 'column_inv': 13
+                 }
 
 
 ################ addTable
@@ -103,3 +109,5 @@ G_initial_rds.add_edge(0, 1, type = 'elements')
 
 rds_pallete = Pallete(dic_operations_rds, dic_nodes_rds, 
                           dic_edges_rds, G_initial_rds)
+
+rds_separator = '_'

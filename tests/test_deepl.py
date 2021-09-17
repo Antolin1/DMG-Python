@@ -47,6 +47,7 @@ dic_edges = {'eClassifiers': 0,
 pallete = Pallete(dic_operations, dic_nodes, dic_edges, g4t.G_initial)
 sequence = pallete.graphToSequence(g4t.G_g2s)
 max_len = 3
+sequence = [(addInvEdges(s[0], pallete, '_'),s[1]) for s in sequence]
 listDatas = sequence2data(sequence, pallete, max_len)
 
 def node_match_type_ids(n1,n2):
@@ -110,7 +111,7 @@ class TestDeepLearning(unittest.TestCase):
     def test_generation(self):
         d = 10
         model = GenerativeModel(d, dic_nodes, dic_edges, dic_operations, True)
-        sampled = sampleGraph(g4t.G_initial, pallete, model, 10)
+        sampled = sampleGraph(g4t.G_initial, pallete, model, 10, '_')
         print(sampled.nodes(data=True))
         print(sampled.edges(data=True))
     
