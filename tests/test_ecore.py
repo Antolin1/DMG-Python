@@ -9,7 +9,6 @@ Created on Fri Sep 17 15:18:35 2021
 import unittest
 import dmg.model2graph.model2graph as m2g
 import dmg.model2graph.metafilter as mf
-import tests.graphs4test as g4t
 import dmg.graphUtils as gu
 from networkx.algorithms.isomorphism import is_isomorphic
 

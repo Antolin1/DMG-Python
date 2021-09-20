@@ -208,6 +208,8 @@ rds_inco.add_node(5, type = 'Column')
 rds_inco.add_node(6, type = 'Reference')
 rds_inco.add_node(7, type = 'Column')
 rds_inco.add_node(8, type = 'Reference')
+rds_inco.add_edge(0, 5, type = 'columns')
+rds_inco.add_edge(0, 7, type = 'columns')
 
 rds_inco.add_edge(5, 6, type = 'primaryReferences')
 rds_inco.add_edge(6, 7, type = 'foreignKeyColumns')

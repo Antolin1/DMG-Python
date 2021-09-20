@@ -44,4 +44,6 @@ class TestConsistency(unittest.TestCase):
     def test_consistency_rds(self):
         self.assertTrue(conRDS.inconsistenceEqualRefs(g4t.rds_inco))
         self.assertTrue(conRDS.inconsistenceIcCons(g4t.rds_inco))
+        self.assertFalse(conRDS.inconsistenceIcCons(g4t.G_rds))
+        self.assertFalse(conRDS.inconsistenceEqualRefs(g4t.G_rds))
         

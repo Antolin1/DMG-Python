@@ -79,3 +79,45 @@ addSuperType = ed.EditOperation([pattern_as], [0,1])
 
 #TODO: add the rest of edit ops and put a set of graphs as intial graphs in the pallete
 
+################ addReference
+
+pattern_ar = nx.MultiDiGraph()
+pattern_ar.add_node(0, type = ['EClass'], ids = {0})
+pattern_ar.add_node(1, type = ['EClass'], ids = {1})
+pattern_ar.add_node(2, type = 'EReference')
+pattern_ar.add_edge(0, 2, type = 'eStructuralFeatures')
+pattern_ar.add_edge(2, 0, type = 'eContainingClass')
+pattern_ar.add_edge(2, 1, type = 'eType')
+
+pattern_ar_it = nx.MultiDiGraph()
+pattern_ar_it.add_node(0, type = ['EClass'], ids = {0,1})
+pattern_ar_it.add_node(1, type = 'EReference')
+pattern_ar_it.add_edge(0, 1, type = 'eStructuralFeatures')
+pattern_ar_it.add_edge(1, 0, type = 'eContainingClass')
+pattern_ar_it.add_edge(1, 0, type = 'eType')
+
+addReference = ed.EditOperation([pattern_ar, pattern_ar_it], [0,1])
+
+############# addEAttribute
+
+pattern_aea = nx.MultiDiGraph()
+pattern_aea.add_node(0, type = ['EClass'], ids = {0})
+pattern_aea.add_node(1, type = ['EDataType, EEnum'], ids = {1})
+pattern_aea.add_node(2, type = 'EAttribute')
+pattern_aea.add_edge(0, 2, type = 'eStructuralFeatures')
+pattern_aea.add_edge(2, 0, type = 'eContainingClass')
+pattern_aea.add_edge(2, 1, type = 'eType')
+
+addEAttribute = ed.EditOperation([pattern_aea], [0,1])
+
+dic_operations_yak = {
+    0: addEAttribute,
+    1: addReference,
+    2: addSuperType,
+    3: addLiteral,
+    4: addEnum,
+    5: addDatatype,
+    6: addClass
+    }
+
+
