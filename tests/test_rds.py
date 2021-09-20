@@ -15,7 +15,7 @@ import dmg.graphUtils as gu
 from networkx.algorithms.isomorphism import is_isomorphic
 
 
-class RDSYakindu(unittest.TestCase):
+class TestRDS(unittest.TestCase):
     
     def test_rds(self):
         metafilter_refs = ['Database.elements', 
