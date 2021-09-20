@@ -88,6 +88,76 @@ G_yak.add_edge(4, 2, type = 'source')
 G_yak.add_edge(4, 3, type = 'target')
 G_yak.add_edge(3, 4, type = 'incomingTransitions')
 
+#G yak inconsistency
+G_yak_inco = nx.MultiDiGraph()
+G_yak_inco.add_node(0, type = 'Statechart')
+G_yak_inco.add_node(1, type = 'Region')
+G_yak_inco.add_node(2, type = 'State')
+G_yak_inco.add_node(3, type = 'Transition')
+G_yak_inco.add_node(4, type = 'Region')
+        
+G_yak_inco.add_edge(0, 1, type = 'regions')
+G_yak_inco.add_edge(1, 2, type = 'vertices')
+G_yak_inco.add_edge(2, 4, type = 'regions')
+
+G_yak_inco.add_edge(2, 3, type = 'outgoingTransitions')
+G_yak_inco.add_edge(3, 2, type = 'source')
+G_yak_inco.add_edge(3, 2, type = 'target')
+G_yak_inco.add_edge(2, 3, type = 'incomingTransitions')
+
+#G yak inconsistency
+G_yak_inco_2 = nx.MultiDiGraph()
+G_yak_inco_2.add_node(0, type = 'Statechart')
+G_yak_inco_2.add_node(1, type = 'Region')
+G_yak_inco_2.add_node(2, type = 'Entry')
+G_yak_inco_2.add_node(3, type = 'State')
+G_yak_inco_2.add_node(4, type = 'Transition')
+G_yak_inco_2.add_node(5, type = 'Entry')
+G_yak_inco_2.add_node(6, type = 'Transition')
+G_yak_inco_2.add_node(7, type = 'Choice')
+G_yak_inco_2.add_node(8, type = 'Transition')
+        
+G_yak_inco_2.add_edge(0, 1, type = 'regions')
+G_yak_inco_2.add_edge(1, 2, type = 'vertices')
+G_yak_inco_2.add_edge(1, 3, type = 'vertices')
+G_yak_inco_2.add_edge(1, 5, type = 'vertices')
+G_yak_inco_2.add_edge(1, 7, type = 'vertices')
+G_yak_inco_2.add_edge(2, 4, type = 'outgoingTransitions')
+G_yak_inco_2.add_edge(4, 2, type = 'source')
+G_yak_inco_2.add_edge(4, 3, type = 'target')
+G_yak_inco_2.add_edge(3, 4, type = 'incomingTransitions')
+
+G_yak_inco_2.add_edge(5, 6, type = 'outgoingTransitions')
+G_yak_inco_2.add_edge(5, 6, type = 'source')
+G_yak_inco_2.add_edge(6, 2, type = 'target')
+G_yak_inco_2.add_edge(2, 6, type = 'incomingTransitions')
+
+G_yak_inco_2.add_edge(5, 8, type = 'outgoingTransitions')
+G_yak_inco_2.add_edge(5, 8, type = 'source')
+G_yak_inco_2.add_edge(8, 7, type = 'target')
+G_yak_inco_2.add_edge(7, 8, type = 'incomingTransitions')
+
+#G for yakindu inconsistency
+G_yak_inco_3 = nx.MultiDiGraph()
+G_yak_inco_3.add_node(0, type = 'Statechart')
+G_yak_inco_3.add_node(1, type = 'Region')
+G_yak_inco_3.add_node(2, type = 'Entry')
+G_yak_inco_3.add_node(3, type = 'State')
+G_yak_inco_3.add_node(4, type = 'Exit')
+G_yak_inco_3.add_node(5, type = 'Transition')
+
+G_yak_inco_3.add_edge(0, 1, type = 'regions')
+G_yak_inco_3.add_edge(1, 2, type = 'vertices')
+G_yak_inco_3.add_edge(1, 3, type = 'vertices')
+
+G_yak_inco_3.add_edge(4, 5, type = 'outgoingTransitions')
+G_yak_inco_3.add_edge(5, 4, type = 'source')
+G_yak_inco_3.add_edge(5, 3, type = 'target')
+G_yak_inco_3.add_edge(3, 5, type = 'incomingTransitions')
+
+
+
+
 #G for yakindu metafiler
 G_yak_meta = nx.MultiDiGraph()
 G_yak_meta.add_node(0, type = 'Statechart')
@@ -112,6 +182,42 @@ G_rds.add_node(3, type = 'Column',  atts = {'name':'column'})
 G_rds.add_edge(0, 1, type = 'elements')
 G_rds.add_edge(1, 2, type = 'columns')
 G_rds.add_edge(1, 3, type = 'columns')
+
+
+### RDS incosistence
+
+rds_inco = nx.MultiDiGraph()
+rds_inco.add_node(0, type = 'Table')
+rds_inco.add_node(1, type = 'Index')
+rds_inco.add_node(2, type = 'IndexColumn')
+rds_inco.add_node(3, type = 'Column')
+rds_inco.add_node(4, type = 'Table')
+rds_inco.add_node(9, type = 'Database')
+
+rds_inco.add_edge(9, 0, type = 'elements')
+rds_inco.add_edge(9, 6, type = 'elements')
+rds_inco.add_edge(9, 8, type = 'elements')
+
+
+rds_inco.add_edge(0, 1, type = 'indexes')
+rds_inco.add_edge(1, 2, type = 'indexColumns')
+rds_inco.add_edge(2, 3, type = 'column')
+rds_inco.add_edge(4, 3, type = 'columns')
+
+rds_inco.add_node(5, type = 'Column')
+rds_inco.add_node(6, type = 'Reference')
+rds_inco.add_node(7, type = 'Column')
+rds_inco.add_node(8, type = 'Reference')
+
+rds_inco.add_edge(5, 6, type = 'primaryReferences')
+rds_inco.add_edge(6, 7, type = 'foreignKeyColumns')
+rds_inco.add_edge(6, 5, type = 'primaryKeyColumns')
+rds_inco.add_edge(7, 6, type = 'foreignReferences')
+
+rds_inco.add_edge(5, 8, type = 'primaryReferences')
+rds_inco.add_edge(8, 7, type = 'foreignKeyColumns')
+rds_inco.add_edge(8, 5, type = 'primaryKeyColumns')
+rds_inco.add_edge(7, 8, type = 'foreignReferences')
 
 
 ##### graphs for test edits
