@@ -133,4 +133,4 @@ G_initial_yak.add_edge(0, 1, type = 'regions')
 yakindu_separator = '_'
 
 yakindu_pallete = Pallete(dic_operations_yak, dic_nodes_yak, 
-                          dic_edges_yak, G_initial_yak)
+                          dic_edges_yak, [G_initial_yak])

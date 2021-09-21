@@ -44,7 +44,7 @@ dic_edges = {'eClassifiers': 0,
              'eType_inv': 6,
              'eSuperTypes_inv': 7}
 
-pallete = Pallete(dic_operations, dic_nodes, dic_edges, g4t.G_initial)
+pallete = Pallete(dic_operations, dic_nodes, dic_edges, [g4t.G_initial])
 sequence = pallete.graphToSequence(g4t.G_g2s)
 max_len = 3
 sequence = [(addInvEdges(s[0], pallete, '_'),s[1]) for s in sequence]

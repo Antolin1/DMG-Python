@@ -18,9 +18,9 @@ class Pallete:
     def __init__(self, editOperations,
                  dic_nodes,
                  dic_edges,
-                 initialGraph):
+                 initialGraphs):
         self.editOperations = editOperations
-        self.initialGraph = initialGraph
+        self.initialGraphs = initialGraphs
         self.dic_nodes = dic_nodes
         self.dic_edges = dic_edges
         #TODO: check consistency
@@ -28,20 +28,22 @@ class Pallete:
     def graphToSequence(self, G):
         list_ids = list(range(0,len(self.editOperations)))
         random.shuffle(list_ids)
-        if (is_isomorphic(G,self.initialGraph,
-                          node_match, edge_match)):
-            return []
-        else:
-            for idd in list_ids:
-                editOp = self.editOperations[idd]
-                re = editOp.removeEdit(G)
-                if re != None:
-                    re_new = nx.MultiDiGraph(re[0])
-                    for n in re_new:
-                        if 'ids' in re_new.nodes[n]:
-                            del re_new.nodes[n]['ids']
-                    return [(re[0], idd)] + self.graphToSequence(re_new)
-            return []
+        
+        for intialGraph in self.initialGraphs:
+            if is_isomorphic(G,intialGraph,
+                          node_match, edge_match):
+                return []
+
+        for idd in list_ids:
+            editOp = self.editOperations[idd]
+            re = editOp.removeEdit(G)
+            if re != None:
+                re_new = nx.MultiDiGraph(re[0])
+                for n in re_new:
+                    if 'ids' in re_new.nodes[n]:
+                        del re_new.nodes[n]['ids']
+                return [(re[0], idd)] + self.graphToSequence(re_new)
+        return []
     
     def applyEdit(self, G, idd):
         return self.editOperations[idd].applyEdit(G)

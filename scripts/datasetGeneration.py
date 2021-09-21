@@ -19,6 +19,7 @@ import dmg.model2graph.model2graph as m2g
 import dmg.model2graph.metafilter as mf
 import dmg.yakindu.yakinduPallete as yp
 import dmg.rds.rdsPallete as rds
+import dmg.ecore.ecorePallete as ecore
 import ntpath
 import dmg.graphUtils as gu
 from networkx.algorithms.isomorphism import is_isomorphic
@@ -49,6 +50,8 @@ def main():
             removeLayout(f,preprodataset_path+'/'+full_file_name)
         elif type_model.lower() == 'rds':
             removeTypes(f,preprodataset_path+'/'+full_file_name)
+        elif type_model.lower() == 'ecore':
+            copyfile(f, preprodataset_path+'/'+full_file_name)
     ##load and remove small models
     
     metafilter_refs = None
@@ -57,7 +60,7 @@ def main():
     meta_models = None
     metafilter_atts = None
     pallete = None
-    G_initial = None
+    G_initials = None
     
     if type_model.lower() == 'yakindu':
         metafilter_refs = ['Region.vertices', 
@@ -77,7 +80,7 @@ def main():
         meta_models = glob.glob("data/metamodels/yakinduComplete/*")
         
         pallete = yp.yakindu_pallete
-        G_initial= yp.G_initial_yak
+        G_initials= yp.yakindu_pallete.initialGraphs
         
     elif type_model.lower() == 'rds':
         metafilter_refs = ['Database.elements', 
@@ -97,11 +100,35 @@ def main():
                      classes = metafilter_cla)
         meta_models = ['data/metamodels/rds_manual.ecore']
         pallete = rds.rds_pallete
-        G_initial= rds.G_initial_rds
+        G_initials = rds.rds_pallete.initialGraphs
+        
+    elif type_model.lower() == 'ecore':
+       metafilter_refs = ['EClass.eSuperTypes',
+                          'EClassifier.ePackage',
+                           'EPackage.eClassifiers',
+                           'ETypedElement.eType',
+                           'EStructuralFeature.eContainingClass',
+                           'EReference.eOpposite',
+                           'EEnum.eLiterals',
+                           'EEnumLiteral.eEnum',
+                           'EClass.eStructuralFeatures']
+       metafilter_cla = ['EClass', 'EPackage', 
+                         'EStructuralFeature','EEnum', 'EEnumLiteral']
+       metafilter_atts = None
+       metafilterobj = mf.MetaFilter(references = metafilter_refs, 
+                     attributes = metafilter_atts,
+                     classes = metafilter_cla)
+       meta_models = []        
+       pallete = ecore.ecore_pallete
+       G_initials = ecore.ecore_pallete.initialGraphs
     
     files = glob.glob(preprodataset_path +'/*')
     for f in files:
         #TODO: solve exception in RDS and develop and take a good metamodel for RDS
+        #TODO: solve exception in ecore, this is caused by proxy elements. 
+        #Elements defined in the model that are in other models.
+        #TODO: too big ecore models too slow
+        #TODO: deal with instanceClassName="java.lang.Integer" in eattributes
         try:
             G1 = m2g.getGraphFromModel(f, 
                                   meta_models, metafilterobj,
@@ -114,16 +141,34 @@ def main():
         if type_model.lower() == 'yakindu':
             if len(G1) < 5:
                 os.remove(f)
-        if type_model.lower() == 'rds':
+                continue
+        if (type_model.lower() == 'rds'):
             if len(G1) < 7:
                 os.remove(f)
+                continue
+        if (type_model.lower() == 'ecore'):
+            if len(G1) < 7 or len(G1) > 100:
+                os.remove(f)
+                continue
         
         #remove models that cannot be reached
         seq = pallete.graphToSequence(G1)
-        if not is_isomorphic(G_initial, 
-                seq[-1][0], 
-                gu.node_match_type, 
-                gu.edge_match_type):
+        is_iso = False
+        #print(f,'-',len(seq))
+        
+        for G_initial in G_initials:
+            if is_isomorphic(G_initial, 
+                    seq[-1][0], 
+                    gu.node_match_type, 
+                    gu.edge_match_type):
+                is_iso = True
+        
+        if not is_iso:
+            print('Remove not iso:', f)
+            if len(seq[-1][0]) < 10:
+                print(seq[-1][0].nodes(data=True))
+                print(seq[-1][0].edges(data=True))
+                print(f,'-',len(seq))
             os.remove(f)
         
     

@@ -74,7 +74,7 @@ class TestEditOperations(unittest.TestCase):
                           1: addSuperType,
                           2: addClass}
         
-        pallete = Pallete(dic_operations, None, None, g4t.G_initial)
+        pallete = Pallete(dic_operations, None, None, [g4t.G_initial])
         
         sequence = pallete.graphToSequence(g4t.G_g2s)
         

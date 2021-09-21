@@ -152,3 +152,8 @@ data/rdsDataset/preprocess
 data/rdsDataset/train
 data/rdsDataset/test
 data/rdsDataset/val
+
+data/ecoreDataset/preprocess
+data/ecoreDataset/train
+data/ecoreDataset/test
+data/ecoreDataset/val

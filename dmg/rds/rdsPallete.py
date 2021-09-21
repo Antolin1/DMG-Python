@@ -108,6 +108,6 @@ G_initial_rds.add_node(1, type = 'Table')
 G_initial_rds.add_edge(0, 1, type = 'elements')
 
 rds_pallete = Pallete(dic_operations_rds, dic_nodes_rds, 
-                          dic_edges_rds, G_initial_rds)
+                          dic_edges_rds, [G_initial_rds])
 
 rds_separator = '_'

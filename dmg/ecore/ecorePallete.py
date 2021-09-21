@@ -10,7 +10,7 @@ from dmg.edits.pallete import Pallete
 import dmg.edits.editoperations as ed
 import networkx as nx
 
-dic_nodes_yak = {'EClass': 0,
+dic_nodes_ecore = {'EClass': 0,
                  'EReference': 1,
                  'EAttribute': 2,
                  'EPackage': 3,
@@ -18,7 +18,7 @@ dic_nodes_yak = {'EClass': 0,
                  'EEnum': 5,
                  'EEnumLiteral': 6}
 
-dic_edges_yak = {'ePackage': 0,
+dic_edges_ecore = {'ePackage': 0,
                  'eStructuralFeatures': 1,
                  'eSuperTypes': 2,
                  'eType': 3,
@@ -98,11 +98,43 @@ pattern_ar_it.add_edge(1, 0, type = 'eType')
 
 addReference = ed.EditOperation([pattern_ar, pattern_ar_it], [0,1])
 
+################ addReferenceEOpposite
+
+pattern_areo = nx.MultiDiGraph()
+pattern_areo.add_node(0, type = ['EClass'], ids = {0})
+pattern_areo.add_node(1, type = ['EClass'], ids = {1})
+pattern_areo.add_node(2, type = 'EReference')
+pattern_areo.add_node(3, type = 'EReference')
+pattern_areo.add_edge(0, 2, type = 'eStructuralFeatures')
+pattern_areo.add_edge(2, 0, type = 'eContainingClass')
+pattern_areo.add_edge(2, 1, type = 'eType')
+pattern_areo.add_edge(1, 3, type = 'eStructuralFeatures')
+pattern_areo.add_edge(3, 1, type = 'eContainingClass')
+pattern_areo.add_edge(3, 0, type = 'eType')
+pattern_areo.add_edge(3, 2, type = 'eOpposite')
+pattern_areo.add_edge(2, 3, type = 'eOpposite')
+
+pattern_areo_it = nx.MultiDiGraph()
+pattern_areo_it.add_node(0, type = ['EClass'], ids = {0,1})
+pattern_areo_it.add_node(1, type = 'EReference')
+pattern_areo_it.add_node(2, type = 'EReference')
+pattern_areo_it.add_edge(0, 1, type = 'eStructuralFeatures')
+pattern_areo_it.add_edge(1, 0, type = 'eContainingClass')
+pattern_areo_it.add_edge(1, 0, type = 'eType')
+pattern_areo_it.add_edge(0, 2, type = 'eStructuralFeatures')
+pattern_areo_it.add_edge(2, 0, type = 'eContainingClass')
+pattern_areo_it.add_edge(2, 0, type = 'eType')
+pattern_areo_it.add_edge(2, 1, type = 'eOpposite')
+pattern_areo_it.add_edge(1, 2, type = 'eOpposite')
+
+addReferenceEOpposite = ed.EditOperation([pattern_areo, pattern_areo_it], [0,1])
+
+
 ############# addEAttribute
 
 pattern_aea = nx.MultiDiGraph()
 pattern_aea.add_node(0, type = ['EClass'], ids = {0})
-pattern_aea.add_node(1, type = ['EDataType, EEnum'], ids = {1})
+pattern_aea.add_node(1, type = ['EDataType', 'EEnum'], ids = {1})
 pattern_aea.add_node(2, type = 'EAttribute')
 pattern_aea.add_edge(0, 2, type = 'eStructuralFeatures')
 pattern_aea.add_edge(2, 0, type = 'eContainingClass')
@@ -110,14 +142,38 @@ pattern_aea.add_edge(2, 1, type = 'eType')
 
 addEAttribute = ed.EditOperation([pattern_aea], [0,1])
 
-dic_operations_yak = {
+dic_operations_ecore = {
     0: addEAttribute,
     1: addReference,
     2: addSuperType,
     3: addLiteral,
     4: addEnum,
     5: addDatatype,
-    6: addClass
+    6: addClass,
+    7: addReferenceEOpposite
     }
 
+G_initial_ecore_1 = nx.MultiDiGraph()
+G_initial_ecore_1.add_node(0, type = 'EPackage')
+G_initial_ecore_1.add_node(1, type = 'EClass')
+G_initial_ecore_1.add_edge(0, 1, type = 'eClassifiers')
+G_initial_ecore_1.add_edge(1, 0, type = 'ePackage')
 
+G_initial_ecore_2 = nx.MultiDiGraph()
+G_initial_ecore_2.add_node(0, type = 'EPackage')
+G_initial_ecore_2.add_node(1, type = 'EDataType')
+G_initial_ecore_2.add_edge(0, 1, type = 'eClassifiers')
+G_initial_ecore_2.add_edge(1, 0, type = 'ePackage')
+
+G_initial_ecore_3 = nx.MultiDiGraph()
+G_initial_ecore_3.add_node(0, type = 'EPackage')
+G_initial_ecore_3.add_node(1, type = 'EEnum')
+G_initial_ecore_3.add_edge(0, 1, type = 'eClassifiers')
+G_initial_ecore_3.add_edge(1, 0, type = 'ePackage')
+
+ecore_separator = '_'
+
+ecore_pallete = Pallete(dic_operations_ecore, dic_nodes_ecore, 
+                          dic_edges_ecore, [G_initial_ecore_1,
+                                          G_initial_ecore_2,
+                                          G_initial_ecore_3])
