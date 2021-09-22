@@ -1,0 +1,3 @@
+python scripts/datasetGeneration.py data/rdsDataset/raw/ data/rdsDataset/preprocess data/rdsDataset/train data/rdsDataset/test data/rdsDataset/val rds
+python scripts/datasetGeneration.py data/yakinduDataset/raw/ data/yakinduDataset/preprocess data/yakinduDataset/train data/yakinduDataset/test data/yakinduDataset/val yakindu
+python scripts/datasetGeneration.py data/ecoreDataset/raw/ data/ecoreDataset/preprocess data/ecoreDataset/train data/ecoreDataset/test data/ecoreDataset/val ecore

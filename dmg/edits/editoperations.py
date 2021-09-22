@@ -143,7 +143,6 @@ class EditOperation:
             G.nodes[n]['out'] = G.out_degree(n)
         return G
     
-    #TODO: check how to manage random seed
     #given a pattern of the edit operation and a graph. It returns a new graph
     #that corresponds to the action of removing an edit operation.
     #this graph has nodes with 'ids' indicating the border nodes.

@@ -221,6 +221,43 @@ rds_inco.add_edge(8, 7, type = 'foreignKeyColumns')
 rds_inco.add_edge(8, 5, type = 'primaryKeyColumns')
 rds_inco.add_edge(7, 8, type = 'foreignReferences')
 
+#G ecore insconsistent
+G_ecore_inco = nx.MultiDiGraph()
+G_ecore_inco.add_node(0, type = 'EPackage')
+G_ecore_inco.add_node(1, type = 'EClass')
+G_ecore_inco.add_node(2, type = 'EDataType')
+G_ecore_inco.add_node(3, type = 'EDataType')
+G_ecore_inco.add_node(4, type = 'EReference')
+G_ecore_inco.add_node(5, type = 'EReference')
+G_ecore_inco.add_node(6, type = 'EReference')
+G_ecore_inco.add_node(7, type = 'EClass')
+G_ecore_inco.add_node(8, type = 'EClass')
+        
+G_ecore_inco.add_edge(0, 1, type = 'eClassifiers')
+G_ecore_inco.add_edge(0, 2, type = 'eClassifiers')
+G_ecore_inco.add_edge(0, 3, type = 'eClassifiers')
+G_ecore_inco.add_edge(1, 0, type = 'ePackage')
+G_ecore_inco.add_edge(2, 0, type = 'ePackage')
+G_ecore_inco.add_edge(3, 0, type = 'ePackage')
+G_ecore_inco.add_edge(0, 7, type = 'eClassifiers')
+G_ecore_inco.add_edge(0, 8, type = 'eClassifiers')
+G_ecore_inco.add_edge(7, 0, type = 'ePackage')
+G_ecore_inco.add_edge(8, 0, type = 'ePackage')
+        
+G_ecore_inco.add_edge(1, 4, type = 'eStructuralFeatures')
+G_ecore_inco.add_edge(1, 5, type = 'eStructuralFeatures')
+G_ecore_inco.add_edge(1, 6, type = 'eStructuralFeatures')
+G_ecore_inco.add_edge(4, 1, type = 'eContainingClass')
+G_ecore_inco.add_edge(5, 1, type = 'eContainingClass')
+G_ecore_inco.add_edge(6, 1, type = 'eContainingClass')
+
+G_ecore_inco.add_edge(4, 1, type = 'eType')
+G_ecore_inco.add_edge(5, 1, type = 'eType')
+G_ecore_inco.add_edge(6, 1, type = 'eType')
+G_ecore_inco.add_edge(1, 7, type = 'eSuperTypes')
+G_ecore_inco.add_edge(7, 8, type = 'eSuperTypes')
+G_ecore_inco.add_edge(8, 1, type = 'eSuperTypes')
+
 
 ##### graphs for test edits
 

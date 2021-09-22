@@ -6,7 +6,6 @@ Created on Fri Sep 10 09:36:17 2021
 @author: Jose Antonio
 """
 
-## TODO: test all methods
 
 def numberInconmigTransitions(G, n):
     count = 0
@@ -66,16 +65,14 @@ def incomingToEntry(G):
             return True
     return False
 
-## Not transition from entry, it is not correct
-## TODO
+
 def entryOutTran(G):
     for n in G.nodes():
         if G.nodes[n]['type'] == 'Entry' and (numberOutgoingTransitions(G, n) != 1):
             return True
     return False
 
-## transition from exit or final, it is not correct
-## TODO
+
 def exitFinal(G):
     for n in G.nodes():
         if (G.nodes[n]['type'] == 'Exit' or 
@@ -96,8 +93,6 @@ def noStateRegion(G):
             return True
     return False
 
-## consistency in choice
-## TODO
 def choice(G):
     for n in G.nodes():
         if (G.nodes[n]['type'] == 'Choice') and (numberInconmigTransitions(G, n) == 0 
@@ -105,7 +100,6 @@ def choice(G):
             return True
     return False
 
-## TODO add the other functions.
 def inconsistent(G):
     return (noEntryRegion(G) or multipleEntryRegion(G)
             or incomingToEntry(G) or noStateRegion(G) or 

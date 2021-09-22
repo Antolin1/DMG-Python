@@ -133,10 +133,10 @@ def main():
             G1 = m2g.getGraphFromModel(f, 
                                   meta_models, metafilterobj,
                                   consider_atts = False)
-        except Exception as e:
-            print(e)
+        except: # Exception as e:
+            #print(e.with_traceback())
             print('Exception m2g in', f)
-            #os.remove(f)
+            os.remove(f)
             continue
         if type_model.lower() == 'yakindu':
             if len(G1) < 5:
@@ -165,10 +165,10 @@ def main():
         
         if not is_iso:
             print('Remove not iso:', f)
-            if len(seq[-1][0]) < 10:
-                print(seq[-1][0].nodes(data=True))
-                print(seq[-1][0].edges(data=True))
-                print(f,'-',len(seq))
+            #if len(seq[-1][0]) < 10:
+            #    print(seq[-1][0].nodes(data=True))
+            #    print(seq[-1][0].edges(data=True))
+            #    print(f,'-',len(seq))
             os.remove(f)
         
     

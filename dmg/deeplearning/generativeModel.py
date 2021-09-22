@@ -80,8 +80,6 @@ def sampleGraph(G_0, pallete, model, max_size, sep, debug = False):
     return G_aux
                     
 
-#TODO: add finish layer out like in Jure's work to predict if we have to finish
-#the generation procedure
 class GenerativeModel(nn.Module):
     
     def __init__(self, hidden_dim, vocab_nodes, vocab_edges, vocab_actions,
@@ -114,7 +112,6 @@ class GenerativeModel(nn.Module):
     
     #TODO: do it in batch
     #TODO: fix random seed
-    #TODO: test it
     def getActionAndFinish(self, nodeTypes, edge_index, edge_attr, bs):
         #node embeddings
         nodeTypes = self.emb_nodes(nodeTypes)
@@ -135,7 +132,6 @@ class GenerativeModel(nn.Module):
         isLast = torch.bernoulli(final)
         return m.sample(), isLast, h_G, nodeEmbeddings
     
-    #TODO: finish it!!!!
     def getNodes(self, h_G, nodeEmbeddings,
                 bs, sequence_input, action_input, len_seq, nodes_bs):
         

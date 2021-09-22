@@ -7,43 +7,50 @@ Created on Mon Sep 20 10:57:14 2021
 
 import unittest
 import tests.graphs4test as g4t
-import dmg.yakindu.yakinduConsistency as con
+import dmg.yakindu.yakinduConsistency as conYAK
 import dmg.rds.rdsConsistency as conRDS
+import dmg.ecore.ecoreConsistency as conECORE
 
 class TestConsistency(unittest.TestCase):
     
     def test_consistency_yakindu(self):
         #print('Test consistency')
-        self.assertTrue(con.noEntryRegion(g4t.G_yak_inco))
-        self.assertFalse(con.noEntryRegion(g4t.G_yak))
+        self.assertTrue(conYAK.noEntryRegion(g4t.G_yak_inco))
+        self.assertFalse(conYAK.noEntryRegion(g4t.G_yak))
         
-        self.assertTrue(con.noStateRegion(g4t.G_yak_inco))
-        self.assertFalse(con.noStateRegion(g4t.G_yak))
+        self.assertTrue(conYAK.noStateRegion(g4t.G_yak_inco))
+        self.assertFalse(conYAK.noStateRegion(g4t.G_yak))
         
-        self.assertTrue(con.multipleEntryRegion(g4t.G_yak_inco_2))
-        self.assertFalse(con.multipleEntryRegion(g4t.G_yak))
+        self.assertTrue(conYAK.multipleEntryRegion(g4t.G_yak_inco_2))
+        self.assertFalse(conYAK.multipleEntryRegion(g4t.G_yak))
         
-        self.assertTrue(con.incomingToEntry(g4t.G_yak_inco_2))
-        self.assertFalse(con.incomingToEntry(g4t.G_yak))
+        self.assertTrue(conYAK.incomingToEntry(g4t.G_yak_inco_2))
+        self.assertFalse(conYAK.incomingToEntry(g4t.G_yak))
         
-        self.assertTrue(con.choice(g4t.G_yak_inco_2))
-        self.assertFalse(con.choice(g4t.G_yak))
+        self.assertTrue(conYAK.choice(g4t.G_yak_inco_2))
+        self.assertFalse(conYAK.choice(g4t.G_yak))
         #entryOutTran
-        self.assertTrue(con.entryOutTran(g4t.G_yak_inco_3))
-        self.assertFalse(con.entryOutTran(g4t.G_yak))
+        self.assertTrue(conYAK.entryOutTran(g4t.G_yak_inco_3))
+        self.assertFalse(conYAK.entryOutTran(g4t.G_yak))
         
-        self.assertTrue(con.exitFinal(g4t.G_yak_inco_3))
-        self.assertFalse(con.exitFinal(g4t.G_yak))
+        self.assertTrue(conYAK.exitFinal(g4t.G_yak_inco_3))
+        self.assertFalse(conYAK.exitFinal(g4t.G_yak))
         
-        self.assertFalse(con.exitFinal(g4t.G_yak))
+        self.assertFalse(conYAK.exitFinal(g4t.G_yak))
         
-        self.assertTrue(con.inconsistent(g4t.G_yak_inco_2))
-        self.assertTrue(con.inconsistent(g4t.G_yak_inco_3))
-        self.assertTrue(con.inconsistent(g4t.G_yak_inco))
+        self.assertTrue(conYAK.inconsistent(g4t.G_yak_inco_2))
+        self.assertTrue(conYAK.inconsistent(g4t.G_yak_inco_3))
+        self.assertTrue(conYAK.inconsistent(g4t.G_yak_inco))
         
     def test_consistency_rds(self):
         self.assertTrue(conRDS.inconsistenceEqualRefs(g4t.rds_inco))
         self.assertTrue(conRDS.inconsistenceIcCons(g4t.rds_inco))
         self.assertFalse(conRDS.inconsistenceIcCons(g4t.G_rds))
         self.assertFalse(conRDS.inconsistenceEqualRefs(g4t.G_rds))
+    
+    def test_consistency_ecore(self):
+        self.assertFalse(conECORE.inconsistent(g4t.G_test_small_ecore))
+        self.assertTrue(conECORE.inconsistent(g4t.G_ecore_inco))
+        
+    
         
