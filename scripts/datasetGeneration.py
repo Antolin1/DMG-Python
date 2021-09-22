@@ -92,8 +92,7 @@ def main():
                            'Reference.foreignKeyColumns',
                            'Column.primaryReferences',
                            'Column.foreignReferences']
-        metafilter_cla = ['Database', 'Column','Table',
-                          'Index', 'IndexColumn','Reference']  
+        metafilter_cla = list(rds.dic_nodes_rds.keys())
         metafilter_atts = None
         metafilterobj = mf.MetaFilter(references = metafilter_refs, 
                      attributes = metafilter_atts,
@@ -112,8 +111,7 @@ def main():
                            'EEnum.eLiterals',
                            'EEnumLiteral.eEnum',
                            'EClass.eStructuralFeatures']
-       metafilter_cla = ['EClass', 'EPackage', 
-                         'EStructuralFeature','EEnum', 'EEnumLiteral']
+       metafilter_cla = list(ecore.dic_nodes_ecore.keys())
        metafilter_atts = None
        metafilterobj = mf.MetaFilter(references = metafilter_refs, 
                      attributes = metafilter_atts,
@@ -147,7 +145,7 @@ def main():
                 os.remove(f)
                 continue
         if (type_model.lower() == 'ecore'):
-            if len(G1) < 7 or len(G1) > 100:
+            if len(G1) < 3 or len(G1) > 100:
                 os.remove(f)
                 continue
         

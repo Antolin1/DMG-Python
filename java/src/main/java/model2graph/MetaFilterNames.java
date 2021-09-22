@@ -102,6 +102,33 @@ public class MetaFilterNames implements IMetaFilter {
 		mf.references.add("IndexColumn:column");
 		return mf;
 	}
+	
+	public static MetaFilterNames getEcoreFilter() {
+		MetaFilterNames mf = new MetaFilterNames();
+		
+		mf.classes.add("EClass");
+		mf.classes.add("EPackage");
+		mf.classes.add("EStructuralFeature");
+		mf.classes.add("EEnum");
+		mf.classes.add("EEnumLiteral");
+		mf.classes.add("EDataType");
+
+		mf.attributes = new UniversalSet<String>();
+		
+		
+		//mf.references = new UniversalSet<String>();
+		mf.references.add("EClass:eSuperTypes");
+		mf.references.add("EClassifier:ePackage");
+		mf.references.add("EPackage:eClassifiers");
+		mf.references.add("ETypedElement:eType");
+		mf.references.add("EStructuralFeature:eContainingClass");
+		mf.references.add("EReference:eOpposite");
+		mf.references.add("EEnum:eLiterals");
+		mf.references.add("EEnumLiteral:eEnum");
+		mf.references.add("EClass:eStructuralFeatures");
+		
+		return mf;
+	}
 
 }
 
