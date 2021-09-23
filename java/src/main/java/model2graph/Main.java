@@ -39,11 +39,14 @@ public class Main {
 			System.err.println("Input: <type of model> <path_to_model>");
 			return;
 		}
+		//debug, remove it when finishing debuging
+		String prefix = "/home/antolin/wakame/DMG-Python/";
 		//inputs
 		String modelType = args[0];
 		String modelPath = args[1];
 		//emf
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
+		ResourceSet rs = new ResourceSetImpl();
 		//serialization
 		IntegerComponentNameProvider<Node> p1=new IntegerComponentNameProvider<Node>();
 		ComponentNameProvider<Node> p2 = new ComponentNameProvider<Node>() {
@@ -62,7 +65,6 @@ public class Main {
 		Writer writer = new StringWriter();
 		
 		if (modelType.toLowerCase().equals("ecore")) {
-			ResourceSet rs = new ResourceSetImpl();
 			Resource resource = null;
 			MetaFilterNames mfn = MetaFilterNames.getEcoreFilter();
 			try {
@@ -79,17 +81,9 @@ public class Main {
 			
 		} else if (modelType.toLowerCase().equals("rds")) {
 			//load metamodel of rds
-			ResourceSet rs = new ResourceSetImpl();
 			MetaFilterNames mfn = MetaFilterNames.getRDSFilter();
 			String metamodelpath = "data/metamodels/rds_manual.ecore";
-			Resource r = rs.createResource(URI.createURI(metamodelpath));
-			r.load(new FileInputStream(metamodelpath), null);
-			r.getAllContents().forEachRemaining(o -> {
-				if (o instanceof EPackage) {
-					EPackage pkg = (EPackage) o;
-					EPackage.Registry.INSTANCE.put(pkg.getNsURI(), pkg);
-				}
-			});
+			registerMetamodel(prefix + metamodelpath, rs);
 			
 			Resource resource = new XMIResourceImpl();
 			resource.load(new FileInputStream(new File(modelPath)), null);
@@ -100,9 +94,39 @@ public class Main {
 	        System.out.println(writer.toString());
 			
 		} else if (modelType.toLowerCase().equals("yakindu")) {
+			MetaFilterNames mfn = MetaFilterNames.getYakinduFilter();
+			String[] metamodels = {"data/metamodels/yakinduComplete/base.ecore", 
+					"data/metamodels/yakinduComplete/Expressions.ecore",
+					"data/metamodels/yakinduComplete/sexec.ecore",
+					"data/metamodels/yakinduComplete/sexec_trace.ecore",
+					"data/metamodels/yakinduComplete/sgen.ecore",
+					"data/metamodels/yakinduComplete/sgraph.ecore",
+					"data/metamodels/yakinduComplete/SText.ecore",
+					"data/metamodels/yakinduComplete/types.ecore"};
+			for (String metamodelpath : metamodels) {
+				registerMetamodel(prefix + metamodelpath, rs);
+			}
+			Resource resource = new XMIResourceImpl();
+			resource.load(new FileInputStream(new File(modelPath)), null);
+			Graph<Node, Edge> g = getGraph(resource, mfn);
 			
+			//export
+	        exporter.exportGraph(g, writer);
+	        System.out.println(writer.toString());
 		}
 		
+	}
+	
+	public static Resource registerMetamodel(String metamodelpath, ResourceSet rs) throws FileNotFoundException, IOException{
+		Resource r = rs.getResource(URI.createURI(metamodelpath), true);
+		r.load(new FileInputStream(metamodelpath), null);
+		r.getAllContents().forEachRemaining(o -> {
+			if (o instanceof EPackage) {
+				EPackage pkg = (EPackage) o;
+				EPackage.Registry.INSTANCE.put(pkg.getNsURI(), pkg);
+			}
+		});
+		return r;
 	}
 	
 	public static Graph<Node, Edge> getGraph(Resource r, IMetaFilter mf){
