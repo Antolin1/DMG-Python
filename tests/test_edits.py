@@ -74,30 +74,33 @@ class TestEditOperations(unittest.TestCase):
                           1: addSuperType,
                           2: addClass}
         
-        pallete = Pallete(dic_operations, None, None, [g4t.G_initial])
+        for shuffle in [True, False]:
         
-        sequence = pallete.graphToSequence(g4t.G_g2s)
-        
-        self.assertTrue(len(sequence)==3)
-        self.assertTrue(is_isomorphic(g4t.G_initial, 
-                                      sequence[-1][0], 
-                                      gu.node_match_type, 
-                                      gu.edge_match_type))
-        
-        for j, (graph, idd) in enumerate(sequence):
-            #print(graph.nodes(data = True))
-            #print('Edit nº', idd)
-            applied = pallete.applyEdit(graph, idd)
-            if j == 0:
-                self.assertTrue(is_isomorphic(g4t.G_g2s, 
-                                      applied, 
-                                      gu.node_match_type, 
-                                      gu.edge_match_type))
-            else:
-                self.assertTrue(is_isomorphic(sequence[j-1][0], 
-                                      applied, 
-                                      gu.node_match_type, 
-                                      gu.edge_match_type))
+            pallete = Pallete(dic_operations, None, None, [g4t.G_initial], 
+                              shuffle = shuffle)
+            
+            sequence = pallete.graphToSequence(g4t.G_g2s)
+            
+            self.assertTrue(len(sequence)==3)
+            self.assertTrue(is_isomorphic(g4t.G_initial, 
+                                          sequence[-1][0], 
+                                          gu.node_match_type, 
+                                          gu.edge_match_type))
+            
+            for j, (graph, idd) in enumerate(sequence):
+                #print(graph.nodes(data = True))
+                #print('Edit nº', idd)
+                applied = pallete.applyEdit(graph, idd)
+                if j == 0:
+                    self.assertTrue(is_isomorphic(g4t.G_g2s, 
+                                          applied, 
+                                          gu.node_match_type, 
+                                          gu.edge_match_type))
+                else:
+                    self.assertTrue(is_isomorphic(sequence[j-1][0], 
+                                          applied, 
+                                          gu.node_match_type, 
+                                          gu.edge_match_type))
         
 if __name__ == '__main__':
     unittest.main()

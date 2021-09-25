@@ -145,12 +145,12 @@ addEAttribute = ed.EditOperation([pattern_aea], [0,1])
 dic_operations_ecore = {
     0: addEAttribute,
     1: addReference,
-    2: addSuperType,
-    3: addLiteral,
-    4: addEnum,
-    5: addDatatype,
-    6: addClass,
-    7: addReferenceEOpposite
+    2: addReferenceEOpposite,
+    3: addSuperType,
+    4: addLiteral,
+    5: addEnum,
+    6: addDatatype,
+    7: addClass
     }
 
 G_initial_ecore_1 = nx.MultiDiGraph()

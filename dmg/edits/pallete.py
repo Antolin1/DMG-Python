@@ -18,16 +18,21 @@ class Pallete:
     def __init__(self, editOperations,
                  dic_nodes,
                  dic_edges,
-                 initialGraphs):
+                 initialGraphs,
+                 shuffle = True):
         self.editOperations = editOperations
         self.initialGraphs = initialGraphs
         self.dic_nodes = dic_nodes
         self.dic_edges = dic_edges
+        self.shuffle = shuffle
         #TODO: check consistency
         
     def graphToSequence(self, G):
         list_ids = list(range(0,len(self.editOperations)))
-        random.shuffle(list_ids)
+        if self.shuffle:
+            random.shuffle(list_ids)
+        else:
+            list_ids = sorted(list_ids, reverse=False)
         
         for intialGraph in self.initialGraphs:
             if is_isomorphic(G,intialGraph,
