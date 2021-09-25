@@ -492,6 +492,23 @@ G_g2s_inv.add_edge(1, 2, type = 'eSuperTypes')
 G_g2s_inv.add_edge(1, 4, type = 'eType_inv')
 G_g2s_inv.add_edge(2, 1, type = 'eSuperTypes_inv')
 
+############### for testEcoregraph
+G_testEcore = nx.MultiDiGraph()
+G_testEcore.add_node(0, type = 'EPackage')
+G_testEcore.add_node(1, type = 'EClass')
+G_testEcore.add_node(2, type = 'EClass')
+G_testEcore.add_node(3, type = 'EClass')
+
+        
+G_testEcore.add_edge(0, 1, type = 'eClassifiers')
+G_testEcore.add_edge(1, 0, type = 'ePackage')
+G_testEcore.add_edge(0, 2, type = 'eClassifiers')
+G_testEcore.add_edge(2, 0, type = 'ePackage')
+G_testEcore.add_edge(0, 3, type = 'eClassifiers')
+G_testEcore.add_edge(3, 0, type = 'ePackage')
+        
+G_testEcore.add_edge(1, 2, type = 'eSuperTypes')
+
 
 ################ patterns for add a reference
 pattern1_ref = nx.MultiDiGraph()

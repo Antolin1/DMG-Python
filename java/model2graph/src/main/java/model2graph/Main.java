@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -31,6 +30,7 @@ import org.jgrapht.io.StringComponentNameProvider;
 
 
 
+@SuppressWarnings("deprecation")
 public class Main {
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -39,24 +39,23 @@ public class Main {
 			System.err.println("Input: <type of model> <path_to_model>");
 			return;
 		}
-		//debug, remove it when finishing debuging
-		String prefix = "/home/antolin/wakame/DMG-Python/";
+		//prefix for debug, remove it when finishing debuging
+		//String prefix = "/home/antolin/wakame/DMG-Python/";
 		//inputs
 		String modelType = args[0];
 		String modelPath = args[1];
 		//emf
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
 		ResourceSet rs = new ResourceSetImpl();
+		
 		//serialization
 		IntegerComponentNameProvider<Node> p1=new IntegerComponentNameProvider<Node>();
 		ComponentNameProvider<Node> p2 = new ComponentNameProvider<Node>() {
-			@Override
 			public String getName(Node arg0) {
 				return arg0.object.eClass().getName();
 			}
 		};
 		ComponentNameProvider<Edge> p3 = new ComponentNameProvider<Edge>() {
-			@Override
 			public String getName(Edge arg0) {
 				return arg0.label;
 			}
@@ -83,7 +82,7 @@ public class Main {
 			//load metamodel of rds
 			MetaFilterNames mfn = MetaFilterNames.getRDSFilter();
 			String metamodelpath = "data/metamodels/rds_manual.ecore";
-			registerMetamodel(prefix + metamodelpath, rs);
+			registerMetamodel(metamodelpath, rs);
 			
 			Resource resource = new XMIResourceImpl();
 			resource.load(new FileInputStream(new File(modelPath)), null);
@@ -104,7 +103,7 @@ public class Main {
 					"data/metamodels/yakinduComplete/SText.ecore",
 					"data/metamodels/yakinduComplete/types.ecore"};
 			for (String metamodelpath : metamodels) {
-				registerMetamodel(prefix + metamodelpath, rs);
+				registerMetamodel(metamodelpath, rs);
 			}
 			Resource resource = new XMIResourceImpl();
 			resource.load(new FileInputStream(new File(modelPath)), null);
@@ -156,6 +155,7 @@ public class Main {
 						continue;
 					
 					if (f instanceof EReference && f.isMany()) {
+						@SuppressWarnings("unchecked")
 						Collection<EObject> elements = (Collection<EObject>) obj.eGet(f);
 						for (EObject e : elements) {
 							// ignore the class

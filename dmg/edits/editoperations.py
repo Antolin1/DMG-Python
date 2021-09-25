@@ -18,6 +18,17 @@ def node_match(n1,n2):
         return ((n1['type'] == n2['type']) and
                 n1['out'] == n2['out'] and
                 n1['in'] == n2['in'])
+    
+def relabelRandomly(G):
+    new_map = {}
+    j = 0
+    new_ids = list(range(0,len(G)))
+    random.shuffle(new_ids)
+    for n in G:
+        new_map[n] = new_ids[j]
+        j = j + 1
+    return nx.relabel_nodes(G, new_map)
+        
 
 class EditOperation:
     #: list(nx.Graph), set(str)
@@ -155,6 +166,7 @@ class EditOperation:
         dics = []
         for subgraph in GM.subgraph_isomorphisms_iter():
             dics.append(subgraph)
+            #break
         ##No match, return none
         if len(dics) == 0:
             return None

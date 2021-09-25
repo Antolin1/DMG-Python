@@ -8,6 +8,7 @@ Created on Mon Sep  6 12:15:01 2021
 
 from multiset import Multiset
 import graphviz
+import networkx as nx
 
 def node_match_type(n1,n2):
     return n1['type'] == n2['type']
@@ -33,3 +34,20 @@ def plotGraphViz(G):
         g.node(str(e[1]), label = G.nodes[e[1]]['type'])
         g.edge(str(e[0]), str(e[1]),label=G[e[0]][e[1]][e[2]]['type'])
     return g
+
+def fixDotGraph(G):
+    G_new = nx.MultiDiGraph(G)
+    for n in G_new:
+        G_new.nodes[n]['type'] = G_new.nodes[n]['label']
+        del G_new.nodes[n]['label']
+    for e in list(G_new.edges(keys=True)):
+        label = G_new[e[0]][e[1]][e[2]]['label']
+        G_new.remove_edge(e[0],e[1],e[2])
+        G_new.add_edge(e[0],e[1],e[2], type = label)
+    new_map = {}
+    j = 0
+    for n in G_new:
+        new_map[n] = j
+        j = j + 1                                            
+    G_new = nx.relabel_nodes(G_new, new_map)
+    return G_new
