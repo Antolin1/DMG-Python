@@ -10,7 +10,7 @@ This project has two aims:
 Install requirements:
 
 ```
-TODO
+$ pip install -r requirements.txt
 ```
 
 
