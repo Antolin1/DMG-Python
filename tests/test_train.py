@@ -111,12 +111,35 @@ class TestTrain(unittest.TestCase):
                                       node_match_type_ids, 
                                       gu.edge_match_type))
     
+    def test_withoutTrain(self):
+        model_woTrain = GenerativeModel(hidden_dim, yp.dic_nodes_yak, 
+                        yp.dic_edges_yak, yp.dic_operations_yak)
+        model_woTrain.eval()
+        samples = [sampleGraph(yp.G_initial_yak, yp.yakindu_pallete, 
+                                   model_woTrain, 50, yp.yakindu_separator, debug=False) 
+                       for i in range(num_samples)]
+        iso = []
+        for s in samples:
+            #print(s.nodes(data=True))
+            #print(s.edges(data=True))
+            #print()
+            for g in graphs:
+                #print(g.nodes(data=True))
+                #print(g.edges(data=True))
+                if (is_isomorphic(s,g,gu.node_match_type, 
+                                  gu.edge_match_type)):
+                    iso.append(s)
+                    break
+        proportion_iso = len(iso)/len(samples)
+        print('Proportion not trained:', proportion_iso)
+        self.assertLess(proportion_iso, 0.5)
+    
     def test_trainGenerativeModel(self):
         #for g in graphs:
         #    print(g.nodes(data=True))
         #    print(g.edges(data=True))
         #print('---'*10)
-
+        yp.yakindu_pallete.shuffle = False
         for epoch in range(epochs):
             model.train()
             total_loss = 0
@@ -185,4 +208,4 @@ class TestTrain(unittest.TestCase):
                     break
         proportion_iso = len(iso)/len(samples)
         print('Proportion:', proportion_iso)
-        self.assertGreater(proportion_iso, 0.05)
+        self.assertGreater(proportion_iso, 0.5)

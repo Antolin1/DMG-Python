@@ -17,10 +17,11 @@ from torch.distributions.categorical import Categorical
 import networkx as nx
 from dmg.deeplearning.dataGeneration import graph2dataPreAction, graph2dataPostAction, addInvEdges
 
-def sampleGraph(G_0, pallete, model, max_size, sep, debug = False):
+def sampleGraph(G_0, pallete, model, max_size, sep, debug = False, max_trials = 100):
     G_aux = nx.MultiDiGraph(G_0)
     finish = False
     step = 0
+    trials = 0
     while (len(G_aux) < max_size and (not finish)):
         G_aux_inv = addInvEdges(G_aux, pallete, sep)
         #sample action
@@ -67,16 +68,20 @@ def sampleGraph(G_0, pallete, model, max_size, sep, debug = False):
                 
         applied = pallete.applyEdit(G_aux, sampled_action)
         if applied!= None:
+            trials = 0
             G_aux = applied
             step = step + 1
             if debug:
                 print()
         else:
             #print('Cannot apply')
+            trials = trials + 1
             for n in G_aux:
                 if ('ids' in G_aux.nodes[n]):
                     del G_aux.nodes[n]['ids']
             finish = False
+            if trials == max_trials:
+                return G_aux
     return G_aux
                     
 

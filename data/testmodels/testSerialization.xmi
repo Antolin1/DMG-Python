@@ -2,9 +2,9 @@
 <smallEcore:EPackage xmlns:xmi="http://www.omg.org/XMI" xmlns:smallEcore="http://www.example.org/smallEcore" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="&lt;none&gt;" xmi:version="2.0">
   <eClassifiers xsi:type="smallEcore:EDataType" name="&lt;none&gt;"/>
   <eClassifiers xsi:type="smallEcore:EClass" name="&lt;none&gt;">
-    <eStructuralFeatures xsi:type="smallEcore:EReference" eType="//@eClassifiers.1" name="&lt;none&gt;"/>
-    <eStructuralFeatures xsi:type="smallEcore:EReference" eType="//@eClassifiers.1" name="&lt;none&gt;"/>
-    <eStructuralFeatures xsi:type="smallEcore:EReference" eType="//@eClassifiers.1" name="&lt;none&gt;" containment="true"/>
+    <eStructuralFeatures xsi:type="smallEcore:EReference" name="&lt;none&gt;" eType="//@eClassifiers.1"/>
+    <eStructuralFeatures xsi:type="smallEcore:EReference" name="&lt;none&gt;" eType="//@eClassifiers.1"/>
+    <eStructuralFeatures xsi:type="smallEcore:EReference" name="&lt;none&gt;" eType="//@eClassifiers.1" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="smallEcore:EDataType" name="&lt;none&gt;"/>
 </smallEcore:EPackage>
