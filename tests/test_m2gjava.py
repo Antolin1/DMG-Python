@@ -13,7 +13,7 @@ from networkx.drawing import nx_agraph
 import dmg.graphUtils as gu
 from networkx.algorithms.isomorphism import is_isomorphic
 import tests.graphs4test as g4t
-
+import dmg.model2graph.model2graph as m2g
 
 class Testm2gJava(unittest.TestCase):
     
@@ -37,6 +37,11 @@ class Testm2gJava(unittest.TestCase):
                                       gu.node_match_type, 
                                       gu.edge_match_type))
         
+        self.assertTrue(is_isomorphic(m2g.model2graphJava('ecore',
+                                                      "data/testmodels/testEcore.ecore"), g4t.G_testEcore, 
+                                      gu.node_match_type, 
+                                      gu.edge_match_type))
+        
     def test_rdsJava(self):
         x = subprocess.Popen(["java", "-jar", 
                               "java/model2graph/target/model2graph-0.0.1-jar-with-dependencies.jar", "rds", 
@@ -55,6 +60,15 @@ class Testm2gJava(unittest.TestCase):
         self.assertTrue(is_isomorphic(G, g4t.G_rds, 
                                           gu.node_match_type, 
                                           gu.edge_match_type))
+        self.assertTrue(is_isomorphic(m2g.model2graphJava('rds',
+                                                      "data/testmodels/testRDS.xmi"), g4t.G_rds, 
+                                      gu.node_match_type, 
+                                      gu.edge_match_type))
     
-    #TODO: do test for yakindu, currently it does not work in java
+    def test_yakinduJava(self):
+        G1 = m2g.model2graphJava('yakindu', "data/testmodels/outYak.xmi")
+        self.assertTrue(is_isomorphic(G1, g4t.G_yak, 
+                                      gu.node_match_type, 
+                                      gu.edge_match_type))
+    
 

@@ -31,6 +31,7 @@ def main():
     test_path = sys.argv[4]
     val_path = sys.argv[5]
     type_model = sys.argv[6]
+    emf_backend = sys.argv[7]
     
     if not os.path.exists(preprodataset_path):
         os.makedirs(preprodataset_path)
@@ -127,13 +128,17 @@ def main():
         #Elements defined in the model that are in other models.
         #TODO: too big ecore models too slow
         #TODO: deal with instanceClassName="java.lang.Integer" in eattributes
+        G1 = None
         try:
-            G1 = m2g.getGraphFromModel(f, 
+            if emf_backend.lower() == 'python':
+                G1 = m2g.getGraphFromModel(f, 
                                   meta_models, metafilterobj,
                                   consider_atts = False)
+            elif emf_backend.lower() == 'java':
+                G1 = m2g.model2graphJava(type_model.lower(), f)
         except: # Exception as e:
             #print(e.with_traceback())
-            print('Exception m2g in', f)
+            print('Remove exception m2g in', f)
             os.remove(f)
             continue
         if type_model.lower() == 'yakindu':
@@ -145,14 +150,19 @@ def main():
                 os.remove(f)
                 continue
         if (type_model.lower() == 'ecore'):
-            if len(G1) < 3 or len(G1) > 100:
+            if len(G1) < 3 or len(G1) > 200:
                 os.remove(f)
+                print('Remove out of bounds in', f)
                 continue
         
         #remove models that cannot be reached
         seq = pallete.graphToSequence(G1)
         is_iso = False
         #print(f,'-',len(seq))
+        if len(seq) == 0:
+            print('Remove Seq 0 in', f)
+            os.remove(f)
+            continue
         
         for G_initial in G_initials:
             if is_isomorphic(G_initial, 

@@ -117,8 +117,9 @@ public class Main {
 	}
 	
 	public static Resource registerMetamodel(String metamodelpath, ResourceSet rs) throws FileNotFoundException, IOException{
-		Resource r = rs.getResource(URI.createURI(metamodelpath), true);
-		r.load(new FileInputStream(metamodelpath), null);
+		File fileMetamodel = new File(metamodelpath);
+		URI uri = URI.createFileURI(fileMetamodel.getAbsolutePath());
+		Resource r = rs.getResource(uri, true);
 		r.getAllContents().forEachRemaining(o -> {
 			if (o instanceof EPackage) {
 				EPackage pkg = (EPackage) o;

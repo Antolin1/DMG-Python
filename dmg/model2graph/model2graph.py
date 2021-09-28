@@ -9,6 +9,10 @@ Created on Sat Jul 24 16:23:44 2021
 from pyecore.ecore import EReference, EClass, EAttribute
 import networkx as nx
 from pyecore.resources import ResourceSet, URI
+import subprocess
+import pygraphviz
+from networkx.drawing import nx_agraph
+import dmg.graphUtils as gu
 
 #Register metamodels
 #rset = ResourceSet()
@@ -185,5 +189,18 @@ def serializeGraphModel(path, pathMetamodels, mainClass, G):
             resource = rset.create_resource(URI(path))  # This will create an XMI resource
             resource.append(ob)  # we add the EPackage instance in the resource
             resource.save()  # we then serialize it
-    
+
+def model2graphJava(modelType, pathmodel):
+    x = subprocess.Popen(["java", "-jar", 
+                              "java/model2graph/target/model2graph-0.0.1-jar-with-dependencies.jar", modelType, 
+                              pathmodel], 
+                             stderr=subprocess.PIPE, 
+                             stdout=subprocess.PIPE,
+                             text=True)
+    out,err = x.communicate()
+    #print(out)
+    #print(err)
+    G = nx_agraph.from_agraph(pygraphviz.AGraph(out))
+    G = gu.fixDotGraph(G)
+    return G
         
