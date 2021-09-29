@@ -47,7 +47,7 @@ def main():
     for f in files:
         p = Path(f)
         full_file_name = p.stem +'.'+f.split('.')[-1]
-        if type_model.lower() == 'yakindu':
+        if type_model.lower() == 'yakindu' or type_model.lower() == 'yakindu-bigger':
             removeLayout(f,preprodataset_path+'/'+full_file_name)
         elif type_model.lower() == 'rds':
             removeTypes(f,preprodataset_path+'/'+full_file_name)
@@ -120,6 +120,26 @@ def main():
        meta_models = []        
        pallete = ecore.ecore_pallete
        G_initials = ecore.ecore_pallete.initialGraphs
+       
+    elif type_model.lower() == 'yakindu-bigger':
+        metafilter_refs = ['Region.vertices', 
+                               'CompositeElement.regions',
+                               'Vertex.outgoingTransitions',
+                               'Vertex.incomingTransitions',
+                               'Transition.target',
+                               'Transition.source']
+        metafilter_cla = list(yp.dic_nodes_yak.keys())
+            
+        metafilter_atts = None
+            
+        metafilterobj = mf.MetaFilter(references = metafilter_refs, 
+                     attributes = metafilter_atts,
+                     classes = metafilter_cla)
+            
+        meta_models = ['data/metamodels/yakindu_simplified.ecore']
+        
+        pallete = yp.yakindu_pallete
+        G_initials= yp.yakindu_pallete.initialGraphs
     
     files = glob.glob(preprodataset_path +'/*')
     for f in files:
@@ -141,7 +161,7 @@ def main():
             print('Remove exception m2g in', f)
             os.remove(f)
             continue
-        if type_model.lower() == 'yakindu':
+        if type_model.lower() == 'yakindu' or type_model.lower() == 'yakindu-bigger':
             if len(G1) < 5:
                 os.remove(f)
                 continue

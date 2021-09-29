@@ -24,6 +24,32 @@ def getListDegree(G):
 def getClustList(G):
     return list(nx.clustering(nx.Graph(G)).values())
 
+#Node activity
+def nodeActivity(G, dims):
+    vectors = degreeVectors(G, dims)
+    result = []
+    for n in G:
+        vector = vectors[n]
+        na = np.sum([v != 0 for v in vector])
+        result.append(na)
+    return result
+
+#dimensional degree
+def dimensionalDegree(G, reference, dims):
+    vectors = degreeVectors(G, dims)
+    result = []
+    for n in G:
+        vector = vectors[n]
+        result.append(vector[dims.index(reference)])
+    return result
+
+#node type distribution
+#def nodeTypeDistribution(G, types):
+#    result = []
+#    for n in G:
+#        typee = G.nodes['type']
+#        result[types.index(typee)] += 1
+#    return result
 
 #MPC Varro et al.
 def degreeVectors(G, dims):

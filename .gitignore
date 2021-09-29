@@ -135,6 +135,11 @@ data/yakinduDataset/train
 data/yakinduDataset/test
 data/yakinduDataset/val
 
+data/yakinduDatasetBigger/preprocess
+data/yakinduDatasetBigger/train
+data/yakinduDatasetBigger/test
+data/yakinduDatasetBigger/val
+
 .Rhistory
 
 notebooks/example.xmi
