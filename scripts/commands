@@ -2,3 +2,12 @@ python scripts/datasetGeneration.py data/yakindu-github/ yakindu-github python
 python scripts/datasetGeneration.py data/yakindu-exercise/ yakindu-exercise python
 python scripts/datasetGeneration.py data/rds-genmymodel/ rds-genmymodel python
 python scripts/datasetGeneration.py data/ecore-github/ ecore-github java
+
+#####
+
+python scripts/train.py -s models/yakindu-github-clean-shuffle.m -d yakindu-github -pd data/yakindu-github/ -e 100 -emf python -mp 10 -td models/yakindu-github-clean-shuffle.dt
+
+
+#####
+
+python scripts/eval.py data/yakindu-github/ yakindu-github models/yakindu-github-clean-shuffle.m 500 python 50 128

@@ -12,95 +12,12 @@ sys.path.append(os.getcwd())
 import glob
 from pathlib import Path
 from shutil import copyfile
-from dmg.yakindu.yakinduPreprocess import removeLayout
-from dmg.rds.rdsPreprocess import removeTypes
 from sklearn.model_selection import train_test_split
-import dmg.model2graph.model2graph as m2g
-import dmg.model2graph.metafilter as mf
-import dmg.yakindu.yakinduPallete as yp
-import dmg.rds.rdsPallete as rds
-import dmg.ecore.ecorePallete as ecore
 import ntpath
 import dmg.graphUtils as gu
 from networkx.algorithms.isomorphism import is_isomorphic
 
-def getPreprocess(dataset):
-    if dataset.lower() == 'yakindu-github':
-        return removeLayout
-    elif dataset.lower() == 'yakindu-exercise':
-        return copyfile
-    elif dataset.lower() == 'ecore-github':
-        return copyfile
-    elif dataset.lower() == 'rds-genmymodel':
-        return removeTypes
-
-def getUpperLower(dataset):
-    if dataset.lower() == 'yakindu-github':
-        return (5, float('inf'))
-    elif dataset.lower() == 'yakindu-exercise':
-        return (5, float('inf'))
-    elif dataset.lower() == 'ecore-github':
-        return (3, 200)
-    elif dataset.lower() == 'rds-genmymodel':
-        return (7, float('inf'))
-
-def getGraph(f, dataset, backend):
-    if backend.lower() == "java":
-        return m2g.model2graphJava(dataset.lower(), f)
-    elif backend.lower() == "python":
-        metafilter_refs = None
-        metafilter_cla = None
-        metafilterobj = None
-        meta_models = None
-        metafilter_atts = None
-        if dataset.lower() == 'yakindu-github':
-            metafilter_refs = yp.metafilter_refs
-            metafilter_cla = list(yp.dic_nodes_yak.keys())
-            metafilter_atts = None
-            metafilterobj = mf.MetaFilter(references = metafilter_refs, 
-                     attributes = metafilter_atts,
-                     classes = metafilter_cla)
-            meta_models = glob.glob("data/metamodels/yakinduComplete/*")
-        
-        elif dataset.lower() == 'yakindu-exercise':
-            metafilter_refs = yp.metafilter_refs
-            metafilter_cla = list(yp.dic_nodes_yak.keys())
-            metafilter_atts = None
-            metafilterobj = mf.MetaFilter(references = metafilter_refs, 
-                     attributes = metafilter_atts,
-                     classes = metafilter_cla)
-            meta_models = ['data/metamodels/yakindu_simplified.ecore']
-            
-        elif dataset.lower() == 'ecore-github':
-            metafilter_refs = ecore.metafilter_refs
-            metafilter_cla = list(ecore.dic_nodes_ecore.keys())
-            metafilter_atts = None
-            metafilterobj = mf.MetaFilter(references = metafilter_refs, 
-                     attributes = metafilter_atts,
-                     classes = metafilter_cla)
-            meta_models = []  
-            
-        elif dataset.lower() == 'rds-genmymodel':
-            metafilter_refs = rds.metafilter_refs
-            metafilter_cla = list(rds.dic_nodes_rds.keys())
-            metafilter_atts = None
-            metafilterobj = mf.MetaFilter(references = metafilter_refs, 
-                     attributes = metafilter_atts,
-                     classes = metafilter_cla)
-            meta_models = ['data/metamodels/rds_manual.ecore']
-        
-        return m2g.getGraphFromModel(f, meta_models, metafilterobj,
-                                  consider_atts = False)
-
-def getPallete(dataset):
-    if dataset.lower() == 'yakindu-github':
-        return yp.yakindu_pallete
-    elif dataset.lower() == 'yakindu-exercise':
-        return yp.yakindu_pallete
-    elif dataset.lower() == 'ecore-github':
-        return ecore.ecore_pallete
-    elif dataset.lower() == 'rds-genmymodel':
-        return rds.rds_pallete
+from utils4scripts import getPreprocess, getGraph, getUpperLower, getPallete
 
 def main():
     

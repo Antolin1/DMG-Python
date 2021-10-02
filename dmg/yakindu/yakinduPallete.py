@@ -141,3 +141,5 @@ metafilter_refs = ['Region.vertices',
 
 yakindu_pallete = Pallete(dic_operations_yak, dic_nodes_yak, 
                           dic_edges_yak, [G_initial_yak])
+
+max_len = 2

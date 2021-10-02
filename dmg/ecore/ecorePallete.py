@@ -187,3 +187,5 @@ ecore_pallete = Pallete(dic_operations_ecore, dic_nodes_ecore,
                           dic_edges_ecore, [G_initial_ecore_1,
                                           G_initial_ecore_2,
                                           G_initial_ecore_3])
+
+max_len = 2

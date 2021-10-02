@@ -208,3 +208,6 @@ buildNumber.properties
 notebooks/yakinduGenerator.model
 notebooks/ecoreGenerator.model
 notebooks/rdsGenerator.model
+
+*.deta
+*.m

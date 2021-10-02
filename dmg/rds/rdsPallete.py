@@ -121,3 +121,5 @@ metafilter_refs = ['Database.elements',
                    'Reference.foreignKeyColumns',
                    'Column.primaryReferences',
                    'Column.foreignReferences']
+
+max_len = 3
