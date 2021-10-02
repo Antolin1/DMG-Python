@@ -1,0 +1,13 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_lraTINVIEemvGJPGARiGeg" specification="&#10;interface HWFault:&#10;&#9;in event shutdown&#10;&#10;&#9;&#10;interface Fault:&#10;&#9;out event shutdown&#10;&#9;" name="UC">
+    <regions xmi:id="_lrcIU9VIEemvGJPGARiGeg" name="UC">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_lrd9gdVIEemvGJPGARiGeg">
+        <outgoingTransitions xmi:id="_lrgZw9VIEemvGJPGARiGeg" target="_lrfLodVIEemvGJPGARiGeg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_lrfLodVIEemvGJPGARiGeg" name="On" incomingTransitions="_lrgZw9VIEemvGJPGARiGeg">
+        <outgoingTransitions xmi:id="_vVcIcNVIEemvGJPGARiGeg" specification="HWFault.shutdown" target="_pdxxgNVIEemvGJPGARiGeg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_pdxxgNVIEemvGJPGARiGeg" specification="entry/&#10;raise Fault.shutdown" name="Off" incomingTransitions="_vVcIcNVIEemvGJPGARiGeg"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

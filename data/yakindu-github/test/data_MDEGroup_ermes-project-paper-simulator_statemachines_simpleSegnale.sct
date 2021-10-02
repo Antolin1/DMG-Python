@@ -1,0 +1,15 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_q3fMUCW3Eeu30LKBb3LXnA" specification="@EventDriven&#10;// Use the event driven execution model.&#10;// Runs a run-to-completion step&#10;// each time an event is raised.&#10;// Switch to cycle based behavior&#10;// by specifying '@CycleBased(200)'&#10;// instead.&#10;&#10;@ChildFirstExecution&#10;// In composite states, execute&#10;// child states first.&#10;// @ParentFirstExecution does the opposite.&#10;&#10;import:&#10;&quot;simppMM.SegnaleAltoPP&quot;&#10;&#10;interface:&#10;const STATUS_ROSSO: String = &quot;Red&quot;&#10;const STATUS_GREEN: String = &quot;Green&quot;&#10;&#10;// Define events&#10;// and variables here. &#10;// Use CTRL + Space for content assist.&#10;var segnale: SegnaleAltoPP&#10;&#10;&#10;//#API&#10;in event rosso&#10;in event verde&#10;&#10;//API#" name="simpleSegnale" domainID="com.yakindu.domain.java">
+    <regions xmi:id="_q4eDwCW3Eeu30LKBb3LXnA" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_q5KnUCW3Eeu30LKBb3LXnA">
+        <outgoingTransitions xmi:id="_q5diQCW3Eeu30LKBb3LXnA" target="_q5O4wCW3Eeu30LKBb3LXnA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_q5O4wCW3Eeu30LKBb3LXnA" specification="entry / segnale.setStatus(STATUS_ROSSO)" name="Rosso" incomingTransitions="_q5diQCW3Eeu30LKBb3LXnA _zSSOYCW3Eeu30LKBb3LXnA">
+        <outgoingTransitions xmi:id="_vSXcMCW3Eeu30LKBb3LXnA" specification="verde" target="_vSNEICW3Eeu30LKBb3LXnA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_vSNEICW3Eeu30LKBb3LXnA" specification="entry / segnale.setStatus(STATUS_GREEN)" name="Verde" incomingTransitions="_vSXcMCW3Eeu30LKBb3LXnA">
+        <outgoingTransitions xmi:id="_zSSOYCW3Eeu30LKBb3LXnA" specification="rosso" target="_q5O4wCW3Eeu30LKBb3LXnA"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

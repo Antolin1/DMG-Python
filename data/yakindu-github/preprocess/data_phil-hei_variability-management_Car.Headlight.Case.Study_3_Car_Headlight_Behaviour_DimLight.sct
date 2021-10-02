@@ -1,0 +1,29 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_7nfnYCXEEeOgHqiZZJTXvA" specification="interface:&#10;in event autoMode&#10;in event passThroughMode&#10;var passThroughValue : integer = 0&#10;&#10;var interiorTemp : integer = 0&#10;var drvRefTemp : integer = 0&#10;var passRefTemp : integer = 0&#10;&#10;var power : integer = 0&#10;&#10;internal:&#10;var drvDelta : integer = 0&#10;var passDelta : integer = 0&#10;var tempPwr : integer = 0" name="BlowerCtrl">
+    <regions xmi:id="_7ng1giXEEeOgHqiZZJTXvA" name="main region">
+      <vertices xsi:type="sgraph:State" xmi:id="_TVe_4EX0EeOlj9X7kz9gBg" specification="entry, always /&#10;&#9;drvDelta = drvRefTemp - interiorTemp;&#10;&#9;passDelta = passRefTemp - interiorTemp&#10;entry, always [drvDelta&lt;0] / drvDelta = drvDelta * -1&#10;entry, always [passDelta&lt;0] / passDelta = passDelta * -1" name="Auto Mode">
+        <outgoingTransitions xmi:id="_6TfyAEYHEeOzCoMFVRIMGA" specification="passThroughMode" target="_Zg-40EX0EeOlj9X7kz9gBg"/>
+        <regions xmi:id="_LgSL8EX5EeOV_5tZYxoTag" name="">
+          <vertices xsi:type="sgraph:Choice" xmi:id="_hdOp0KR_EeOEkbDkmHxtBQ" incomingTransitions="_uRy_4EX1EeOlj9X7kz9gBg _is_2UKSEEeOEkbDkmHxtBQ">
+            <outgoingTransitions xmi:id="_l0PtYKR_EeOEkbDkmHxtBQ" specification="default /&#10;&#9;tempPwr = 10 * drvDelta /10" target="_ap1GkKSDEeOEkbDkmHxtBQ"/>
+            <outgoingTransitions xmi:id="_Xt0IwKSAEeOEkbDkmHxtBQ" specification="[passDelta &gt; drvDelta] / &#10;&#9;tempPwr = 10 * passDelta / 10" target="_ap1GkKSDEeOEkbDkmHxtBQ"/>
+          </vertices>
+          <vertices xsi:type="sgraph:Choice" xmi:id="_ap1GkKSDEeOEkbDkmHxtBQ" incomingTransitions="_Xt0IwKSAEeOEkbDkmHxtBQ _l0PtYKR_EeOEkbDkmHxtBQ">
+            <outgoingTransitions xmi:id="_o1jlcKSDEeOEkbDkmHxtBQ" specification="[tempPwr &gt; 100] / power = 100" target="_nwOVEKSDEeOEkbDkmHxtBQ"/>
+            <outgoingTransitions xmi:id="_wwATgKSDEeOEkbDkmHxtBQ" specification="default / power = tempPwr" target="_nwOVEKSDEeOEkbDkmHxtBQ"/>
+            <outgoingTransitions xmi:id="_1jPZAKSDEeOEkbDkmHxtBQ" specification="[tempPwr &lt;= 10] / power = 10" target="_nwOVEKSDEeOEkbDkmHxtBQ"/>
+          </vertices>
+          <vertices xsi:type="sgraph:State" xmi:id="_nwOVEKSDEeOEkbDkmHxtBQ" name="Calc Power" incomingTransitions="_o1jlcKSDEeOEkbDkmHxtBQ _wwATgKSDEeOEkbDkmHxtBQ _1jPZAKSDEeOEkbDkmHxtBQ">
+            <outgoingTransitions xmi:id="_is_2UKSEEeOEkbDkmHxtBQ" specification="oncycle" target="_hdOp0KR_EeOEkbDkmHxtBQ"/>
+          </vertices>
+        </regions>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_Zg-40EX0EeOlj9X7kz9gBg" specification="entry, always / power = passThroughValue" name="PassThroughMode" incomingTransitions="_6TfyAEYHEeOzCoMFVRIMGA _FMrawKR-EeOEkbDkmHxtBQ">
+        <outgoingTransitions xmi:id="_uRy_4EX1EeOlj9X7kz9gBg" specification="autoMode" target="_hdOp0KR_EeOEkbDkmHxtBQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:Entry" xmi:id="_EpWEMKR-EeOEkbDkmHxtBQ">
+        <outgoingTransitions xmi:id="_FMrawKR-EeOEkbDkmHxtBQ" specification="" target="_Zg-40EX0EeOlj9X7kz9gBg"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

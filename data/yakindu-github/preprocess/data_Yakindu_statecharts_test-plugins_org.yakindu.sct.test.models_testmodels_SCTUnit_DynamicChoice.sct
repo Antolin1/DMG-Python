@@ -1,0 +1,18 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_XGQLcHd7EeOs5MmX1Up0pg" specification="interface:&#13;&#10;var number : integer&#13;&#10;in event reset" name="DynamicChoice">
+    <regions xmi:id="_XGRZknd7EeOs5MmX1Up0pg" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_XGVrAXd7EeOs5MmX1Up0pg">
+        <outgoingTransitions xmi:id="_XGXgMHd7EeOs5MmX1Up0pg" target="_XGWSFHd7EeOs5MmX1Up0pg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_XGWSFHd7EeOs5MmX1Up0pg" specification="entry / number = 1" name="Start" incomingTransitions="_XGXgMHd7EeOs5MmX1Up0pg">
+        <outgoingTransitions xmi:id="_tK_1AHd7EeOs5MmX1Up0pg" specification=" always /number +=1" target="_rWSWIHd7EeOs5MmX1Up0pg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:Choice" xmi:id="_rWSWIHd7EeOs5MmX1Up0pg" incomingTransitions="_tK_1AHd7EeOs5MmX1Up0pg">
+        <outgoingTransitions xmi:id="_ti9CAHd7EeOs5MmX1Up0pg" specification="[number == 2]" target="_rl-X8Hd7EeOs5MmX1Up0pg"/>
+        <outgoingTransitions xmi:id="_t7cagHd7EeOs5MmX1Up0pg" specification="" target="_r2m08Hd7EeOs5MmX1Up0pg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_rl-X8Hd7EeOs5MmX1Up0pg" name="A" incomingTransitions="_ti9CAHd7EeOs5MmX1Up0pg"/>
+      <vertices xsi:type="sgraph:State" xmi:id="_r2m08Hd7EeOs5MmX1Up0pg" name="B" incomingTransitions="_t7cagHd7EeOs5MmX1Up0pg"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

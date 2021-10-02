@@ -1,0 +1,16 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_y4LPQBw5EeahrKOnLEWyBg" specification="interface:&#10;&#9;in event button&#10;&#9;operation setLight(lightOn: boolean): void" name="LightCtrl">
+    <regions xmi:id="_y4NEchw5EeahrKOnLEWyBg" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_y4VAQBw5EeahrKOnLEWyBg">
+        <outgoingTransitions xmi:id="_y4Yqoxw5EeahrKOnLEWyBg" target="_y4WOYRw5EeahrKOnLEWyBg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_y4WOYRw5EeahrKOnLEWyBg" name="Light Off" incomingTransitions="_y4Yqoxw5EeahrKOnLEWyBg __bg0ABw5EeahrKOnLEWyBg">
+        <outgoingTransitions xmi:id="_7GmpQBw5EeahrKOnLEWyBg" specification="button / setLight(true)" target="_2usN0Bw5EeahrKOnLEWyBg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_2usN0Bw5EeahrKOnLEWyBg" name="Light On" incomingTransitions="_7GmpQBw5EeahrKOnLEWyBg _bw3zgCPvEeabR7rQ6TRGkA">
+        <outgoingTransitions xmi:id="__bg0ABw5EeahrKOnLEWyBg" specification="after 5s / setLight(false)" target="_y4WOYRw5EeahrKOnLEWyBg"/>
+        <outgoingTransitions xmi:id="_bw3zgCPvEeabR7rQ6TRGkA" specification="button" target="_2usN0Bw5EeahrKOnLEWyBg"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

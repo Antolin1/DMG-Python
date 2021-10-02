@@ -1,0 +1,29 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_Hhi8UFkLEeiK-J-PtcK1Qg" specification="@CycleBased(200)&#10;&#10;interface:&#10;in event e&#10;var x : integer" name="SynchronizationExitTransition">
+    <regions xmi:id="_HhlYk1kLEeiK-J-PtcK1Qg" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_Hhq4IVkLEeiK-J-PtcK1Qg">
+        <outgoingTransitions xmi:id="_MfQzgFkLEeiK-J-PtcK1Qg" specification="" target="_MBR3AFkLEeiK-J-PtcK1Qg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_HhsGRFkLEeiK-J-PtcK1Qg" name="StateA">
+        <regions xmi:id="_K-gLYFkLEeiK-J-PtcK1Qg" name="">
+          <vertices xsi:type="sgraph:State" xmi:id="_K-gycFkLEeiK-J-PtcK1Qg" name="State1" incomingTransitions="_Oqoe4FkLEeiK-J-PtcK1Qg">
+            <outgoingTransitions xmi:id="_Uau1QFkLEeiK-J-PtcK1Qg" specification="" target="_TWNdMFkLEeiK-J-PtcK1Qg"/>
+          </vertices>
+        </regions>
+        <regions xmi:id="_LJyOUFkLEeiK-J-PtcK1Qg" name="">
+          <vertices xsi:type="sgraph:State" xmi:id="_LJy1YFkLEeiK-J-PtcK1Qg" name="State1" incomingTransitions="_RA2vYFkLEeiK-J-PtcK1Qg">
+            <outgoingTransitions xmi:id="_UtziQFkLEeiK-J-PtcK1Qg" specification="" target="_TWNdMFkLEeiK-J-PtcK1Qg"/>
+          </vertices>
+        </regions>
+      </vertices>
+      <vertices xsi:type="sgraph:Synchronization" xmi:id="_MBR3AFkLEeiK-J-PtcK1Qg" incomingTransitions="_MfQzgFkLEeiK-J-PtcK1Qg">
+        <outgoingTransitions xmi:id="_Oqoe4FkLEeiK-J-PtcK1Qg" specification="" target="_K-gycFkLEeiK-J-PtcK1Qg"/>
+        <outgoingTransitions xmi:id="_RA2vYFkLEeiK-J-PtcK1Qg" specification="" target="_LJy1YFkLEeiK-J-PtcK1Qg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:Synchronization" xmi:id="_TWNdMFkLEeiK-J-PtcK1Qg" incomingTransitions="_Uau1QFkLEeiK-J-PtcK1Qg _UtziQFkLEeiK-J-PtcK1Qg">
+        <outgoingTransitions xmi:id="_VcyvMFkLEeiK-J-PtcK1Qg" specification="e [x==0] / x = 42" target="_VHvFMFkLEeiK-J-PtcK1Qg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:FinalState" xmi:id="_VHvFMFkLEeiK-J-PtcK1Qg" incomingTransitions="_VcyvMFkLEeiK-J-PtcK1Qg"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

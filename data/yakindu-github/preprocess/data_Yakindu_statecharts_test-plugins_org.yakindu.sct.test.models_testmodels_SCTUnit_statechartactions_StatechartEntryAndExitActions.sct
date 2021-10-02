@@ -1,0 +1,10 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_uu3Q0O1-EeiR9ayMzEN_RA" specification="namespace statechartactions&#10;&#10;interface:&#10;&#10;var x : integer&#10;var y : integer&#10;var b : boolean&#10;&#10;internal:&#10;&#10;// all entry actions must be executed&#10;// in the declared order&#10;// and guards must be considered&#10;entry / x = 2; y = 3&#10;entry [b] / x += y&#10;&#10;// all exit actions must be executed&#10;// in the declared order&#10;// and guards must be considered&#10;exit / x = 8; y = 2&#10;exit [b] / x -= y" namespace="statechartactions" name="StatechartEntryAndExitActions">
+    <regions xmi:id="_uu4e8-1-EeiR9ayMzEN_RA" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_uu-lkO1-EeiR9ayMzEN_RA">
+        <outgoingTransitions xmi:id="_uvAaxe1-EeiR9ayMzEN_RA" target="_uu_Mp-1-EeiR9ayMzEN_RA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_uu_Mp-1-EeiR9ayMzEN_RA" name="A" incomingTransitions="_uvAaxe1-EeiR9ayMzEN_RA"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

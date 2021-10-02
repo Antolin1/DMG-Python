@@ -1,0 +1,33 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_BNR3gLX7EeWTfOMYDrZNaw" specification="internal:&#10;event proceed: void&#10;event error&#10;event success" name="state_initial_final">
+    <regions xmi:id="_BNSekrX7EeWTfOMYDrZNaw" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_BNWwAbX7EeWTfOMYDrZNaw">
+        <outgoingTransitions xmi:id="_3_1okLkQEeW6eogEEG3H2w" specification="" target="_QCGVsLYGEeWTfOMYDrZNaw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_f7J1sLhOEeWuvJHgu3pQWg" specification="" name="Handle result" incomingTransitions="_67ZawLkQEeW6eogEEG3H2w _cfkVALkREeW6eogEEG3H2w">
+        <regions xmi:id="_f7kFYLhOEeWuvJHgu3pQWg" name="inner region">
+          <vertices xsi:type="sgraph:State" xmi:id="_WyYfQLYdEeWXOIu_IVDg8Q" specification="" name="Handle failure" incomingTransitions="_m2vu0LhOEeWuvJHgu3pQWg">
+            <outgoingTransitions xmi:id="_fcDXgLhREeWuvJHgu3pQWg" specification="proceed" target="_eeSuwLhREeWuvJHgu3pQWg"/>
+          </vertices>
+          <vertices xsi:type="sgraph:Entry" xmi:id="_lr8IkLhOEeWuvJHgu3pQWg" name="failure">
+            <outgoingTransitions xmi:id="_m2vu0LhOEeWuvJHgu3pQWg" specification="" target="_WyYfQLYdEeWXOIu_IVDg8Q"/>
+          </vertices>
+          <vertices xsi:type="sgraph:Entry" xmi:id="__EXwcLhOEeWuvJHgu3pQWg" name="">
+            <outgoingTransitions xmi:id="_FvRiMLhPEeWuvJHgu3pQWg" specification="" target="_XG9U0LhREeWuvJHgu3pQWg"/>
+          </vertices>
+          <vertices xsi:type="sgraph:State" xmi:id="_XG9U0LhREeWuvJHgu3pQWg" name="Handle success" incomingTransitions="_FvRiMLhPEeWuvJHgu3pQWg">
+            <outgoingTransitions xmi:id="_hUSrgLhREeWuvJHgu3pQWg" specification="proceed" target="_eeSuwLhREeWuvJHgu3pQWg"/>
+          </vertices>
+          <vertices xsi:type="sgraph:FinalState" xmi:id="_eeSuwLhREeWuvJHgu3pQWg" incomingTransitions="_fcDXgLhREeWuvJHgu3pQWg _hUSrgLhREeWuvJHgu3pQWg"/>
+        </regions>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_QCGVsLYGEeWTfOMYDrZNaw" specification="" name="A" incomingTransitions="_3_1okLkQEeW6eogEEG3H2w">
+        <outgoingTransitions xmi:id="_KOCg0LYQEeWTfOMYDrZNaw" specification="proceed" target="_KOAEkLYQEeWTfOMYDrZNaw"/>
+        <outgoingTransitions xmi:id="_67ZawLkQEeW6eogEEG3H2w" specification="error # &gt;failure" target="_f7J1sLhOEeWuvJHgu3pQWg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_KOAEkLYQEeWTfOMYDrZNaw" name="B" incomingTransitions="_KOCg0LYQEeWTfOMYDrZNaw">
+        <outgoingTransitions xmi:id="_cfkVALkREeW6eogEEG3H2w" specification="success" target="_f7J1sLhOEeWuvJHgu3pQWg"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

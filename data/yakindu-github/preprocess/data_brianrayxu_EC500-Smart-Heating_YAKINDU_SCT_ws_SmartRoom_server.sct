@@ -1,0 +1,15 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_cKuUIAiaEeqxO47HGj-BGg" specification="@EventDriven&#10;// Use the event driven execution model.&#10;// Runs a run-to-completion step&#10;// each time an event is raised.&#10;// Switch to cycle based behavior&#10;// by specifying '@CycleBased(200)'&#10;// instead.&#10;&#10;@ChildFirstExecution&#10;// In composite states, execute&#10;// child states first.&#10;// @ParentFirstExecution does the opposite.&#10;internal:&#10;event lightOff&#10;interface:&#10;// Define events&#10;// and variables here. &#10;&#10;var userSensed : integer&#10;var openWindow : boolean&#10;operation get_RainAndOutTemp() : boolean&#10;var tempTarget : integer&#10;var tempSense : integer&#10;operation get_temp() : integer&#10;var lighting : integer&#10;operation get_lighting() : integer&#10;operation avg_Temp_Pref() : integer" name="server">
+    <regions xmi:id="_cKviQwiaEeqxO47HGj-BGg" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_cKwJVgiaEeqxO47HGj-BGg">
+        <outgoingTransitions xmi:id="_cKxXdQiaEeqxO47HGj-BGg" target="_cKwwawiaEeqxO47HGj-BGg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_cKwwawiaEeqxO47HGj-BGg" specification="entry/ tempTarget = 68; raise lightOff" name="Idle" incomingTransitions="_cKxXdQiaEeqxO47HGj-BGg _6SMMEAicEeqxO47HGj-BGg">
+        <outgoingTransitions xmi:id="_tv40AAiaEeqxO47HGj-BGg" specification="[userSensed != 0]" target="_j6gDQAiaEeqxO47HGj-BGg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_j6gDQAiaEeqxO47HGj-BGg" specification="every 120s/tempTarget = avg_Temp_Pref(); &#10;openWindow = get_RainAndOutTemp()&#10;" name="userSensed" incomingTransitions="_tv40AAiaEeqxO47HGj-BGg">
+        <outgoingTransitions xmi:id="_6SMMEAicEeqxO47HGj-BGg" specification="[userSensed == 0]" target="_cKwwawiaEeqxO47HGj-BGg"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

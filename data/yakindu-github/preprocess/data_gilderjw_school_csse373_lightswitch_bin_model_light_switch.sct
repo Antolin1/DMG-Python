@@ -1,0 +1,15 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_M9C_kCbJEee_eM3nzeCsNw" specification="internal:&#10;&#9;event operate&#10;&#9;" name="default">
+    <regions xmi:id="_M9frgCbJEee_eM3nzeCsNw" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_M-Ao4CbJEee_eM3nzeCsNw">
+        <outgoingTransitions xmi:id="_M-LA8CbJEee_eM3nzeCsNw" target="_M-DsMCbJEee_eM3nzeCsNw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_M-DsMCbJEee_eM3nzeCsNw" name="off" incomingTransitions="_M-LA8CbJEee_eM3nzeCsNw _8rr6oCkdEeeok8ylE7rvcg">
+        <outgoingTransitions xmi:id="_6-CGACkdEeeok8ylE7rvcg" specification="operate" target="_693t8CkdEeeok8ylE7rvcg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_693t8CkdEeeok8ylE7rvcg" name="On" incomingTransitions="_6-CGACkdEeeok8ylE7rvcg">
+        <outgoingTransitions xmi:id="_8rr6oCkdEeeok8ylE7rvcg" specification="operate" target="_M-DsMCbJEee_eM3nzeCsNw"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

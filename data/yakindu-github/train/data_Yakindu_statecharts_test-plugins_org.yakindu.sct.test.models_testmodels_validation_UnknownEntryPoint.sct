@@ -1,0 +1,24 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_IPIaEG8PEei9CMIz-h2p1A" specification="@CycleBased(200)&#10;&#10;interface:&#10;// Define events and&#10;// and variables here. &#10;//Use CTRL + Space for content assist." name="UnknownEntryPoint">
+    <regions xmi:id="_IPJBLW8PEei9CMIz-h2p1A" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_IPJoNm8PEei9CMIz-h2p1A">
+        <outgoingTransitions xmi:id="_QMLwMG8PEei9CMIz-h2p1A" specification="" target="_OLsfIG8PEei9CMIz-h2p1A"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_OLsfIG8PEei9CMIz-h2p1A" name="StateA" incomingTransitions="_QMLwMG8PEei9CMIz-h2p1A">
+        <outgoingTransitions xmi:id="_TRn3IG8PEei9CMIz-h2p1A" specification="always #&gt;doesNotExist &gt; doesExist" target="_OjcQwG8PEei9CMIz-h2p1A"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_OjcQwG8PEei9CMIz-h2p1A" name="StateB" incomingTransitions="_TRn3IG8PEei9CMIz-h2p1A">
+        <regions xmi:id="_Ojc30m8PEei9CMIz-h2p1A" name="r1">
+          <vertices xsi:type="sgraph:Entry" xmi:id="_Bb9VwG8SEeindukGo-aWiw" name="">
+            <outgoingTransitions xmi:id="_Kgi3gG8ZEeindukGo-aWiw" specification="" target="_HSUA8G8ZEeindukGo-aWiw"/>
+          </vertices>
+          <vertices xsi:type="sgraph:Entry" xmi:id="_FO7z928ZEeindukGo-aWiw" name="doesExist">
+            <outgoingTransitions xmi:id="_Mlg_8G8ZEeindukGo-aWiw" specification="" target="_JzjOoG8ZEeindukGo-aWiw"/>
+          </vertices>
+          <vertices xsi:type="sgraph:State" xmi:id="_HSUA8G8ZEeindukGo-aWiw" name="StateD" incomingTransitions="_Kgi3gG8ZEeindukGo-aWiw"/>
+          <vertices xsi:type="sgraph:State" xmi:id="_JzjOoG8ZEeindukGo-aWiw" name="StateF" incomingTransitions="_Mlg_8G8ZEeindukGo-aWiw"/>
+        </regions>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

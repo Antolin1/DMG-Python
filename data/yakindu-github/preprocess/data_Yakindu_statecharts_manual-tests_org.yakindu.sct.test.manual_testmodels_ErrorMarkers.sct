@@ -1,0 +1,16 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_SgyrIP-eEeiO47NfT87QrA" specification="@EventDriven&#10;@ChildFirstExecution&#10;&#10;internal:&#10;var x : integer = true&#10;var unused : boolean " name="ErrorMarkers">
+    <regions xmi:id="_Sg2Vg_-eEeiO47NfT87QrA" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_Sg9DMf-eEeiO47NfT87QrA">
+        <outgoingTransitions xmi:id="_Sg_fc_-eEeiO47NfT87QrA" target="_Sg-RVP-eEeiO47NfT87QrA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_Sg-RVP-eEeiO47NfT87QrA" name="StateA" incomingTransitions="_Sg_fc_-eEeiO47NfT87QrA">
+        <outgoingTransitions xmi:id="_ayliMP-eEeiO47NfT87QrA" specification="" target="_Z-kEQP-eEeiO47NfT87QrA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_Z-kEQP-eEeiO47NfT87QrA" specification="" name="StateA" incomingTransitions="_ayliMP-eEeiO47NfT87QrA">
+        <outgoingTransitions xmi:id="_cnkG0P-eEeiO47NfT87QrA" specification="[!x]" target="_b9DxQP-eEeiO47NfT87QrA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_b9DxQP-eEeiO47NfT87QrA" specification="entry / x = false" name="StateC" incomingTransitions="_cnkG0P-eEeiO47NfT87QrA"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

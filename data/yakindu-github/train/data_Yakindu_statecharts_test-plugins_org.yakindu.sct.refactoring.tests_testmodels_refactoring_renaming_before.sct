@@ -1,0 +1,13 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_1vhokMdfEeGOoP2Ze98WBQ" specification="interface  someInterface:&#10; &#10; in event someEvent1&#10; in event someEvent2 : integer&#10; var someVariable : integer" name="Renaming">
+    <regions xmi:id="_1vi2scdfEeGOoP2Ze98WBQ" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_1vjdxsdfEeGOoP2Ze98WBQ">
+        <outgoingTransitions xmi:id="_1vl6A8dfEeGOoP2Ze98WBQ" target="_1vkr48dfEeGOoP2Ze98WBQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_1vkr48dfEeGOoP2Ze98WBQ" specification="entry / raise someInterface.someEvent1;&#10;  someInterface.someVariable=42" name="A" incomingTransitions="_1vl6A8dfEeGOoP2Ze98WBQ">
+        <outgoingTransitions xmi:id="_hkckcMdhEeGOoP2Ze98WBQ" specification="[someInterface.someVariable==42 &amp;&amp; someInterface.someEvent1] / someInterface.someVariable+=1" target="_hNom8MdhEeGOoP2Ze98WBQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_hNom8MdhEeGOoP2Ze98WBQ" name="B" incomingTransitions="_hkckcMdhEeGOoP2Ze98WBQ"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

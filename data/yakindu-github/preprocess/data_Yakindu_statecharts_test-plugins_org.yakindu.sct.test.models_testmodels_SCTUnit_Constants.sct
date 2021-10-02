@@ -1,0 +1,18 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_WbmUAHDFEeS-kPXuwFs1pA" specification="interface:&#13;&#10;in event e&#13;&#10;in event e2 : integer&#13;&#10;const x : integer = 10&#13;&#10;const y :integer = x *2&#13;&#10;&#13;&#10;var result : integer = 0&#13;&#10;&#13;&#10;interface Named:&#13;&#10;const y : string = &quot;Hello World&quot;&#13;&#10;const two : integer = 2&#13;&#10;&#13;&#10;internal:&#13;&#10;const internalConstant : integer = 5" name="Constants">
+    <regions xmi:id="_WboJMnDFEeS-kPXuwFs1pA" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_WbqldnDFEeS-kPXuwFs1pA">
+        <outgoingTransitions xmi:id="_WbtBs3DFEeS-kPXuwFs1pA" target="_WbrzlHDFEeS-kPXuwFs1pA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_WbrzlHDFEeS-kPXuwFs1pA" name="A" incomingTransitions="_WbtBs3DFEeS-kPXuwFs1pA _0r0-sOJ7EeSX98LLrxf-kw">
+        <outgoingTransitions xmi:id="_KJyusHDGEeS-kPXuwFs1pA" specification="e" target="_9cjnEHDFEeS-kPXuwFs1pA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_9cjnEHDFEeS-kPXuwFs1pA" specification="entry / result = Named.two * x" name="B" incomingTransitions="_KJyusHDGEeS-kPXuwFs1pA">
+        <outgoingTransitions xmi:id="_kzHK4OG9EeS03b3Sal9BvQ" specification="e" target="_kbR5sOG9EeS03b3Sal9BvQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_kbR5sOG9EeS03b3Sal9BvQ" specification="entry / result = result * internalConstant" name="C" incomingTransitions="_kzHK4OG9EeS03b3Sal9BvQ">
+        <outgoingTransitions xmi:id="_0r0-sOJ7EeSX98LLrxf-kw" specification="e2 / result = valueof(e2) * x * Named.two * internalConstant" target="_WbrzlHDFEeS-kPXuwFs1pA"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

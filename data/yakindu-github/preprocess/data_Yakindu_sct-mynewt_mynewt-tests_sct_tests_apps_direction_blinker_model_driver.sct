@@ -1,0 +1,18 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_zdh88LEFEeiCp9ZwnHu_Vw" specification="@EventDriven&#10;@ChildFirstExecution&#10;&#10;import : &quot;../src/sm/Directionblinker.h&quot;&#10;interface: &#10;&#10;var blinker : pointer&lt;Directionblinker&gt;" name="driver" domainID="com.yakindu.domain.c">
+    <regions xmi:id="_zdh8-rEFEeiCp9ZwnHu_Vw" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_zdikCbEFEeiCp9ZwnHu_Vw">
+        <outgoingTransitions xmi:id="_zdjLJLEFEeiCp9ZwnHu_Vw" target="_zdjLFLEFEeiCp9ZwnHu_Vw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_zdjLFLEFEeiCp9ZwnHu_Vw" name="Step1" incomingTransitions="_zdjLJLEFEeiCp9ZwnHu_Vw _2Y-k8LEGEeiCp9ZwnHu_Vw">
+        <outgoingTransitions xmi:id="_WKENc7EGEeiCp9ZwnHu_Vw" specification="after 2s" target="_WKENcLEGEeiCp9ZwnHu_Vw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_WKENcLEGEeiCp9ZwnHu_Vw" specification="entry / directionblinkerIface_raise_left(blinker)" name="Step2" incomingTransitions="_WKENc7EGEeiCp9ZwnHu_Vw">
+        <outgoingTransitions xmi:id="_ufOac7EGEeiCp9ZwnHu_Vw" specification="after 8s" target="_ufOacLEGEeiCp9ZwnHu_Vw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_ufOacLEGEeiCp9ZwnHu_Vw" specification="entry / directionblinkerIface_raise_right(blinker)" name="Step3" incomingTransitions="_ufOac7EGEeiCp9ZwnHu_Vw">
+        <outgoingTransitions xmi:id="_2Y-k8LEGEeiCp9ZwnHu_Vw" specification="after 6s" target="_zdjLFLEFEeiCp9ZwnHu_Vw"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

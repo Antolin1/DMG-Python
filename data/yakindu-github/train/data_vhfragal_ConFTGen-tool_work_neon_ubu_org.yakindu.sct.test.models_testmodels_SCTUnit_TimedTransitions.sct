@@ -1,0 +1,13 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_hIDusFEHEeOc8J-qhtddTg" specification="internal:&#10;var x:integer=0&#10;var y:integer=0&#10;every 1s / x+=1&#10;oncycle / y+=1" name="TimedTransitions">
+    <regions xmi:id="_hIGyAlEHEeOc8J-qhtddTg" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_ntZtAFXTEeOE_N2O5IeRFg">
+        <outgoingTransitions xmi:id="_oZDSEFXTEeOE_N2O5IeRFg" specification="" target="_kWy9kFXTEeOE_N2O5IeRFg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_kWy9kFXTEeOE_N2O5IeRFg" name="Start" incomingTransitions="_oZDSEFXTEeOE_N2O5IeRFg">
+        <outgoingTransitions xmi:id="_uowVkFXTEeOE_N2O5IeRFg" specification="after 2s" target="_kopikFXTEeOE_N2O5IeRFg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_kopikFXTEeOE_N2O5IeRFg" specification="" name="End" incomingTransitions="_uowVkFXTEeOE_N2O5IeRFg"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

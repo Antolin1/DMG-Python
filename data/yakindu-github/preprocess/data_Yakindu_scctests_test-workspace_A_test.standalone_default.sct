@@ -1,0 +1,13 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_Oyj74L-HEeWOuOsEof1gMw" specification="&#13;&#10;interface: &#13;&#10;in event event1 &#13;&#10;var value : integer&#13;&#10;&#13;&#10;&#13;&#10;" name="A_SCT">
+    <regions xmi:id="_OzJKsL-HEeWOuOsEof1gMw" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_OzizUL-HEeWOuOsEof1gMw">
+        <outgoingTransitions xmi:id="_Ozz5EL-HEeWOuOsEof1gMw" target="_Oznr0L-HEeWOuOsEof1gMw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_Oznr0L-HEeWOuOsEof1gMw" specification="entry / value=42" name="A" incomingTransitions="_Ozz5EL-HEeWOuOsEof1gMw">
+        <outgoingTransitions xmi:id="_8xUd4GetEeevBf3UvWdPLQ" specification="event1" target="_8xQzgGetEeevBf3UvWdPLQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_8xQzgGetEeevBf3UvWdPLQ" specification="entry / value = 43" name="B" incomingTransitions="_8xUd4GetEeevBf3UvWdPLQ"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

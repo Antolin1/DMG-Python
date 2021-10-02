@@ -1,0 +1,15 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="__sryEPgvEeG-WPrThBMM5w" specification="&#10;&#10;interface:&#10;&#10;&#9;in event e&#10;&#9;var guard : boolean = false&#10;&#9;var done : boolean = false" name="GuardedExit">
+    <regions xmi:id="__stnQvgvEeG-WPrThBMM5w" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="__tJsIfgvEeG-WPrThBMM5w">
+        <outgoingTransitions xmi:id="__tMvcPgvEeG-WPrThBMM5w" target="__tK6QfgvEeG-WPrThBMM5w"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="__tK6QfgvEeG-WPrThBMM5w" specification="exit [guard] &#10;  / done = true" name="A" incomingTransitions="__tMvcPgvEeG-WPrThBMM5w _EdiR8PgwEeG-WPrThBMM5w">
+        <outgoingTransitions xmi:id="_DkP5gPgwEeG-WPrThBMM5w" specification="e" target="_B9W0MPgwEeG-WPrThBMM5w"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_B9W0MPgwEeG-WPrThBMM5w" name="B" incomingTransitions="_DkP5gPgwEeG-WPrThBMM5w">
+        <outgoingTransitions xmi:id="_EdiR8PgwEeG-WPrThBMM5w" specification="e" target="__tK6QfgvEeG-WPrThBMM5w"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

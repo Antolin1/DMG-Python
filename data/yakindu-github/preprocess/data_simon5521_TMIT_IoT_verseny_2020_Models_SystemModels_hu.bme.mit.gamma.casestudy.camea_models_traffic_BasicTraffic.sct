@@ -1,0 +1,12 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_R9rnEPeJEeqH3JDUP7HQiQ" specification="interface InPort:&#13;&#10;&#9;in event NewCar&#13;&#10;&#9;&#13;&#10;interface OutPort:&#13;&#10;&#9;out event NewData" name="BasicTraffic">
+    <regions xmi:id="_R9tcQ_eJEeqH3JDUP7HQiQ" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_R99T4feJEeqH3JDUP7HQiQ">
+        <outgoingTransitions xmi:id="_R-DagPeJEeqH3JDUP7HQiQ" target="_R9_wI_eJEeqH3JDUP7HQiQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_R9_wI_eJEeqH3JDUP7HQiQ" name="StateA" incomingTransitions="_R-DagPeJEeqH3JDUP7HQiQ _UT5QgPeJEeqH3JDUP7HQiQ">
+        <outgoingTransitions xmi:id="_UT5QgPeJEeqH3JDUP7HQiQ" specification="InPort.NewCar / raise OutPort.NewData" target="_R9_wI_eJEeqH3JDUP7HQiQ"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

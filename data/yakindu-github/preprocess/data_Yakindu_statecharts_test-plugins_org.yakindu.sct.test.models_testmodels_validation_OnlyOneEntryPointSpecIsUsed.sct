@@ -1,0 +1,27 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_HTxHQLwtEei6d4Y1XhmBsw" specification="" name="OnlyOneEntryPointSpecIsUsed">
+    <regions xmi:id="_HUPBULwtEei6d4Y1XhmBsw" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_HUoC4LwtEei6d4Y1XhmBsw">
+        <outgoingTransitions xmi:id="_HUwlwLwtEei6d4Y1XhmBsw" target="_HUp4ELwtEei6d4Y1XhmBsw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_HUp4ELwtEei6d4Y1XhmBsw" name="StateA" incomingTransitions="_HUwlwLwtEei6d4Y1XhmBsw">
+        <outgoingTransitions xmi:id="_H2IBcLyxEeiOnvn1OsaBeg" specification="always # &gt; e1 &gt; e2 " target="__noWALywEeiOnvn1OsaBeg"/>
+        <outgoingTransitions xmi:id="_UxEN4LyxEeiOnvn1OsaBeg" specification="always # &gt; e1" target="__noWALywEeiOnvn1OsaBeg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="__noWALywEeiOnvn1OsaBeg" name="StateB" incomingTransitions="_H2IBcLyxEeiOnvn1OsaBeg _UxEN4LyxEeiOnvn1OsaBeg">
+        <regions xmi:id="__npkILywEeiOnvn1OsaBeg" name="r1">
+          <vertices xsi:type="sgraph:Entry" xmi:id="_AlaM4LyxEeiOnvn1OsaBeg" name="e1">
+            <outgoingTransitions xmi:id="_EeXbcLyxEeiOnvn1OsaBeg" specification="" target="_CiVzoLyxEeiOnvn1OsaBeg"/>
+          </vertices>
+          <vertices xsi:type="sgraph:Entry" xmi:id="_Bih8cLyxEeiOnvn1OsaBeg" name="e2">
+            <outgoingTransitions xmi:id="_FComILyxEeiOnvn1OsaBeg" specification="" target="_CiVzoLyxEeiOnvn1OsaBeg"/>
+          </vertices>
+          <vertices xsi:type="sgraph:State" xmi:id="_CiVzoLyxEeiOnvn1OsaBeg" name="StateC" incomingTransitions="_EeXbcLyxEeiOnvn1OsaBeg _FComILyxEeiOnvn1OsaBeg _Oh6kALyxEeiOnvn1OsaBeg"/>
+          <vertices xsi:type="sgraph:Entry" xmi:id="_OAQBYLyxEeiOnvn1OsaBeg">
+            <outgoingTransitions xmi:id="_Oh6kALyxEeiOnvn1OsaBeg" specification="" target="_CiVzoLyxEeiOnvn1OsaBeg"/>
+          </vertices>
+        </regions>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

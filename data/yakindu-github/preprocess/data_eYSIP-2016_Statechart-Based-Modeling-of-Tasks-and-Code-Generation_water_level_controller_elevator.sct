@@ -1,0 +1,27 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_grA5kD0aEeaZVdFLglQRUQ" specification="interface:&#10;&#10;var floor:integer&#10;var current:integer&#10;var open:boolean&#10;in event floorSelected&#10;&#10;&#10;&#10;operation openDoors():void&#10;operation CloseDoors():void" name="elevator">
+    <regions xmi:id="_xgK_ND0iEea1N5W-aVnDNg" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_xgtKvT0iEea1N5W-aVnDNg">
+        <outgoingTransitions xmi:id="_xgtKxT0iEea1N5W-aVnDNg" specification="/floor=0;&#13;&#10;current=0" target="_xgoSUz0iEea1N5W-aVnDNg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_xgoSUz0iEea1N5W-aVnDNg" specification="" name="Doors Open" incomingTransitions="_xgtKxT0iEea1N5W-aVnDNg _xgl2Cz0iEea1N5W-aVnDNg">
+        <outgoingTransitions xmi:id="_xgqudj0iEea1N5W-aVnDNg" specification="floorSelected[floor!=current]/&#13;&#10;CloseDoors()" target="_xgg9fT0iEea1N5W-aVnDNg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_xgg9fT0iEea1N5W-aVnDNg" specification="entry/open=false" name="DoorsClosed" incomingTransitions="_xgqudj0iEea1N5W-aVnDNg">
+        <outgoingTransitions xmi:id="_xgl18j0iEea1N5W-aVnDNg" specification="[floor&gt;current]" target="_xgZowj0iEea1N5W-aVnDNg"/>
+        <outgoingTransitions xmi:id="_xgjZsD0iEea1N5W-aVnDNg" specification="[floor&lt;current]" target="_xgP3xj0iEea1N5W-aVnDNg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_xgNbdT0iEea1N5W-aVnDNg" name="moving">
+        <outgoingTransitions xmi:id="_xgl2Cz0iEea1N5W-aVnDNg" specification="[floor==current]/openDoors()" target="_xgoSUz0iEea1N5W-aVnDNg"/>
+        <regions xmi:id="_xgP3uT0iEea1N5W-aVnDNg" name="r1">
+          <vertices xsi:type="sgraph:State" xmi:id="_xgZowj0iEea1N5W-aVnDNg" specification="entry/current=&#13;&#10;current+1" name="MovingUp" incomingTransitions="_xgl18j0iEea1N5W-aVnDNg _o8fGkD6FEearZOXzvNYzEQ">
+            <outgoingTransitions xmi:id="_o8fGkD6FEearZOXzvNYzEQ" specification="every 1 s[floor&gt;current]" target="_xgZowj0iEea1N5W-aVnDNg"/>
+          </vertices>
+          <vertices xsi:type="sgraph:State" xmi:id="_xgP3xj0iEea1N5W-aVnDNg" specification="entry/current=&#13;&#10;current-1" name="MovingDown" incomingTransitions="_xgUwRD0iEea1N5W-aVnDNg _xgjZsD0iEea1N5W-aVnDNg">
+            <outgoingTransitions xmi:id="_xgUwRD0iEea1N5W-aVnDNg" specification="every 1s[floor&lt;current]" target="_xgP3xj0iEea1N5W-aVnDNg"/>
+          </vertices>
+        </regions>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

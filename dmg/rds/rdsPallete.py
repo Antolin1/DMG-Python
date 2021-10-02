@@ -111,3 +111,13 @@ rds_pallete = Pallete(dic_operations_rds, dic_nodes_rds,
                           dic_edges_rds, [G_initial_rds])
 
 rds_separator = '_'
+
+metafilter_refs = ['Database.elements', 
+                   'Table.indexes',
+                   'Table.columns',
+                   'Index.indexColumns',
+                   'IndexColumn.column',
+                   'Reference.primaryKeyColumns',
+                   'Reference.foreignKeyColumns',
+                   'Column.primaryReferences',
+                   'Column.foreignReferences']

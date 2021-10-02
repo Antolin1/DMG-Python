@@ -1,0 +1,12 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_IPEiAI_CEeaE_NItBGtDFQ" specification="/* Toggle LED3 EDU-CIAA-NXP */&#13;&#10;&#13;&#10;&#13;&#10;/* For each event (evTick) an operation  is done (opLED(LED3)) */&#13;&#10;&#13;&#10;&#13;&#10;interface:&#13;&#10;&#13;&#10;in event evTick&#13;&#10;&#13;&#10;operation opLED(LEDNumber:integer): void&#13;&#10;&#13;&#10;//const LEDR: integer = 0&#13;&#10;//const LEDG: integer = 1&#13;&#10;//const LEDB: integer = 2&#13;&#10;//const LED1: integer = 3&#13;&#10;//const LED2: integer = 4&#13;&#10;const LED3: integer = 5&#13;&#10;&#13;&#10;&#13;&#10;internal:&#13;&#10;" name="toggle">
+    <regions xmi:id="_IPEiA4_CEeaE_NItBGtDFQ" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_IPEiDY_CEeaE_NItBGtDFQ">
+        <outgoingTransitions xmi:id="_XlKfgBMaEeevvbhLDk5fag" specification="" target="_EvYFTRMaEeevvbhLDk5fag"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_EvYFTRMaEeevvbhLDk5fag" specification="entry / opLED(LED3)" name="TOGGLE" incomingTransitions="_XlKfgBMaEeevvbhLDk5fag _qtMbcObiEemPo55lRtzgow">
+        <outgoingTransitions xmi:id="_qtMbcObiEemPo55lRtzgow" specification="evTick" target="_EvYFTRMaEeevvbhLDk5fag"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

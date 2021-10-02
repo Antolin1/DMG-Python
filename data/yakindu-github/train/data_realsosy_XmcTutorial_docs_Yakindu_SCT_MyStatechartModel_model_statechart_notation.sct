@@ -1,0 +1,30 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_tQdgUNddEei_hIN6ENiOSQ" specification="" name="statechart_notation">
+    <regions xmi:id="_tQeuc9ddEei_hIN6ENiOSQ" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_tQkOAdddEei_hIN6ENiOSQ">
+        <outgoingTransitions xmi:id="_tQofcNddEei_hIN6ENiOSQ" target="_tQmDMtddEei_hIN6ENiOSQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_tQmDMtddEei_hIN6ENiOSQ" specification="entry/ ...&#13;&#10;always/ ...&#13;&#10;exit/ ..." name="StateA" incomingTransitions="_tQofcNddEei_hIN6ENiOSQ">
+        <outgoingTransitions xmi:id="_SHItINdeEei_hIN6ENiOSQ" specification="Event[Condition]/Action" target="_Oq520NdeEei_hIN6ENiOSQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_Oq520NdeEei_hIN6ENiOSQ" name="StateB" incomingTransitions="_SHItINdeEei_hIN6ENiOSQ">
+        <regions xmi:id="_Oq6d4tdeEei_hIN6ENiOSQ" name="OthogoanlA">
+          <vertices xsi:type="sgraph:State" xmi:id="_fRBUgNdeEei_hIN6ENiOSQ" name="SubStateB1" incomingTransitions="_56VVcNdeEei_hIN6ENiOSQ">
+            <outgoingTransitions xmi:id="_ya69kNdeEei_hIN6ENiOSQ" specification="" target="_gweVENdeEei_hIN6ENiOSQ"/>
+          </vertices>
+          <vertices xsi:type="sgraph:State" xmi:id="_gweVENdeEei_hIN6ENiOSQ" name="SubStateB2" incomingTransitions="_ya69kNdeEei_hIN6ENiOSQ">
+            <outgoingTransitions xmi:id="_56VVcNdeEei_hIN6ENiOSQ" specification="" target="_fRBUgNdeEei_hIN6ENiOSQ"/>
+          </vertices>
+        </regions>
+        <regions xmi:id="_Oq6d49deEei_hIN6ENiOSQ" name="OthogoanlB">
+          <vertices xsi:type="sgraph:State" xmi:id="_hVftsNdeEei_hIN6ENiOSQ" name="SubStateB3" incomingTransitions="_9k3tgNdeEei_hIN6ENiOSQ">
+            <outgoingTransitions xmi:id="_8Duq4NdeEei_hIN6ENiOSQ" specification="" target="_hsNkkNdeEei_hIN6ENiOSQ"/>
+          </vertices>
+          <vertices xsi:type="sgraph:State" xmi:id="_hsNkkNdeEei_hIN6ENiOSQ" name="SubStateB4" incomingTransitions="_8Duq4NdeEei_hIN6ENiOSQ">
+            <outgoingTransitions xmi:id="_9k3tgNdeEei_hIN6ENiOSQ" specification="" target="_hVftsNdeEei_hIN6ENiOSQ"/>
+          </vertices>
+        </regions>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

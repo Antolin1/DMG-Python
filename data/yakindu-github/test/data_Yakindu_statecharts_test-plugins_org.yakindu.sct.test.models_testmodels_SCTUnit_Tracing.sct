@@ -1,0 +1,25 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_gSNhYO17Eeie5uoWtym4Mg" specification="@EventDriven&#10;// Use the event driven execution model.&#10;// Runs a run-to-completion step&#10;// each time an event is raised.&#10;// Switch to cycle based behavior&#10;// by specifying '@CycleBased(200)'&#10;// instead.&#10;&#10;@ChildFirstExecution&#10;// In composite states, execute&#10;// child states first.&#10;// @ParentFirstExecution does the opposite.&#10;&#10;interface:&#10;// Define events&#10;// and variables here. &#10;// Use CTRL + Space for content assist." name="Tracing">
+    <regions xmi:id="_gSPWk-17Eeie5uoWtym4Mg" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_gSVdMe17Eeie5uoWtym4Mg">
+        <outgoingTransitions xmi:id="_gSYggO17Eeie5uoWtym4Mg" target="_gSWrV-17Eeie5uoWtym4Mg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_gSWrV-17Eeie5uoWtym4Mg" name="StateA" incomingTransitions="_gSYggO17Eeie5uoWtym4Mg">
+        <outgoingTransitions xmi:id="_muiEkO17Eeie5uoWtym4Mg" specification="always" target="_mMgVkO17Eeie5uoWtym4Mg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:FinalState" xmi:id="_mMgVkO17Eeie5uoWtym4Mg" incomingTransitions="_muiEkO17Eeie5uoWtym4Mg"/>
+    </regions>
+    <annotations>
+      <type href="#|::0.8.0::0::/1"/>
+    </annotations>
+    <annotations>
+      <type href="#|::0.8.1::0::/9"/>
+    </annotations>
+    <annotations xmi:id="_gTkzUu17Eeie5uoWtym4Mg">
+      <type href="#|::0.8.0::0::/1"/>
+    </annotations>
+    <annotations xmi:id="_gTkzU-17Eeie5uoWtym4Mg">
+      <type href="#|::0.8.1::0::/9"/>
+    </annotations>
+  </sgraph:Statechart>
+  </xmi:XMI>

@@ -1,0 +1,10 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_i9tWgNvWEeW8u6lR5q1jkw" specification="interface Sample:&#10;    var a:boolean&#10;    in event evA:boolean&#10;    out event evB:integer" name="DefaultSM">
+    <regions xmi:id="_i9ukotvWEeW8u6lR5q1jkw" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_i90EMdvWEeW8u6lR5q1jkw">
+        <outgoingTransitions xmi:id="_i92gddvWEeW8u6lR5q1jkw" target="_i91SV9vWEeW8u6lR5q1jkw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_i91SV9vWEeW8u6lR5q1jkw" specification="" name="MyState" incomingTransitions="_i92gddvWEeW8u6lR5q1jkw"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

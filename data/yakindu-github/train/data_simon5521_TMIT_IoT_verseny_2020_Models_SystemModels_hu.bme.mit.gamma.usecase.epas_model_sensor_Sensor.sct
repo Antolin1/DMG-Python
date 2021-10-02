@@ -1,0 +1,15 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_f_cFQNU8Eemxm9eGinoW5Q" specification="&#10;interface HWFault:&#10;&#9;in event det&#10;&#9;in event latent&#10;&#9;&#10;&#10;interface SensorFault:&#10;&#9;out event det&#10;&#9;out event latent" name="Sensor">
+    <regions xmi:id="_gAJ28NU8Eemxm9eGinoW5Q" name="Sensor">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_gA8hINU8Eemxm9eGinoW5Q">
+        <outgoingTransitions xmi:id="_gBMYwNU8Eemxm9eGinoW5Q" target="_gBBZoNU8Eemxm9eGinoW5Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_gBBZoNU8Eemxm9eGinoW5Q" name="Ok" incomingTransitions="_gBMYwNU8Eemxm9eGinoW5Q">
+        <outgoingTransitions xmi:id="_SiSHINU9Eemxm9eGinoW5Q" specification="HWFault.det" target="_5dGycNU8Eemxm9eGinoW5Q"/>
+        <outgoingTransitions xmi:id="_VRh7oNU9Eemxm9eGinoW5Q" specification="HWFault.latent" target="_5tYqINU8Eemxm9eGinoW5Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_5dGycNU8Eemxm9eGinoW5Q" specification="entry / raise SensorFault.det" name="Off" incomingTransitions="_SiSHINU9Eemxm9eGinoW5Q"/>
+      <vertices xsi:type="sgraph:State" xmi:id="_5tYqINU8Eemxm9eGinoW5Q" specification="entry/&#10;raise SensorFault.latent" name="LatentFailure" incomingTransitions="_VRh7oNU9Eemxm9eGinoW5Q"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

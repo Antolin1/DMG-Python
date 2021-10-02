@@ -1,0 +1,16 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_7vGTADywEei5mvtbXGo9BQ" specification="namespace eventdriven&#10;@EventDriven&#10;&#10;interface:&#10;in event e&#10;in event i: integer&#10;var x: integer" namespace="eventdriven" name="NoLocalEvents">
+    <regions xmi:id="_7vIIMzywEei5mvtbXGo9BQ" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_7vO14TywEei5mvtbXGo9BQ">
+        <outgoingTransitions xmi:id="_7vSgQTywEei5mvtbXGo9BQ" target="_7vQEBDywEei5mvtbXGo9BQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_7vQEBDywEei5mvtbXGo9BQ" name="StateA" incomingTransitions="_7vSgQTywEei5mvtbXGo9BQ _MwLOYDyxEei5mvtbXGo9BQ">
+        <outgoingTransitions xmi:id="_HGC9IDyxEei5mvtbXGo9BQ" specification="e" target="_GOuTkDyxEei5mvtbXGo9BQ"/>
+        <outgoingTransitions xmi:id="_I_ubkDyxEei5mvtbXGo9BQ" specification="i / x = valueof(i)" target="_GOuTkDyxEei5mvtbXGo9BQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_GOuTkDyxEei5mvtbXGo9BQ" name="StateB" incomingTransitions="_HGC9IDyxEei5mvtbXGo9BQ _I_ubkDyxEei5mvtbXGo9BQ">
+        <outgoingTransitions xmi:id="_MwLOYDyxEei5mvtbXGo9BQ" specification="always" target="_7vQEBDywEei5mvtbXGo9BQ"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

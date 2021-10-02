@@ -1,0 +1,19 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_oqWBMOXyEeWRg9v3GT9X0Q" specification="import : &quot;CSample.h&quot;&#10;import : &quot;stdio.h&quot;&#10;&#10;interface:&#10;" name="CStatechart" domainID="com.yakindu.domain.c">
+    <regions xmi:id="_oqWBNeXyEeWRg9v3GT9X0Q" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_oqX2YeXyEeWRg9v3GT9X0Q">
+        <outgoingTransitions xmi:id="_oqZEieXyEeWRg9v3GT9X0Q" target="_qaXPEEgjEeagN_lyUlbl8g"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_oqYddOXyEeWRg9v3GT9X0Q" specification="entry / &#10;extIntArr = 8" name="StateB" incomingTransitions="_wDdlkEgjEeagN_lyUlbl8g">
+        <outgoingTransitions xmi:id="_kdYvwEgiEeagN_lyUlbl8g" specification="always [extIntArr==8]" target="_ji6EgEgiEeagN_lyUlbl8g"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_ji6EgEgiEeagN_lyUlbl8g" specification="entry / &#10;extIntArr = extIntArr * 2 // 16" name="StateC" incomingTransitions="_kdYvwEgiEeagN_lyUlbl8g">
+        <outgoingTransitions xmi:id="_4Y2lYEgyEeaoBYzRlEGNeQ" specification="always [extIntArr==16]" target="_qcG9sEgyEeaoBYzRlEGNeQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_qaXPEEgjEeagN_lyUlbl8g" specification="entry / printf(&quot;...text&quot;);&#13;&#10;printInt(5)" name="StateA" incomingTransitions="_oqZEieXyEeWRg9v3GT9X0Q">
+        <outgoingTransitions xmi:id="_wDdlkEgjEeagN_lyUlbl8g" specification="always" target="_oqYddOXyEeWRg9v3GT9X0Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_qcG9sEgyEeaoBYzRlEGNeQ" specification="entry /&#10;extIntArr = -1" name="StateD" incomingTransitions="_4Y2lYEgyEeaoBYzRlEGNeQ"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

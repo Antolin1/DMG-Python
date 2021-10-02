@@ -1,0 +1,10 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_cRy-UDjYEee-8pocxnEajw" specification="interface peripheral:&#10;&#10;interface driver:&#10;&#9;operation reset() : void&#10;&#9;" name="usi_twi_master">
+    <regions xmi:id="_cR0McjjYEee-8pocxnEajw" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_cR2osTjYEee-8pocxnEajw">
+        <outgoingTransitions xmi:id="_cR4d4zjYEee-8pocxnEajw" target="_cR3PxzjYEee-8pocxnEajw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_cR3PxzjYEee-8pocxnEajw" specification="entry/driver.reset()" name="StateA" incomingTransitions="_cR4d4zjYEee-8pocxnEajw"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

@@ -1,0 +1,13 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_Cpuf8PkGEeaK-eAH1-h7yw" specification="interface:&#10;interface Data:&#10;operation initFiat(): void&#10;" name="ECU_C">
+    <regions xmi:id="_CpvuEvkGEeaK-eAH1-h7yw" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_Cpw8MfkGEeaK-eAH1-h7yw">
+        <outgoingTransitions xmi:id="_CpyKU_kGEeaK-eAH1-h7yw" target="_CpxjR_kGEeaK-eAH1-h7yw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_CpxjR_kGEeaK-eAH1-h7yw" specification="entry / Data.initFiat()" name="Init" incomingTransitions="_CpyKU_kGEeaK-eAH1-h7yw">
+        <outgoingTransitions xmi:id="_LFubwP9wEea3gOE23vWw-w" specification="always" target="_Jsf_AP9wEea3gOE23vWw-w"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_Jsf_AP9wEea3gOE23vWw-w" name="Operate" incomingTransitions="_LFubwP9wEea3gOE23vWw-w"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

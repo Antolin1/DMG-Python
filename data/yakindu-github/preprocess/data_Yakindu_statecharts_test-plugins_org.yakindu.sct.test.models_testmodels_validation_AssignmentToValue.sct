@@ -1,0 +1,10 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_u513oG5sEeSL5-Sh3xFGWw" specification="internal:&#13;&#10;//No Issue, initializing constant&#13;&#10;const x :integer = 10&#13;&#10;// No issue, initializing constant in named interface&#13;&#10;interface A:&#13;&#10;const x : integer = 4" name="ATM">
+    <regions xmi:id="_u53s0m5sEeSL5-Sh3xFGWw" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_u57-Q25sEeSL5-Sh3xFGWw">
+        <outgoingTransitions xmi:id="_u5-agW5sEeSL5-Sh3xFGWw" target="_u58lV25sEeSL5-Sh3xFGWw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_u58lV25sEeSL5-Sh3xFGWw" specification="//expected 2 errors&#13;&#10;entry / A.x = 10; x = 10" name="s" incomingTransitions="_u5-agW5sEeSL5-Sh3xFGWw"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

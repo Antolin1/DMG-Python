@@ -1,0 +1,10 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_KsRwMLT6EeePQ5-VDn5g5w" specification="interface:&#10;// Define events and&#10;// and variables here. &#10;//Use CTRL + Space for content assist." name="default" domainID="com.yakindu.domain.solidity">
+    <regions xmi:id="_KsWBorT6EeePQ5-VDn5g5w" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_KscvUbT6EeePQ5-VDn5g5w">
+        <outgoingTransitions xmi:id="_Kshn0bT6EeePQ5-VDn5g5w" target="_Ksd9dLT6EeePQ5-VDn5g5w"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_Ksd9dLT6EeePQ5-VDn5g5w" name="StateA" incomingTransitions="_Kshn0bT6EeePQ5-VDn5g5w"/>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

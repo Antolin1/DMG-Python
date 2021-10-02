@@ -1,0 +1,20 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_WQHfEITqEeqy_LD7Uhmb4Q" specification="internal:&#10;&#9;var QueueMaxLen:integer=4&#10;&#9;var QueueLen:integer=0&#10;&#9;&#10;interface PreProcessedImg:&#10;&#9;in event NewData&#10;&#9;&#10;interface PreProcessedImgOut:&#10;&#9;out event NewData&#10;&#9;&#10;interface ProcessedImg:&#10;&#9;in event NewData&#10;&#9;&#10;interface Status:&#10;&#9;out event Full&#10;&#9;out event Free&#10;&#9;&#10;&#9;&#10;interface NetworkStream:&#10;&#9;out event NewData" name="LPRecQueueManager">
+    <regions xmi:id="_WQJUQ4TqEeqy_LD7Uhmb4Q" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_dtDxwITqEeqy_LD7Uhmb4Q">
+        <outgoingTransitions xmi:id="_dtDxwYTqEeqy_LD7Uhmb4Q" target="_dtEY0ITqEeqy_LD7Uhmb4Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_dtEY0ITqEeqy_LD7Uhmb4Q" specification="entry/&#10;raise Status.Free" name="NotFull" incomingTransitions="_dtDxwYTqEeqy_LD7Uhmb4Q _dtIDNYTqEeqy_LD7Uhmb4Q _dtG1H4TqEeqy_LD7Uhmb4Q _dtE_54TqEeqy_LD7Uhmb4Q">
+        <outgoingTransitions xmi:id="_dtEY4YTqEeqy_LD7Uhmb4Q" specification="PreProcessedImg.NewData/QueueLen=QueueLen+1;&#10;raise PreProcessedImgOut.NewData" target="_dtHcIITqEeqy_LD7Uhmb4Q"/>
+        <outgoingTransitions xmi:id="_dtE_54TqEeqy_LD7Uhmb4Q" specification="ProcessedImg.NewData/QueueLen=QueueLen-1;&#10;raise NetworkStream.NewData" target="_dtEY0ITqEeqy_LD7Uhmb4Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_dtGOAITqEeqy_LD7Uhmb4Q" specification="entry/ &#10;raise Status.Full" name="Full" incomingTransitions="_dtHcIYTqEeqy_LD7Uhmb4Q">
+        <outgoingTransitions xmi:id="_dtG1H4TqEeqy_LD7Uhmb4Q" specification="ProcessedImg.NewData/QueueLen=QueueLen-1;&#10;raise NetworkStream.NewData" target="_dtEY0ITqEeqy_LD7Uhmb4Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:Choice" xmi:id="_dtHcIITqEeqy_LD7Uhmb4Q" incomingTransitions="_dtEY4YTqEeqy_LD7Uhmb4Q">
+        <outgoingTransitions xmi:id="_dtHcIYTqEeqy_LD7Uhmb4Q" specification="[QueueLen==QueueMaxLen]" target="_dtGOAITqEeqy_LD7Uhmb4Q"/>
+        <outgoingTransitions xmi:id="_dtIDNYTqEeqy_LD7Uhmb4Q" specification="default" target="_dtEY0ITqEeqy_LD7Uhmb4Q"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

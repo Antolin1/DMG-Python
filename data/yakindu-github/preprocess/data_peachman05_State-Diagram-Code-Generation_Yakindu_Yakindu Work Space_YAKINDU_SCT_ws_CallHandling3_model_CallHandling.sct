@@ -1,0 +1,22 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_Kz2EEDhbEeashtIrr_Gf7A" specification="interface:&#10;// Define events and&#10;// and variables here&#10;interface User:&#10;    in event accept_call&#10;    in event dismiss_call&#10;&#10;interface Phone:&#10;    var duration : integer&#10;    in event incoming_call" name="CallHandling">
+    <regions xmi:id="_NcXlwjhbEeashtIrr_Gf7A" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_NcXlwzhbEeashtIrr_Gf7A">
+        <outgoingTransitions xmi:id="_NcXlxDhbEeashtIrr_Gf7A" target="_NcYMkDhbEeashtIrr_Gf7A"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_NcYMkDhbEeashtIrr_Gf7A" name="Idle" incomingTransitions="_NcXlxDhbEeashtIrr_Gf7A _Ncb28DhbEeashtIrr_Gf7A">
+        <outgoingTransitions xmi:id="_NcYzoThbEeashtIrr_Gf7A" specification="Phone.incoming_call" target="_NcYzpjhbEeashtIrr_Gf7A"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_NcYzpjhbEeashtIrr_Gf7A" name="Incoming Call" incomingTransitions="_NcYzoThbEeashtIrr_Gf7A">
+        <outgoingTransitions xmi:id="_NcZasThbEeashtIrr_Gf7A" specification="User.accept_call" target="_NcaBxjhbEeashtIrr_Gf7A"/>
+        <outgoingTransitions xmi:id="_NcaBwThbEeashtIrr_Gf7A" specification="User.dismiss_call" target="_NcbP5DhbEeashtIrr_Gf7A"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_NcaBxjhbEeashtIrr_Gf7A" specification="every 1 s /&#13;&#10;Phone.duration +=1" name="Active Call" incomingTransitions="_NcZasThbEeashtIrr_Gf7A">
+        <outgoingTransitions xmi:id="_Ncao3DhbEeashtIrr_Gf7A" specification="User.dismiss_call" target="_NcbP5DhbEeashtIrr_Gf7A"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_NcbP5DhbEeashtIrr_Gf7A" specification="exit /&#13;&#10;Phone.duration = 0" name="Dismiss Call" incomingTransitions="_Ncao3DhbEeashtIrr_Gf7A _NcaBwThbEeashtIrr_Gf7A">
+        <outgoingTransitions xmi:id="_Ncb28DhbEeashtIrr_Gf7A" specification="after 2 s" target="_NcYMkDhbEeashtIrr_Gf7A"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

@@ -1,0 +1,23 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_nk1AMATYEeipN580DMPBKA" specification="interface:&#10;&#10;in event upload&#10;in event success&#10;in event conflict&#10;in event violation&#10;&#10;operation commit()&#10;operation resolve()&#10;operation execute()&#10;operation store()&#10;operation violationStart()&#10;operation violationEnd()" name="MergingClient">
+    <regions xmi:id="_nk1nRQTYEeipN580DMPBKA" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_nk2OVQTYEeipN580DMPBKA">
+        <outgoingTransitions xmi:id="_nk21bwTYEeipN580DMPBKA" target="_nk2OYQTYEeipN580DMPBKA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_nk2OYQTYEeipN580DMPBKA" specification="entry / store()&#13;&#10;exit / execute()" name="Idle" incomingTransitions="_nk21bwTYEeipN580DMPBKA _TUrrUATZEeipN580DMPBKA">
+        <outgoingTransitions xmi:id="_u0d2sATYEeipN580DMPBKA" specification="upload/commit()" target="_ri7NcATYEeipN580DMPBKA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_ri7NcATYEeipN580DMPBKA" name="Commited" incomingTransitions="_u0d2sATYEeipN580DMPBKA _kaFGAATZEeipN580DMPBKA _lGGtkAXhEei2t6tUnE4lMQ">
+        <outgoingTransitions xmi:id="_TUrrUATZEeipN580DMPBKA" specification="success" target="_nk2OYQTYEeipN580DMPBKA"/>
+        <outgoingTransitions xmi:id="_dt_ogATZEeipN580DMPBKA" specification="conflict" target="_YqboAATZEeipN580DMPBKA"/>
+        <outgoingTransitions xmi:id="_a_MH8AXhEei2t6tUnE4lMQ" specification="violation" target="_XIbRwAXhEei2t6tUnE4lMQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_YqboAATZEeipN580DMPBKA" specification="entry / resolve()" name="Merging" incomingTransitions="_dt_ogATZEeipN580DMPBKA">
+        <outgoingTransitions xmi:id="_kaFGAATZEeipN580DMPBKA" specification="upload/commit()" target="_ri7NcATYEeipN580DMPBKA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_XIbRwAXhEei2t6tUnE4lMQ" specification="entry / violationStart()&#13;&#10;exit / violationEnd()" name="Violation" incomingTransitions="_a_MH8AXhEei2t6tUnE4lMQ">
+        <outgoingTransitions xmi:id="_lGGtkAXhEei2t6tUnE4lMQ" specification="upload/commit()" target="_ri7NcATYEeipN580DMPBKA"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

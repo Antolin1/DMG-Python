@@ -1,0 +1,15 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_ab2H8EwhEeefhMBAvBYJ5Q" specification="interface gui:&#10;&#10;in event clicked&#10;&#10;out event on&#10;out event off&#10;&#10;&#10;" name="Timerless">
+    <regions xmi:id="_acjSkEwhEeefhMBAvBYJ5Q" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_adMLwEwhEeefhMBAvBYJ5Q">
+        <outgoingTransitions xmi:id="_adcDYEwhEeefhMBAvBYJ5Q" target="_adREQEwhEeefhMBAvBYJ5Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_adREQEwhEeefhMBAvBYJ5Q" name="State Off" incomingTransitions="_adcDYEwhEeefhMBAvBYJ5Q _nUU2QEwhEeefhMBAvBYJ5Q">
+        <outgoingTransitions xmi:id="_lVZEYEwhEeefhMBAvBYJ5Q" specification="gui.clicked" target="_h30xUEwhEeefhMBAvBYJ5Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_h30xUEwhEeefhMBAvBYJ5Q" specification="entry / raise gui.on&#10;exit / raise gui.off&#10;" name="State On" incomingTransitions="_lVZEYEwhEeefhMBAvBYJ5Q">
+        <outgoingTransitions xmi:id="_nUU2QEwhEeefhMBAvBYJ5Q" specification="gui.clicked" target="_adREQEwhEeefhMBAvBYJ5Q"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

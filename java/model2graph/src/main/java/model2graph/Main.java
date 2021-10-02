@@ -63,7 +63,7 @@ public class Main {
 		DOTExporter<Node, Edge> exporter = new DOTExporter(p1,p2,p3);
 		Writer writer = new StringWriter();
 		
-		if (modelType.toLowerCase().equals("ecore")) {
+		if (modelType.toLowerCase().equals("ecore-github")) {
 			Resource resource = null;
 			MetaFilterNames mfn = MetaFilterNames.getEcoreFilter();
 			try {
@@ -78,7 +78,7 @@ public class Main {
 	        exporter.exportGraph(g, writer);
 	        System.out.println(writer.toString());
 			
-		} else if (modelType.toLowerCase().equals("rds")) {
+		} else if (modelType.toLowerCase().equals("rds-genmymodel")) {
 			//load metamodel of rds
 			MetaFilterNames mfn = MetaFilterNames.getRDSFilter();
 			String metamodelpath = "data/metamodels/rds_manual.ecore";
@@ -92,7 +92,7 @@ public class Main {
 	        exporter.exportGraph(g, writer);
 	        System.out.println(writer.toString());
 			
-		} else if (modelType.toLowerCase().equals("yakindu")) {
+		} else if (modelType.toLowerCase().equals("yakindu-github")) {
 			MetaFilterNames mfn = MetaFilterNames.getYakinduFilter();
 			String[] metamodels = {"data/metamodels/yakinduComplete/base.ecore", 
 					"data/metamodels/yakinduComplete/Expressions.ecore",
@@ -105,6 +105,17 @@ public class Main {
 			for (String metamodelpath : metamodels) {
 				registerMetamodel(metamodelpath, rs);
 			}
+			Resource resource = new XMIResourceImpl();
+			resource.load(new FileInputStream(new File(modelPath)), null);
+			Graph<Node, Edge> g = getGraph(resource, mfn);
+			
+			//export
+	        exporter.exportGraph(g, writer);
+	        System.out.println(writer.toString());
+		} else if (modelType.toLowerCase().equals("yakindu-exercise")) {
+			MetaFilterNames mfn = MetaFilterNames.getYakinduFilter();
+			String metamodelpath = "data/metamodels/yakindu_simplified.ecore";
+			registerMetamodel(metamodelpath, rs);
 			Resource resource = new XMIResourceImpl();
 			resource.load(new FileInputStream(new File(modelPath)), null);
 			Graph<Node, Edge> g = getGraph(resource, mfn);

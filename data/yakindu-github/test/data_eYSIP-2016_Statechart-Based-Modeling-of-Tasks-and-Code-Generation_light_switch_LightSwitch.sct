@@ -1,0 +1,12 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_3AQUYJOAEeWuO-fDDpYHyA" specification="interface:&#13;&#10;&#13;&#10;&#13;&#10; var speed :integer&#13;&#10; " name="LightSwitch">
+    <regions xmi:id="_1jN54Ev0EeaymMXzaIG-yg">
+      <vertices xsi:type="sgraph:State" xmi:id="_pjcgE090EeaWAqzygbZTZA" specification="entry/speed=speed+1" name="No obstacle detected" incomingTransitions="_pje8W090EeaWAqzygbZTZA _pjhYn090EeaWAqzygbZTZA">
+        <outgoingTransitions xmi:id="_pje8W090EeaWAqzygbZTZA" specification="every 1s[speed&lt;=10]" target="_pjcgE090EeaWAqzygbZTZA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:Entry" xmi:id="_pjhYnk90EeaWAqzygbZTZA">
+        <outgoingTransitions xmi:id="_pjhYn090EeaWAqzygbZTZA" specification="" target="_pjcgE090EeaWAqzygbZTZA"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

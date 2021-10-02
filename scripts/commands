@@ -1,3 +1,4 @@
-python scripts/datasetGeneration.py data/rdsDataset/raw/ data/rdsDataset/preprocess data/rdsDataset/train data/rdsDataset/test data/rdsDataset/val rds python
-python scripts/datasetGeneration.py data/yakinduDataset/raw/ data/yakinduDataset/preprocess data/yakinduDataset/train data/yakinduDataset/test data/yakinduDataset/val yakindu python
-python scripts/datasetGeneration.py data/ecoreDataset/raw/ data/ecoreDataset/preprocess data/ecoreDataset/train data/ecoreDataset/test data/ecoreDataset/val ecore python
+python scripts/datasetGeneration.py data/yakindu-github/ yakindu-github python
+python scripts/datasetGeneration.py data/yakindu-exercise/ yakindu-exercise python
+python scripts/datasetGeneration.py data/rds-genmymodel/ rds-genmymodel python
+python scripts/datasetGeneration.py data/ecore-github/ ecore-github java

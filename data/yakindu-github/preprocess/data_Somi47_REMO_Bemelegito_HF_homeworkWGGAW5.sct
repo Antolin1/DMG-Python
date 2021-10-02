@@ -1,0 +1,15 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_-P7AsIadEeStr9ylD5ycmg" specification="/*************************&#13;&#10;   Interfaces of the chess clock&#13;&#10;   Do not modify!&#13;&#10; *************************/&#13;&#10;interface Buttons:&#13;&#10;in event button&#13;&#10;&#13;&#10;interface Display:&#13;&#10;var text:string = &quot;Initial text&quot;&#13;&#10;&#13;&#10; internal:&#13;&#10;/*************************&#13;&#10;   Insert additional variables here:&#13;&#10; *************************/&#13;&#10; &#13;&#10;// var myExampleInteger: integer&#13;&#10;// var myExampleText: string&#13;&#10;" name="ChessClockWGGAW5">
+    <regions xmi:id="_-P7As4adEeStr9ylD5ycmg" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_-QEKoYadEeStr9ylD5ycmg">
+        <outgoingTransitions xmi:id="_-QEKvIadEeStr9ylD5ycmg" target="_-QEKrIadEeStr9ylD5ycmg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_-QEKrIadEeStr9ylD5ycmg" specification="entry / Display.text = &quot;Hello Yakindu World!&quot;" name="Working" incomingTransitions="_-QEKvIadEeStr9ylD5ycmg _XeZNsAcoEeeGIszlmZzJvg">
+        <outgoingTransitions xmi:id="_Q1oxAAcoEeeGIszlmZzJvg" specification="Buttons.button " target="_OX6cQAcmEeeGIszlmZzJvg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_OX6cQAcmEeeGIszlmZzJvg" specification="entry / Display.text = &quot;WGGAW5&quot;" name="Sate2" incomingTransitions="_Q1oxAAcoEeeGIszlmZzJvg">
+        <outgoingTransitions xmi:id="_XeZNsAcoEeeGIszlmZzJvg" specification="Buttons.button" target="_-QEKrIadEeStr9ylD5ycmg"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

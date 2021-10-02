@@ -1,0 +1,18 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_GBagUNXQEeif1b4t6OX2bQ" specification="interface:&#13;&#10;  in event Go&#13;&#10;  in event Stop&#13;&#10;  in event Timeout&#13;&#10;  var Light: integer&#13;&#10;&#13;&#10;" name="StopLight">
+    <regions xmi:id="_GBcVg9XQEeif1b4t6OX2bQ" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_GBk4YdXQEeif1b4t6OX2bQ">
+        <outgoingTransitions xmi:id="_GBupYdXQEeif1b4t6OX2bQ" target="_GBmtl9XQEeif1b4t6OX2bQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_GBmtl9XQEeif1b4t6OX2bQ" specification="entry / Light = 1" name="RED" incomingTransitions="_GBupYdXQEeif1b4t6OX2bQ _ouuCoNbdEeiIArkHwy8eHQ">
+        <outgoingTransitions xmi:id="_jj-cENbdEeiIArkHwy8eHQ" specification="Go / Light=2" target="_dlM6wNXQEeif1b4t6OX2bQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_dlM6wNXQEeif1b4t6OX2bQ" specification="" name="GREEN" incomingTransitions="_jj-cENbdEeiIArkHwy8eHQ">
+        <outgoingTransitions xmi:id="_moTIsNbdEeiIArkHwy8eHQ" specification="Stop / Light=3" target="_egjlgNbdEeiIArkHwy8eHQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_egjlgNbdEeiIArkHwy8eHQ" specification="" name="YELLOW" incomingTransitions="_moTIsNbdEeiIArkHwy8eHQ">
+        <outgoingTransitions xmi:id="_ouuCoNbdEeiIArkHwy8eHQ" specification="Timeout / Light=1" target="_GBmtl9XQEeif1b4t6OX2bQ"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

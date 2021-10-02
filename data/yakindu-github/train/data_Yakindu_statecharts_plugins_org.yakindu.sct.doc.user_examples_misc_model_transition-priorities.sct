@@ -1,0 +1,17 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_fhXWMF_SEea7Gq00qZ1cGQ" specification="internal:&#10; event e1&#10; event e2&#10; event reenter&#10;&#10;var x: integer&#10;&#10;operation isOpen(door:integer): boolean&#10;operation notify(p:integer): void&#10;" name="xxx">
+    <regions xmi:id="_fhX9Ql_SEea7Gq00qZ1cGQ" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_fhc1wV_SEea7Gq00qZ1cGQ">
+        <outgoingTransitions xmi:id="_DTfY4GCbEeatm9_iUm69JQ" target="_DTcVkGCbEeatm9_iUm69JQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_DTcVkGCbEeatm9_iUm69JQ" name="A" incomingTransitions="_DTfY4GCbEeatm9_iUm69JQ">
+        <outgoingTransitions xmi:id="_JzXmYGCbEeatm9_iUm69JQ" specification="e1" target="_JzVKIGCbEeatm9_iUm69JQ"/>
+        <outgoingTransitions xmi:id="_FTfk92CfEeatm9_iUm69JQ" specification="e1" target="_Gli_gGCbEeatm9_iUm69JQ"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_Gli_gGCbEeatm9_iUm69JQ" name="C" incomingTransitions="_FTfk92CfEeatm9_iUm69JQ _I7wFEGCfEeatm9_iUm69JQ"/>
+      <vertices xsi:type="sgraph:State" xmi:id="_JzVKIGCbEeatm9_iUm69JQ" name="B" incomingTransitions="_JzXmYGCbEeatm9_iUm69JQ">
+        <outgoingTransitions xmi:id="_I7wFEGCfEeatm9_iUm69JQ" specification="e2" target="_Gli_gGCbEeatm9_iUm69JQ"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

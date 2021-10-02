@@ -173,6 +173,16 @@ G_initial_ecore_3.add_edge(1, 0, type = 'ePackage')
 
 ecore_separator = '_'
 
+metafilter_refs = ['EClass.eSuperTypes',
+                   'EClassifier.ePackage',
+                   'EPackage.eClassifiers',
+                   'ETypedElement.eType',
+                   'EStructuralFeature.eContainingClass',
+                   'EReference.eOpposite',
+                   'EEnum.eLiterals',
+                   'EEnumLiteral.eEnum',
+                   'EClass.eStructuralFeatures']
+
 ecore_pallete = Pallete(dic_operations_ecore, dic_nodes_ecore, 
                           dic_edges_ecore, [G_initial_ecore_1,
                                           G_initial_ecore_2,

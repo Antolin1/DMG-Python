@@ -1,0 +1,17 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_JzyK8Ea6Eeej_NHnLS1OxA" specification="interface:&#10;// Define events and&#10;// and variables here&#10;internal:&#10;&#9;event on&#10;&#9;event off&#10;&#9;var brightness:integer" name="ManavLightSwitch">
+    <regions xmi:id="_8uad4Ua-Eeej_NHnLS1OxA" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_FAHdoEwKEeeHjNyIDoQfPg">
+        <outgoingTransitions xmi:id="_FAJS0EwKEeeHjNyIDoQfPg" target="_8ufWbEa-Eeej_NHnLS1OxA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_8ufWbEa-Eeej_NHnLS1OxA" specification="" name="off" incomingTransitions="_FAJS0EwKEeeHjNyIDoQfPg _MLfIgEbCEeej_NHnLS1OxA _ji9TEEdjEee_y42kUa6N9w">
+        <outgoingTransitions xmi:id="_56PbMEbAEeej_NHnLS1OxA" specification="on/brightness=1&#13;&#10;" target="_-mT-MEa_Eeej_NHnLS1OxA"/>
+        <outgoingTransitions xmi:id="_ji9TEEdjEee_y42kUa6N9w" specification="off" target="_8ufWbEa-Eeej_NHnLS1OxA"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_-mT-MEa_Eeej_NHnLS1OxA" name="on" incomingTransitions="_56PbMEbAEeej_NHnLS1OxA _lA8iwEddEee_y42kUa6N9w">
+        <outgoingTransitions xmi:id="_MLfIgEbCEeej_NHnLS1OxA" specification="off" target="_8ufWbEa-Eeej_NHnLS1OxA"/>
+        <outgoingTransitions xmi:id="_lA8iwEddEee_y42kUa6N9w" specification="on/brightness+=1" target="_-mT-MEa_Eeej_NHnLS1OxA"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

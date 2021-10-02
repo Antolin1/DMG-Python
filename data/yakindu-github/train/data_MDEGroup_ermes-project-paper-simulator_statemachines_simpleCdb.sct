@@ -1,0 +1,15 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_Reh18B-WEeuS7vCBvniz7Q" specification="@EventDriven&#10;// Use the event driven execution model.&#10;// Runs a run-to-completion step&#10;// each time an event is raised.&#10;// Switch to cycle based behavior&#10;// by specifying '@CycleBased(200)'&#10;// instead.&#10;&#10;@ChildFirstExecution&#10;// In composite states, execute&#10;// child states first.&#10;// @ParentFirstExecution does the opposite.&#10;import:&#10;&quot;simppMM.CircuitoDiBinarioPP&quot;&#10;&#10;interface:&#10;const STATUS_LIBERO: String = &quot;Free&quot;&#10;const STATUS_OCCUPATO: String = &quot;Busy&quot;&#10;&#10;// Define events&#10;// and variables here. &#10;// Use CTRL + Space for content assist.&#10;var cdb: CircuitoDiBinarioPP&#10;&#10;&#10;//#API&#10;in event occupa&#10;in event libera&#10;&#10;//API#" name="simpleCdb" domainID="com.yakindu.domain.java">
+    <regions xmi:id="_RfYKgB-WEeuS7vCBvniz7Q" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_RgEuEB-WEeuS7vCBvniz7Q">
+        <outgoingTransitions xmi:id="_RgQ7UB-WEeuS7vCBvniz7Q" target="_RgHxYB-WEeuS7vCBvniz7Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_RgHxYB-WEeuS7vCBvniz7Q" specification="entry / cdb.setStatus(STATUS_LIBERO)" name="Libero" incomingTransitions="_RgQ7UB-WEeuS7vCBvniz7Q _fRugEB-WEeuS7vCBvniz7Q">
+        <outgoingTransitions xmi:id="_WG2E4B-WEeuS7vCBvniz7Q" specification="occupa" target="_WGsT4B-WEeuS7vCBvniz7Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_WGsT4B-WEeuS7vCBvniz7Q" specification="entry / cdb.setStatus(STATUS_OCCUPATO)" name="Occupato" incomingTransitions="_WG2E4B-WEeuS7vCBvniz7Q">
+        <outgoingTransitions xmi:id="_fRugEB-WEeuS7vCBvniz7Q" specification="libera" target="_RgHxYB-WEeuS7vCBvniz7Q"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

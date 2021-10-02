@@ -1,0 +1,17 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_cpjO8A8NEeqviYeA6lqTwA" specification="interface Input:&#13;&#10;&#9;in event OrionDisconn&#13;&#10;&#9;in event OrionDisconnCause&#13;&#10;&#9;in event OrionConnReq&#13;&#10;&#9;in event OrionAppData&#13;&#10;&#9;in event OrionKeepAlive&#13;&#10;&#9;in event OrionConnConf&#13;&#10;&#9;in event OrionConnResp&#13;&#10;&#13;&#10;interface Output:&#13;&#10;&#9;out event OrionDisconn&#13;&#10;&#9;out event OrionDisconnCause&#13;&#10;&#9;out event OrionConnReq&#13;&#10;&#9;out event OrionAppData&#13;&#10;&#9;out event OrionKeepAlive&#13;&#10;&#9;out event OrionConnConf&#13;&#10;&#9;out event OrionConnResp&#13;&#10;&#9;&#13;&#10;internal:&#13;&#10;&#9;var failed : boolean &#13;&#10;&#9;const S : integer = 6&#13;&#10;&#9;const E : integer = 20" name="Channel">
+    <regions xmi:id="_KSbWECjJEeqJVOWQqWeE5Q" name="MainRegion">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_KSbWESjJEeqJVOWQqWeE5Q">
+        <outgoingTransitions xmi:id="_KSbWEijJEeqJVOWQqWeE5Q" target="_KSbWEyjJEeqJVOWQqWeE5Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_KSbWEyjJEeqJVOWQqWeE5Q" specification="" name="Operating" incomingTransitions="_KSbWEijJEeqJVOWQqWeE5Q _KSbWfSjJEeqJVOWQqWeE5Q _Nlng8CjQEeqJVOWQqWeE5Q">
+        <outgoingTransitions xmi:id="_HtpA8CjQEeqJVOWQqWeE5Q" specification="after S s [!failed]" target="_DM2I1SjLEeqJVOWQqWeE5Q"/>
+        <outgoingTransitions xmi:id="_KSbWfSjJEeqJVOWQqWeE5Q" specification="Input.OrionConnReq /&#13;&#10;raise Output.OrionConnReq" target="_KSbWEyjJEeqJVOWQqWeE5Q"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_DM2I1SjLEeqJVOWQqWeE5Q" specification="entry / failed = true" name="MessageLosing" incomingTransitions="_HtpA8CjQEeqJVOWQqWeE5Q _KmcIICjSEeqJVOWQqWeE5Q">
+        <outgoingTransitions xmi:id="_Nlng8CjQEeqJVOWQqWeE5Q" specification="after E s" target="_KSbWEyjJEeqJVOWQqWeE5Q"/>
+        <outgoingTransitions xmi:id="_KmcIICjSEeqJVOWQqWeE5Q" specification="Input.OrionConnReq" target="_DM2I1SjLEeqJVOWQqWeE5Q"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>

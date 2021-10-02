@@ -1,0 +1,15 @@
+<xmi:XMI xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0" xmi:version="2.0">
+  <sgraph:Statechart xmi:id="_WBcb4BuCEeunKcQry1tWjw" specification="@EventDriven&#10;// Use the event driven execution model.&#10;// Runs a run-to-completion step&#10;// each time an event is raised.&#10;// Switch to cycle based behavior&#10;// by specifying '@CycleBased(200)'&#10;// instead.&#10;&#10;@ChildFirstExecution&#10;// In composite states, execute&#10;// child states first.&#10;// @ParentFirstExecution does the opposite.&#10;import:&#10;&quot;simppMM.ElettromagnetePP&quot;&#10;&#10;/* Deviatoio Triggers OUTPUT */&#10;interface DeviatoioTriggers:&#10;&#10;&#9;operation blocca(): boolean&#10;&#9;operation sblocca(): boolean&#10;&#9;&#10;interface:&#10;const STATUS_ECCITATO: String = &quot;On&quot;&#10;const STATUS_DISECCITATO: String = &quot;Off&quot;&#10;&#10;// Define events&#10;// and variables here. &#10;// Use CTRL + Space for content assist.&#10;&#9;var elettromagnete: ElettromagnetePP&#10;&#10;//#API&#10;in event eccita&#10;in event diseccita&#10;&#10;//API#" name="simpleElettromagnete" domainID="com.yakindu.domain.java">
+    <regions xmi:id="_WBdC9huCEeunKcQry1tWjw" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_WBdqBhuCEeunKcQry1tWjw">
+        <outgoingTransitions xmi:id="_WBe4KRuCEeunKcQry1tWjw" target="_b8VF8BuCEeunKcQry1tWjw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_WBeRFxuCEeunKcQry1tWjw" specification="entry / elettromagnete.setStatus(STATUS_ECCITATO)" name="Eccitato" incomingTransitions="_gE6E4BuCEeunKcQry1tWjw">
+        <outgoingTransitions xmi:id="_hgTr4BuCEeunKcQry1tWjw" specification="diseccita&#10;/ DeviatoioTriggers.sblocca()" target="_b8VF8BuCEeunKcQry1tWjw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_b8VF8BuCEeunKcQry1tWjw" specification="entry / elettromagnete.setStatus(STATUS_DISECCITATO)" name="Diseccitato" incomingTransitions="_WBe4KRuCEeunKcQry1tWjw _hgTr4BuCEeunKcQry1tWjw">
+        <outgoingTransitions xmi:id="_gE6E4BuCEeunKcQry1tWjw" specification="eccita&#10;/ DeviatoioTriggers.blocca()" target="_WBeRFxuCEeunKcQry1tWjw"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  </xmi:XMI>
