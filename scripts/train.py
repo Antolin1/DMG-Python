@@ -33,7 +33,7 @@ parser.add_argument("-e", "--epochs", dest="epochs",
                     help="max epochs.", type=int, 
                     required=True)
 parser.add_argument("-es", "--earlyStopping", dest="earlyStop", 
-                    choices=['clean','iso', 'inco'], 
+                    choices=['clean','iso', 'inco', 'trainloss'], 
                     help="criteria to stop.", default = 'clean')
 parser.add_argument("-sh", "--shuffle", dest="shuffle", 
                     choices=['True', 'False'], 
@@ -56,7 +56,7 @@ parser.add_argument("-hi", "--hidden", dest="hidden_dim", type=int,
 parser.add_argument("-mp", "--multiprocess", dest="mp", type=int, 
                     required=False, default=10,
                     help="number of processes.")
-
+#add argument to use the easrly stopping over the trainset
 # get inputs
 args = parser.parse_args()
 model_path = args.save_path
@@ -137,7 +137,17 @@ model = GenerativeModel(hidden_dim, getDicNodes(dataset),
 #optimizer
 opt = torch.optim.Adam(model.parameters(), lr=0.001)
 #early stopping object
-es = EarlyStopping(opt, model, model_path, patience = 10, mode = 'max')
+
+mode = None
+if early == 'clean':
+    mode = 'max'
+elif early == 'iso':
+    mode = 'min'
+elif early == 'inco':
+    mode = 'min'
+else:
+    mode = 'min'
+es = EarlyStopping(opt, model, model_path, patience = 10, mode = mode)
 #incosistences, isomorfics and clean
 prop_inconsistent = []
 prop_isomorfic = []
@@ -185,40 +195,49 @@ for epoch in range(epochs):
         print('Epoch',epoch,'Loss Traning',total_loss/(len(loader)))
     losses.append(total_loss/(len(loader)))
     
-    model.eval()
-    
-    samples = [sampleGraph(pallete.initialGraphs[0], pallete, model, 
-                           max_size, getSeparator(dataset)) 
-           for i in range(500)]
-    
-    inconsistents = []
-    for s in samples:
-        if getInconsistent(dataset)(s):
-            inconsistents.append(s)
-    inco_prop = len(inconsistents)*100/len(samples)
-    prop_inconsistent.append(inco_prop)
-    
-    iso = []
-    for s in samples:
-        for g in graphs_train:
-            if (is_isomorphic(s,g,gu.node_match_type, gu.edge_match_type)):
-                iso.append(s)
-                break
-    
-    iso_prop = len(iso)*100/len(samples)
-    prop_isomorfic.append(iso_prop)
-    
-    clean_new_models = [g for g in samples if (not g in inconsistents) and (not g in iso)]
-    clean_pr = len(clean_new_models)*100/len(samples)
-    prop_clean.append(clean_pr)
-    
-    if verbose:
-        print('Prop inconsistent:', inco_prop)
-        print('Prop isomorfic:', iso_prop)
-        print('Prop clean:', clean_pr)
-    
-    if es.step(clean_pr, epoch):
-        break
+    if early in ['clean','iso', 'inco']:
+        model.eval()
+        samples = [sampleGraph(pallete.initialGraphs[0], pallete, model, 
+                               max_size, getSeparator(dataset)) 
+               for i in range(500)]
+        inconsistents = []
+        for s in samples:
+            if getInconsistent(dataset)(s):
+                inconsistents.append(s)
+        inco_prop = len(inconsistents)*100/len(samples)
+        prop_inconsistent.append(inco_prop)
+        
+        iso = []
+        for s in samples:
+            for g in graphs_train:
+                if (is_isomorphic(s,g,gu.node_match_type, gu.edge_match_type)):
+                    iso.append(s)
+                    break
+        
+        iso_prop = len(iso)*100/len(samples)
+        prop_isomorfic.append(iso_prop)
+        clean_new_models = [g for g in samples if (not g in inconsistents) and (not g in iso)]
+        clean_pr = len(clean_new_models)*100/len(samples)
+        prop_clean.append(clean_pr)
+        
+        if verbose:
+            print('Prop inconsistent:', inco_prop)
+            print('Prop isomorfic:', iso_prop)
+            print('Prop clean:', clean_pr)
+        
+        metric = None
+        if early == 'clean':
+            metric = clean_pr
+        elif early == 'iso':
+            metric = iso_prop
+        else:
+            metric = inco_prop
+            
+        if es.step(metric, epoch):
+            break
+    else:
+        if es.step(total_loss/(len(loader)), epoch):
+            break
     
 train_duration = time.monotonic() - start_time
     #scheduler.step()
