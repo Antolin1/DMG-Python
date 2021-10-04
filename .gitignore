@@ -135,10 +135,26 @@ data/yakinduDataset/train
 data/yakinduDataset/test
 data/yakinduDataset/val
 
-data/yakinduDatasetBigger/preprocess
-data/yakinduDatasetBigger/train
-data/yakinduDatasetBigger/test
-data/yakinduDatasetBigger/val
+
+data/yakindu-exercise/preprocess
+data/yakindu-exercise/train
+data/yakindu-exercise/test
+data/yakindu-exercise/val
+
+data/yakindu-github/preprocess
+data/yakindu-github/train
+data/yakindu-github/test
+data/yakindu-github/val
+
+data/ecore-github/preprocess
+data/ecore-github/train
+data/ecore-github/test
+data/ecore-github/val
+
+data/rds-genmymodel/preprocess
+data/rds-genmymodel/train
+data/rds-genmymodel/test
+data/rds-genmymodel/val
 
 .Rhistory
 
