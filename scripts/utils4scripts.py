@@ -65,6 +65,36 @@ def getDicOperations(dataset):
     elif dataset.lower() == 'rds-genmymodel':
         return rds.dic_operations_rds
 
+def getMetamodel(dataset):
+    if dataset.lower() == 'yakindu-github':
+        return 'yakindu_simplified.ecore'
+    elif dataset.lower() == 'yakindu-exercise':
+        return 'yakindu_simplified.ecore'
+    elif dataset.lower() == 'ecore-github':
+        return 'smallEcore.ecore'
+    elif dataset.lower() == 'rds-genmymodel':
+        return 'rdsSimplified.ecore'
+    
+def getRoot(dataset):
+    if dataset.lower() == 'yakindu-github':
+        return 'Statechart'
+    elif dataset.lower() == 'yakindu-exercise':
+        return 'Statechart'
+    elif dataset.lower() == 'ecore-github':
+        return 'EPackage'
+    elif dataset.lower() == 'rds-genmymodel':
+        return 'Database'
+
+def getPackage(dataset):
+    if dataset.lower() == 'yakindu-github':
+        return 'yakindumm'
+    elif dataset.lower() == 'yakindu-exercise':
+        return 'yakindumm'
+    elif dataset.lower() == 'ecore-github':
+        return 'smallEcore'
+    elif dataset.lower() == 'rds-genmymodel':
+        return 'rds'
+
 from dmg.yakindu.yakinduConsistency import inconsistent as icy
 from dmg.ecore.ecoreConsistency import inconsistent as ice
 from dmg.rds.rdsConsistency import inconsistent as icr

@@ -17,15 +17,14 @@ $ pip install -r requirements.txt
 Generate datasets:
 
 ```
-$ python scripts/datasetGeneration.py data/rdsDataset/raw/ data/rdsDataset/preprocess data/rdsDataset/train data/rdsDataset/test data/rdsDataset/val rds
+$ python scripts/datasetGeneration.py data/yakindu-github/ yakindu-github python
+
+```
+$ python scripts/datasetGeneration.py data/rds-genmymodel/ rds-genmymodel python
 ```
 
 ```
-$ python scripts/datasetGeneration.py data/yakinduDataset/raw/ data/yakinduDataset/preprocess data/yakinduDataset/train data/yakinduDataset/test data/yakinduDataset/val yakindu
-```
-
-```
-$ python scripts/datasetGeneration.py data/ecoreDataset/raw/ data/ecoreDataset/preprocess data/ecoreDataset/train data/ecoreDataset/test data/ecoreDataset/val ecore
+$ python scripts/datasetGeneration.py data/ecore-github/ ecore-github java
 ```
 
 Compile java code with maven:
@@ -41,4 +40,17 @@ Execute tests:
 ```
 $ python -m unittest discover
 ```
+
+Example of running the training phase:
+
+```
+$ python scripts/train.py -s models/yakindu-github-clean-shuffle.m -d yakindu-github -pd data/yakindu-github/ -e 100 -emf python -mp 10 -td models/yakindu-github-clean-shuffle.deta
+```
+
+Example of evaluating the model:
+
+```
+$ python scripts/eval.py data/yakindu-github/ yakindu-github models/yakindu-github-clean-shuffle.m 500 python 50 128
+```
+
 
