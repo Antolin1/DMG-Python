@@ -20,6 +20,8 @@ Generate datasets:
 $ python scripts/datasetGeneration.py data/yakindu-github/ yakindu-github python
 
 ```
+
+```
 $ python scripts/datasetGeneration.py data/rds-genmymodel/ rds-genmymodel python
 ```
 
@@ -31,7 +33,9 @@ Compile java code with maven:
 
 ```
 $ cd java/model2graph
+```
 
+```
 $ mvn package
 ```
 
