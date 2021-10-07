@@ -77,7 +77,7 @@ class TestEditOperations(unittest.TestCase):
         for shuffle in [True, False]:
         
             pallete = Pallete(dic_operations, None, None, [g4t.G_initial], 
-                              shuffle = shuffle)
+                               2, '_', shuffle = shuffle)
             
             sequence = pallete.graphToSequence(g4t.G_g2s)
             

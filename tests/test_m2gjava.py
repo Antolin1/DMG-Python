@@ -21,7 +21,7 @@ class Testm2gJava(unittest.TestCase):
         #print('TODO')
         x = subprocess.Popen(["java", "-jar", 
                               "java/model2graph/target/model2graph-0.0.1-jar-with-dependencies.jar", "ecore-github", 
-                              "data/testmodels/testEcore.ecore"], 
+                              "data/testmodels/testEcore.ecore", "real"], 
                              stderr=subprocess.PIPE, 
                              stdout=subprocess.PIPE,
                              text=True)
@@ -38,14 +38,14 @@ class Testm2gJava(unittest.TestCase):
                                       gu.edge_match_type))
         
         self.assertTrue(is_isomorphic(m2g.model2graphJava('ecore-github',
-                                                      "data/testmodels/testEcore.ecore"), g4t.G_testEcore, 
+                                                      "data/testmodels/testEcore.ecore", "real"), g4t.G_testEcore, 
                                       gu.node_match_type, 
                                       gu.edge_match_type))
         
     def test_rdsJava(self):
         x = subprocess.Popen(["java", "-jar", 
                               "java/model2graph/target/model2graph-0.0.1-jar-with-dependencies.jar", "rds-genmymodel", 
-                              "data/testmodels/testRDS.xmi"], 
+                              "data/testmodels/testRDS.xmi", "real"], 
                              stderr=subprocess.PIPE, 
                              stdout=subprocess.PIPE,
                              text=True)
@@ -61,12 +61,13 @@ class Testm2gJava(unittest.TestCase):
                                           gu.node_match_type, 
                                           gu.edge_match_type))
         self.assertTrue(is_isomorphic(m2g.model2graphJava('rds-genmymodel',
-                                                      "data/testmodels/testRDS.xmi"), g4t.G_rds, 
+                                                      "data/testmodels/testRDS.xmi", "real"), g4t.G_rds, 
                                       gu.node_match_type, 
                                       gu.edge_match_type))
     
     def test_yakinduJava(self):
-        G1 = m2g.model2graphJava('yakindu-github', "data/testmodels/outYak.xmi")
+        G1 = m2g.model2graphJava('yakindu-github', 
+                                 "data/testmodels/outYak.xmi", "real")
         self.assertTrue(is_isomorphic(G1, g4t.G_yak, 
                                       gu.node_match_type, 
                                       gu.edge_match_type))

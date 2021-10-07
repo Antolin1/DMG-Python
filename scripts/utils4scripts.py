@@ -184,6 +184,18 @@ def getGraph(f, dataset, backend):
         return m2g.getGraphFromModel(f, meta_models, metafilterobj,
                                   consider_atts = False)
 
+def getGraphOfBaselines(f, dataset, backend):
+    if backend.lower() == "java":
+        return m2g.model2graphJava(dataset.lower(), f)
+    elif backend.lower() == "python":
+        if dataset.lower() == 'yakindu-github':
+            return getGraph(f, 'yakindu-exercise', backend)
+        else:
+            return getGraph(f, dataset, backend)
+        
+        
+    
+
 def getPallete(dataset):
     if dataset.lower() == 'yakindu-github':
         return yp.yakindu_pallete

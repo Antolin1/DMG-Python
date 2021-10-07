@@ -107,9 +107,6 @@ G_initial_rds.add_node(0, type = 'Database')
 G_initial_rds.add_node(1, type = 'Table')
 G_initial_rds.add_edge(0, 1, type = 'elements')
 
-rds_pallete = Pallete(dic_operations_rds, dic_nodes_rds, 
-                          dic_edges_rds, [G_initial_rds])
-
 rds_separator = '_'
 
 metafilter_refs = ['Database.elements', 
@@ -123,3 +120,7 @@ metafilter_refs = ['Database.elements',
                    'Column.foreignReferences']
 
 max_len = 3
+
+rds_pallete = Pallete(dic_operations_rds, dic_nodes_rds, 
+                          dic_edges_rds, [G_initial_rds], max_len,
+                          rds_separator)

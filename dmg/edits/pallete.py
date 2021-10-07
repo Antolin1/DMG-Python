@@ -19,12 +19,16 @@ class Pallete:
                  dic_nodes,
                  dic_edges,
                  initialGraphs,
+                 max_len,
+                 separator,
                  shuffle = True):
         self.editOperations = editOperations
         self.initialGraphs = initialGraphs
         self.dic_nodes = dic_nodes
         self.dic_edges = dic_edges
         self.shuffle = shuffle
+        self.max_len = max_len
+        self.separator = separator
         #TODO: check consistency
         
     def graphToSequence(self, G):

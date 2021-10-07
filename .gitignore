@@ -227,3 +227,6 @@ notebooks/rdsGenerator.model
 
 *.deta
 *.m
+
+baselines
+vsconfigs

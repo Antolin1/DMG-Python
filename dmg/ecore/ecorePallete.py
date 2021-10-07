@@ -172,6 +172,7 @@ G_initial_ecore_3.add_edge(0, 1, type = 'eClassifiers')
 G_initial_ecore_3.add_edge(1, 0, type = 'ePackage')
 
 ecore_separator = '_'
+max_len = 2
 
 metafilter_refs = ['EClass.eSuperTypes',
                    'EClassifier.ePackage',
@@ -186,6 +187,8 @@ metafilter_refs = ['EClass.eSuperTypes',
 ecore_pallete = Pallete(dic_operations_ecore, dic_nodes_ecore, 
                           dic_edges_ecore, [G_initial_ecore_1,
                                           G_initial_ecore_2,
-                                          G_initial_ecore_3])
+                                          G_initial_ecore_3],
+                                          max_len,
+                                          ecore_separator)
 
-max_len = 2
+

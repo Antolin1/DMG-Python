@@ -35,15 +35,21 @@ public class Main {
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		//read input parameters
-		if (args.length != 2) {
-			System.err.println("Input: <type of model> <path_to_model>");
+		if (args.length != 3) {
+			System.err.println("Input: <type of model> <path_to_model> <syn or real>");
 			return;
 		}
+		if (!args[2].toLowerCase().equals("real") && !args[2].toLowerCase().equals("syn")) {
+			System.err.println("the thrid argument must belong to {syn, real}");
+			return;
+		}
+		
 		//prefix for debug, remove it when finishing debuging
 		//String prefix = "/home/antolin/wakame/DMG-Python/";
 		//inputs
 		String modelType = args[0];
 		String modelPath = args[1];
+		String syn_or_real = args[2]; //TO DO: cases
 		//emf
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
 		ResourceSet rs = new ResourceSetImpl();
@@ -63,7 +69,7 @@ public class Main {
 		DOTExporter<Node, Edge> exporter = new DOTExporter(p1,p2,p3);
 		Writer writer = new StringWriter();
 		
-		if (modelType.toLowerCase().equals("ecore-github")) {
+		if (modelType.toLowerCase().equals("ecore-github") && syn_or_real.toLowerCase().equals("real")) {
 			Resource resource = null;
 			MetaFilterNames mfn = MetaFilterNames.getEcoreFilter();
 			try {
@@ -78,7 +84,7 @@ public class Main {
 	        exporter.exportGraph(g, writer);
 	        System.out.println(writer.toString());
 			
-		} else if (modelType.toLowerCase().equals("rds-genmymodel")) {
+		} else if (modelType.toLowerCase().equals("rds-genmymodel") && syn_or_real.toLowerCase().equals("real")) {
 			//load metamodel of rds
 			MetaFilterNames mfn = MetaFilterNames.getRDSFilter();
 			String metamodelpath = "data/metamodels/rds_manual.ecore";
@@ -92,7 +98,7 @@ public class Main {
 	        exporter.exportGraph(g, writer);
 	        System.out.println(writer.toString());
 			
-		} else if (modelType.toLowerCase().equals("yakindu-github")) {
+		} else if (modelType.toLowerCase().equals("yakindu-github") && syn_or_real.toLowerCase().equals("real")) {
 			MetaFilterNames mfn = MetaFilterNames.getYakinduFilter();
 			String[] metamodels = {"data/metamodels/yakinduComplete/base.ecore", 
 					"data/metamodels/yakinduComplete/Expressions.ecore",
@@ -115,6 +121,42 @@ public class Main {
 		} else if (modelType.toLowerCase().equals("yakindu-exercise")) {
 			MetaFilterNames mfn = MetaFilterNames.getYakinduFilter();
 			String metamodelpath = "data/metamodels/yakindu_simplified.ecore";
+			registerMetamodel(metamodelpath, rs);
+			Resource resource = new XMIResourceImpl();
+			resource.load(new FileInputStream(new File(modelPath)), null);
+			Graph<Node, Edge> g = getGraph(resource, mfn);
+			
+			//export
+	        exporter.exportGraph(g, writer);
+	        System.out.println(writer.toString());
+		} else if (modelType.toLowerCase().equals("rds-genmymodel") && syn_or_real.toLowerCase().equals("syn")) {
+			//load metamodel of rds
+			MetaFilterNames mfn = MetaFilterNames.getRDSFilter();
+			String metamodelpath = "data/metamodels/rdsSimplified.ecore";
+			registerMetamodel(metamodelpath, rs);
+			
+			Resource resource = new XMIResourceImpl();
+			resource.load(new FileInputStream(new File(modelPath)), null);
+			Graph<Node, Edge> g = getGraph(resource, mfn);
+			
+			//export
+	        exporter.exportGraph(g, writer);
+	        System.out.println(writer.toString());
+			
+		} else if (modelType.toLowerCase().equals("yakindu-github") && syn_or_real.toLowerCase().equals("syn")) {
+			MetaFilterNames mfn = MetaFilterNames.getYakinduFilter();
+			String metamodelpath = "data/metamodels/yakindu_simplified.ecore";
+			registerMetamodel(metamodelpath, rs);
+			Resource resource = new XMIResourceImpl();
+			resource.load(new FileInputStream(new File(modelPath)), null);
+			Graph<Node, Edge> g = getGraph(resource, mfn);
+			
+			//export
+	        exporter.exportGraph(g, writer);
+	        System.out.println(writer.toString());
+		} else if (modelType.toLowerCase().equals("ecore-github") && syn_or_real.toLowerCase().equals("syn")) {
+			MetaFilterNames mfn = MetaFilterNames.getEcoreFilter();
+			String metamodelpath = "data/metamodels/smallEcore.ecore";
 			registerMetamodel(metamodelpath, rs);
 			Resource resource = new XMIResourceImpl();
 			resource.load(new FileInputStream(new File(modelPath)), null);

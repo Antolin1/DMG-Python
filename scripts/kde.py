@@ -40,6 +40,7 @@ def main():
                 for f in glob.glob(train_path + "/*")]
     
     numberObjects = np.array([[len([n for n in G])] for G in graphs_train])
+    #print(numberObjects.shape)
     
     kernel_std = improved_sheather_jones(numberObjects)  # Shape (obs, dims)
 
@@ -51,14 +52,16 @@ def main():
     with open('./data/vsconfigs/model.vsconfig', 'r') as file:
         vsconfig = file.read()
     
+    #delete upperbound and lowerbound
     for i,n in enumerate(resampled_data):
-        replaced = vsconfig.replace('put_here_nodes', str(round(n)))
+        replaced = vsconfig.replace('put_here_nodes', str(int(round(n))))
         replaced = replaced.replace('put_here_metamodel', getMetamodel(dataset))
         replaced = replaced.replace('put_here_package', getPackage(dataset))
         replaced = replaced.replace('root_class', getRoot(dataset))
         replaced = replaced.replace('set_runtime', str(runtime))
         replaced = replaced.replace('set_number', str(number))
         replaced = replaced.replace('put_here_solver', getSolver(generator))
+        replaced = replaced.replace('outputs', 'outputs'+str(i))
         print(replaced)
         with open(save_path+"/"+str(i)+".vsconfig", "w") as text_file:
             text_file.write(replaced)

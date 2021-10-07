@@ -139,7 +139,8 @@ metafilter_refs = ['Region.vertices',
                    'Transition.target',
                    'Transition.source']
 
-yakindu_pallete = Pallete(dic_operations_yak, dic_nodes_yak, 
-                          dic_edges_yak, [G_initial_yak])
 
 max_len = 2
+yakindu_pallete = Pallete(dic_operations_yak, dic_nodes_yak, 
+                          dic_edges_yak, [G_initial_yak],
+                          max_len, yakindu_separator)

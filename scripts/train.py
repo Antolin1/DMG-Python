@@ -86,24 +86,32 @@ torch.manual_seed(seed)
 random.seed(seed)
 np.random.seed(seed)
 
-from utils4scripts import (getSeparator, getMaxLen, 
-                           getDicNodes, getDicEdges, 
-                           getDicOperations, getInconsistent,
-                           getGraph, getPallete)
+#from utils4scripts import (getSeparator, getMaxLen, 
+#                           getDicNodes, getDicEdges, 
+#                           getDicOperations, getInconsistent,
+#                           getGraph, getPallete)
 
+from modelSet import datasets_supported
+
+msetObject = datasets_supported[dataset]
 # Load graphs
-graphs_train = [getGraph(f,dataset,backend) 
+#graphs_train = [getGraph(f,dataset,backend) 
+#                for f in glob.glob(train_path + "/*")]
+#graphs_test = [getGraph(f,dataset,backend) 
+#                for f in glob.glob(test_path + "/*")]
+
+graphs_train = [msetObject.getGraphReal(f,backend) 
                 for f in glob.glob(train_path + "/*")]
-graphs_test = [getGraph(f,dataset,backend) 
+graphs_test = [msetObject.getGraphReal(f,backend) 
                 for f in glob.glob(test_path + "/*")]
 if verbose:
     print('Number of graphs train:', len(graphs_train))
     print('Number of graphs test:', len(graphs_test))
 
 # Get pallete
-pallete = getPallete(dataset)
+pallete = msetObject.pallete#getPallete(dataset)
 pallete.shuffle = shuffle
-separator = getSeparator(dataset)
+separator = pallete.separator#getSeparator(dataset)
 
 #Training phase
 from dmg.deeplearning.generativeModel import GenerativeModel
@@ -124,16 +132,16 @@ import time
 def f(g):
     sequence = pallete.graphToSequence(g)
     sequence = [(addInvEdges(s[0], pallete, separator),s[1]) for s in sequence]
-    return sequence2data(sequence, pallete, getMaxLen(dataset))
+    return sequence2data(sequence, pallete, pallete.max_len)#getMaxLen(dataset)
 
 #losses
 criterion_node = nn.CrossEntropyLoss(reduction = 'mean', ignore_index=-1)
 criterion_action = nn.CrossEntropyLoss(reduction = 'mean')
 criterion_finish = nn.BCELoss(reduction = 'mean')
 #model
-model = GenerativeModel(hidden_dim, getDicNodes(dataset), 
-                        getDicEdges(dataset), 
-                        getDicOperations(dataset))
+model = GenerativeModel(hidden_dim, msetObject.dic_nodes, 
+                        msetObject.dic_edges, 
+                        msetObject.operations)
 #optimizer
 opt = torch.optim.Adam(model.parameters(), lr=0.001)
 #early stopping object
@@ -167,7 +175,7 @@ for epoch in range(epochs):
         for g in graphs_train:
             sequence = pallete.graphToSequence(g)
             sequence = [(addInvEdges(s[0], pallete, separator),s[1]) for s in sequence]
-            listDatas.append(sequence2data(sequence, pallete, getMaxLen(dataset)))
+            listDatas.append(sequence2data(sequence, pallete, pallete.max_len))
     listDatas = [r for rr in listDatas for r in rr]
     loader = DataLoader(listDatas, batch_size=batch_size, 
                             num_workers = 0, 
@@ -198,11 +206,11 @@ for epoch in range(epochs):
     if early in ['clean','iso', 'inco']:
         model.eval()
         samples = [sampleGraph(pallete.initialGraphs[0], pallete, model, 
-                               max_size, getSeparator(dataset)) 
+                               max_size, separator) 
                for i in range(500)]
         inconsistents = []
         for s in samples:
-            if getInconsistent(dataset)(s):
+            if msetObject.inconsistency(s):
                 inconsistents.append(s)
         inco_prop = len(inconsistents)*100/len(samples)
         prop_inconsistent.append(inco_prop)

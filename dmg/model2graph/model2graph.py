@@ -190,10 +190,10 @@ def serializeGraphModel(path, pathMetamodels, mainClass, G):
             resource.append(ob)  # we add the EPackage instance in the resource
             resource.save()  # we then serialize it
 
-def model2graphJava(modelType, pathmodel):
+def model2graphJava(modelType, pathmodel, realSyn):
     x = subprocess.Popen(["java", "-jar", 
                               "java/model2graph/target/model2graph-0.0.1-jar-with-dependencies.jar", modelType, 
-                              pathmodel], 
+                              pathmodel, realSyn], 
                              stderr=subprocess.PIPE, 
                              stdout=subprocess.PIPE,
                              text=True)
