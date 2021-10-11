@@ -7,11 +7,10 @@ Created on Tue Oct  5 17:30:15 2021
 """
 
 import sys
+import os
 import glob
-from utils4scripts import (getSeparator, getMaxLen, 
-                           getDicNodes, getDicEdges, 
-                           getDicOperations, getInconsistent,
-                           getGraph, getPallete)
+sys.path.append(os.getcwd())
+
 from dmg.deeplearning.generativeModel import GenerativeModel
 from dmg.deeplearning.generativeModel import sampleGraph
 from networkx.algorithms.isomorphism import is_isomorphic
@@ -24,44 +23,67 @@ from scipy.stats import wasserstein_distance
 import time
 import seaborn as sns
 from c2st_gnn import C2ST_GNN
-def uniques(Gs):
-    dic = set([])
-    for G1 in Gs:
-        iso = False
-        for G2 in dic:
-            if is_isomorphic(G1, G2, gu.node_match_type, gu.edge_match_type):
-                iso = True
-        if not iso:
-            dic.add(G1)
-    return dic
-
+from argparse import ArgumentParser
+from eval import uniques
+from modelSet import datasets_supported
 
 torch.manual_seed(123)
 random.seed(123)
 np.random.seed(123)
 import matplotlib.pyplot as plt
+
 def main():
-    dataset_path = sys.argv[1]
-    dataset = sys.argv[2]
-    backend = sys.argv[3]
-    generator = sys.argv[4]
-    syn_path = sys.argv[5]
+    
+    parser = ArgumentParser(description='Script for evaluating the baselines')
+
+
+    parser.add_argument("-d", "--dataset", dest="dataset", 
+                        choices=['ecore-github', 'rds-genmymodel', 
+                                 'yakindu-github','yakindu-exercise'], 
+                        help="dataset considered.",
+                        required=True)
+    parser.add_argument("-pd", "--pathdataset", dest="path_dataset",
+                        help="folder of the dataset.", metavar="DIR", 
+                        required=True)
+    parser.add_argument("-emf", "--emf_backend", dest="emf",
+                        choices=['python', 'java'],
+                        help="backend to parse the models.",
+                        required=True)
+    
+    #parser.add_argument("-g", "--generator", dest="gen",
+    #                    choices=['alloy', 'viatra'],
+    #                    help="generator considered.",
+    #                    required=True)
+    
+    parser.add_argument("-ps", "--pathsyn", dest="path_syn",
+                        help="folder of the syn dataset.", metavar="DIR", 
+                        required=True)
+
+    args = parser.parse_args()
+    dataset_path = args.path_dataset
+    dataset = args.dataset
+    backend = args.emf    
+    #generator = args.gen
+    syn_path = args.path_syn
+    
+    msetObject = datasets_supported[dataset]
+
     
     test_path = dataset_path + '/test'
 
-    graphs_test = [getGraph(f,dataset,backend) 
+    graphs_test = [msetObject.getGraphReal(f,backend) 
                 for f in glob.glob(test_path + "/*")]
     
     samples = []
     for filename in glob.iglob(syn_path + '/**/*.xmi', recursive=True):
         #change this
-        samples.append(getGraph(filename,'yakindu-exercise',backend))
+        samples.append(msetObject.getGraphSyn(filename,backend))
     
 
     
     inconsistents = []
     for s in samples:
-        if getInconsistent(dataset)(s):
+        if msetObject.inconsistency(s):
             inconsistents.append(s)
     inco_prop = len(inconsistents)*100/len(samples)
     
@@ -70,7 +92,7 @@ def main():
 
     
     
-    dims = list(getDicEdges(dataset).keys())
+    dims = list(msetObject.dic_edges.keys())
     print(inco_prop,'% inconsistent models')
     print(len(not_inconsistents)/len(samples) * 100, '% Validity among all')
     print(len(uniques(not_inconsistents))/len(not_inconsistents) * 100, '% Uniqueness among valid ones')

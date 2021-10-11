@@ -28,6 +28,8 @@ import time
 from c2st_gnn import C2ST_GNN
 from argparse import ArgumentParser
 from modelSet import datasets_supported
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 def uniques(Gs):
     dic = set([])
@@ -62,7 +64,7 @@ def main():
                         help="folder of the dataset.", metavar="DIR", 
                         required=True)
     parser.add_argument("-nm", "--numberModels", dest="number_models",
-                        help="number of models to generate.", type=int, default = 123)
+                        help="number of models to generate.", type=int, default = 500)
     parser.add_argument("-ms", "--maxSize", dest="maxSize",
                         help="max size of the output models", type=int,
                         required=True)
@@ -73,6 +75,13 @@ def main():
     parser.add_argument("-hi", "--hidden", dest="hidden_dim", type=int, 
                         required=False, default=128,
                         help="hidden dim of the nn size.")
+    parser.add_argument("-p", "--plot", dest="plot", choices=['True', 'False'],
+                        required=False, default="True",
+                        help="if plot distributions.")
+    
+    parser.add_argument("-e", "--epochs", dest="epochs",
+                    help="max epochs.", type=int, default = 50,
+                    required=False)
     
     args = parser.parse_args()
     
@@ -83,6 +92,8 @@ def main():
     backend = args.emf
     max_size = args.maxSize
     hidden_dim = args.hidden_dim
+    epochs = args.epochs
+    plot = bool(args.plot)
     
     test_path = dataset_path + '/test'
     train_path = dataset_path + '/train'
@@ -137,13 +148,52 @@ def main():
     print(len(uniques(not_inconsistents))/len(not_inconsistents) * 100, '% Uniqueness among valid ones')
     print(len(uniques(clean_new_models))/len(uniques(samples)) * 100, '% Novelty among unique ones')
     
-    C2ST_GNN(not_inconsistents, graphs_test, dataset)
+    C2ST_GNN(not_inconsistents, graphs_test, dataset, epochs=epochs)
     print('Degree:', wasserstein_distance([np.mean(mt.getListDegree(G)) for G in samples], 
                      [np.mean(mt.getListDegree(G)) for G in graphs_test]))
+    
+    fig, axs = plt.subplots(ncols=3)
+    line_labels = ['DMG', 'Real']
+    l1 = None
+    l2 = None
+    l3 = None
+    l4 = None
+    l5 = None
+    l6 = None
+    if plot:
+        l1 = sns.distplot([np.mean(mt.getListDegree(G)) for G in samples], hist=False, kde=True, 
+                 bins=int(180/5), color = 'red', label = 'DMG', ax=axs[0])
+        l2 = sns.distplot([np.mean(mt.getListDegree(G)) for G in graphs_test], hist=False, kde=True, 
+                 bins=int(180/5), color = 'blue', label = 'Real', ax=axs[0])
+        axs[0].title.set_text('Degree')
+        axs[0].set_ylabel('')
     print('MPC:', wasserstein_distance([np.mean(list(mt.MPC(G,dims).values())) for G in samples], 
                      [np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test]))
+    if plot:
+       l3 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in samples], hist=False, kde=True, 
+             bins=int(180/5), color = 'red', label = 'DMG', ax=axs[1])
+       l4 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test], hist=False, kde=True, 
+             bins=int(180/5), color = 'blue', label = 'Real', ax=axs[1])
+       axs[1].title.set_text('MPC')
+       axs[1].set_ylabel('')
     print('Node activity:', wasserstein_distance([np.mean(list(mt.nodeActivity(G,dims))) for G in samples], 
                      [np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test]))
+    if plot:
+       l5 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in samples], hist=False, kde=True, 
+             bins=int(180/5), color = 'red', label = 'DMG', ax=axs[2])
+       l6 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test], hist=False, kde=True, 
+             bins=int(180/5), color = 'blue', label = 'Real', ax=axs[2])
+       axs[2].title.set_text('Node Activity')
+       axs[2].set_ylabel('')
+    if plot:
+        #fig.legend()
+        fig.legend([l1, l2, l3, l4, l5, l6],     # The line objects
+           labels=line_labels,   # The labels for each line
+           loc="center right",   # Position of legend
+           borderaxespad=0.1    # Small spacing around legend box
+           )
+        #plt.title('Graph statistics')
+        plt.show()
     print('Inference duration:', inference_duration)
     
 if __name__ == "__main__":

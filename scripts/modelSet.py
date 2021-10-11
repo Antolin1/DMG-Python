@@ -48,7 +48,7 @@ class ModelSet:
     
     def getGraphReal(self, f, backend):
         if backend.lower() == "java":
-            return m2g.model2graphJava(self.name + '-real', f)
+            return m2g.model2graphJava(self.name, f, 'real')
         elif backend.lower() == "python":
             metafilter_refs = self.edges
             metafilter_cla = list(self.dic_nodes.keys())
@@ -62,7 +62,7 @@ class ModelSet:
         
     def getGraphSyn(self, f, backend):
         if backend.lower() == "java":
-            return m2g.model2graphJava(self.name + '-syn', f)
+            return m2g.model2graphJava(self.name, f, 'syn')
         elif backend.lower() == "python":
             metafilter_refs = self.edges
             metafilter_cla = list(self.dic_nodes.keys())

@@ -1,13 +1,22 @@
-python scripts/datasetGeneration.py data/yakindu-github/ yakindu-github python
-python scripts/datasetGeneration.py data/yakindu-exercise/ yakindu-exercise python
-python scripts/datasetGeneration.py data/rds-genmymodel/ rds-genmymodel python
-python scripts/datasetGeneration.py data/ecore-github/ ecore-github java
+##### Dataset generation
 
-#####
+python scripts/datasetGeneration.py -d ecore-github -pd data/ecore-github/ -emf java
+python scripts/datasetGeneration.py -d yakindu-github -pd data/yakindu-github/ -emf python
+python scripts/datasetGeneration.py -d yakindu-exercise -pd data/yakindu-exercise/ -emf python
+python scripts/datasetGeneration.py -d rds-genmymodel -pd data/rds-genmymodel/ -emf python
 
-python scripts/train.py -s models/yakindu-github-clean-shuffle.m -d yakindu-github -pd data/yakindu-github/ -e 100 -emf python -mp 10 -td models/yakindu-github-clean-shuffle.dt
+##### Training phase
 
+python scripts/train.py -d ecore-github -pd data/ecore-github/ -s models/ecore-github-not-shuffle-tl.m -td models/ecore-github-not-shuffle.details -e 200 -es trainloss -sh False -emf java
+python scripts/train.py -d yakindu-github -pd data/yakindu-github/ -s models/yakindu-github-not-shuffle-tl.m -td models/yakindu-github-not-shuffle.details -e 200 -es trainloss -sh False -emf python
+python scripts/train.py -d rds-genmymodel -pd data/rds-genmymodel/ -s models/rds-genmymodel-not-shuffle-tl.m -td models/rds-genmymodel-not-shuffle.details -e 200 -es trainloss -sh False -emf python
+python scripts/train.py -d yakindu-exercise -pd data/yakindu-exercise/ -s models/yakindu-exercise-not-shuffle-tl.m -td models/yakindu-exercise-not-shuffle.details -e 200 -es trainloss -sh False -emf python
 
-#####
+##### Evaluation phase
 
-python scripts/eval.py data/yakindu-github/ yakindu-github models/yakindu-github-clean-shuffle.m 500 python 50 128
+python scripts/eval.py -m models/yakindu-github-not-shuffle-tl.m -d yakindu-github -pd data/yakindu-github/ -nm 500 -ms 50 -emf python
+python scripts/eval.py -m models/ecore-github-not-shuffle-tl.m -d ecore-github -pd data/ecore-github/ -nm 500 -ms 200 -emf java
+python scripts/eval.py -m models/rds-genmymodel-not-shuffle-tl.m -d rds-genmymodel -pd data/rds-genmymodel/ -nm 500 -ms 200 -emf python
+python scripts/eval.py -m models/yakindu-exercise-not-shuffle-tl.m -d yakindu-exercise -pd data/yakindu-exercise/ -nm 500 -ms 150 -emf python
+
+##### KDE

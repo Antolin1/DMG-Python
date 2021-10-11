@@ -27,7 +27,6 @@ def C2ST_pvalue(acc,n_test):
     return st.norm.cdf(-(acc-0.5)/(math.sqrt(1/(4*n_test))))
 
 def C2ST_GNN(synthetics, graphs_test, dataset, epochs = 50 ):
-    separator = getSeparator(dataset)
     syns = []
     for G in random.sample(synthetics,min(len(synthetics),len(graphs_test))):
         G_inv = addInvEdges(G, getPallete(dataset), getSeparator(dataset))
@@ -74,7 +73,7 @@ def C2ST_GNN(synthetics, graphs_test, dataset, epochs = 50 ):
             pred = model(data.x.cpu(), data.edge_index.cpu(),
               torch.squeeze(data.edge_attr.cpu(),dim=1),data.batch.cpu())
             
-            loss = criterion(torch.squeeze(pred), data.y.float().cpu())
+            loss = criterion(torch.squeeze(pred, dim = 1), data.y.float().cpu())
             total_loss += loss.item()
             
             loss.backward()

@@ -16,14 +16,35 @@ from sklearn.model_selection import train_test_split
 import ntpath
 import dmg.graphUtils as gu
 from networkx.algorithms.isomorphism import is_isomorphic
+from modelSet import datasets_supported
+from argparse import ArgumentParser
 
-from utils4scripts import getPreprocess, getGraph, getUpperLower, getPallete
 
 def main():
     
-    dataset_path = sys.argv[1]
-    dataset = sys.argv[2]
-    backend = sys.argv[3]
+    
+    parser = ArgumentParser(description='Script for generating train and test')
+    
+    parser.add_argument("-d", "--dataset", dest="dataset", 
+                    choices=['ecore-github', 'rds-genmymodel', 
+                             'yakindu-github','yakindu-exercise'], 
+                    help="dataset considered.",
+                    required=True)
+    parser.add_argument("-pd", "--pathdataset", dest="path_dataset",
+                    help="folder of the dataset.", metavar="DIR", 
+                    required=True)
+    
+    parser.add_argument("-emf", "--emf_backend", dest="emf",
+                    choices=['python', 'java'],
+                    help="backend to parse the models.",
+                    required=True)
+    
+    args = parser.parse_args()
+    
+    dataset_path = args.path_dataset
+    dataset = args.dataset
+    backend = args.emf
+    msetObject = datasets_supported[dataset]
     
     raw_path = dataset_path + '/' + 'raw'
     preprodataset_path = dataset_path + '/' + 'preprocess'
@@ -42,7 +63,7 @@ def main():
     for f in files:
         p = Path(f)
         full_file_name = p.stem +'.'+f.split('.')[-1]
-        preprocess = getPreprocess(dataset)
+        preprocess = msetObject.preprocess
         preprocess(f,preprodataset_path+'/'+full_file_name)
     
     
@@ -56,20 +77,20 @@ def main():
         #TODO: deal with instanceClassName="java.lang.Integer" in eattributes
         G1 = None
         try:
-            G1 = getGraph(f, dataset, backend)
+            G1 = msetObject.getGraphReal(f,backend)
         except: # Exception as e:
             #print(e.with_traceback())
             print('Remove exception m2g in', f)
             os.remove(f)
             continue
         
-        lower, upper = getUpperLower(dataset)
+        lower, upper = msetObject.bounds
         if len(G1) < lower or len(G1) > upper:
             os.remove(f)
             print('Remove out of bounds in', f)
             continue
         
-        pallete = getPallete(dataset)
+        pallete = msetObject.pallete
         G_initials = pallete.initialGraphs
         #remove models that cannot be reached
         seq = pallete.graphToSequence(G1)
@@ -92,7 +113,7 @@ def main():
         
     #TRAIN TEST SPLIT
     files = glob.glob(preprodataset_path +'/*')
-    train, test =  train_test_split(files, test_size=0.3, random_state=42)
+    train, test =  train_test_split(files, test_size=0.4, random_state=42)
     
     for f in train:
         copyfile(f, train_path+'/'+ntpath.basename(f))

@@ -34,7 +34,7 @@ parser.add_argument("-e", "--epochs", dest="epochs",
                     required=True)
 parser.add_argument("-es", "--earlyStopping", dest="earlyStop", 
                     choices=['clean','iso', 'inco', 'trainloss'], 
-                    help="criteria to stop.", default = 'clean')
+                    help="criteria to stop.", default = 'trainloss')
 parser.add_argument("-sh", "--shuffle", dest="shuffle", 
                     choices=['True', 'False'], 
                     help="shuffle actions", default = 'True')
