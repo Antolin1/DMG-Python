@@ -6,8 +6,14 @@ Created on Mon Oct  4 11:45:18 2021
 """
 
 import sys
+import os
 import glob
-#from utils4scripts import getGraph
+sys.path.append(os.getcwd())
+sys.path.append(os.getcwd()+'/scripts/')
+
+import warnings
+warnings.filterwarnings('ignore')
+
 import numpy as np
 from KDEpy.bw_selection import improved_sheather_jones
 import random
@@ -52,7 +58,7 @@ def main():
                         required=True)
     
     parser.add_argument("-nm", "--numberModels", dest="number_models",
-                        help="number of models to generate.", type=int, default = 500)
+                        help="number of models to generate.", type=int, default = 600)
     
     parser.add_argument("-r", "--runtime", dest="runtime",
                         help="max runtime.", type=int, default = 180)
@@ -86,8 +92,11 @@ def main():
     
     
     train_path = dataset_path + '/train'
+    test_path = dataset_path + '/test'
     graphs_train = [msetObject.getGraphReal(f,backend) 
                 for f in glob.glob(train_path + "/*")]
+    graphs_test = [msetObject.getGraphReal(f,backend) 
+                for f in glob.glob(test_path + "/*")]
     
     numberObjects = np.array([[len([n for n in G])] for G in graphs_train])
     #print(numberObjects.shape)
@@ -123,15 +132,29 @@ def main():
             text_file.write(replaced)
     
     if plot:
+        line_labels = ['Syn', 'Train', 'Test']
         fig, axs = plt.subplots(ncols=2)
-        sns.histplot(rounded, stat = 'density', ax=axs[0], color = 'red')
-        sns.histplot(np.array([len([n for n in G]) 
+        l1 = sns.histplot(rounded, stat = 'density', ax=axs[0], color = 'red', label = 'Syn')
+        l2 = sns.histplot(np.array([len([n for n in G]) 
                                for G in graphs_train]), stat = 'density', ax=axs[0],
-                     color = 'blue')
-        sns.distplot(rounded, hist=False, kde=True, 
-                 bins=int(180/5), color = 'red', label = 'Syn', ax=axs[1])
-        sns.distplot(np.array([len([n for n in G]) 
+                     color = 'blue',  label = 'Train')
+        l3 = sns.histplot(np.array([len([n for n in G]) 
+                               for G in graphs_test]), stat = 'density', ax=axs[0],
+                     color = 'green',  label = 'Test')
+        l4 = sns.distplot(rounded, hist=False, kde=True, 
+                color = 'red', label = 'Syn', ax=axs[1])
+        l5 = sns.distplot(np.array([len([n for n in G]) 
                                for G in graphs_train]), hist=False, kde=True, 
-                 bins=int(180/5), color = 'blue', label = 'Real', ax=axs[1])
+                color = 'blue', label = 'Train', ax=axs[1])
+        l6 = sns.distplot(np.array([len([n for n in G]) 
+                               for G in graphs_test]), hist=False, kde=True, 
+                color = 'green', label = 'Test', ax=axs[1])
+        fig.legend([l1, l2, l3, l4, l5, l6],     # The line objects
+           labels=line_labels,   # The labels for each line
+           loc="center right",   # Position of legend
+           borderaxespad=0.1    # Small spacing around legend box
+           )
+        #plt.title('Graph statistics')
+        plt.show()
 if __name__ == "__main__":
     main()

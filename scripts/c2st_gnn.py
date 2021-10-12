@@ -26,7 +26,7 @@ import math
 def C2ST_pvalue(acc,n_test):
     return st.norm.cdf(-(acc-0.5)/(math.sqrt(1/(4*n_test))))
 
-def C2ST_GNN(synthetics, graphs_test, dataset, epochs = 50 ):
+def C2ST_GNN(synthetics, graphs_test, dataset, epochs = 50, verbose = False):
     syns = []
     for G in random.sample(synthetics,min(len(synthetics),len(graphs_test))):
         G_inv = addInvEdges(G, getPallete(dataset), getSeparator(dataset))
@@ -79,8 +79,8 @@ def C2ST_GNN(synthetics, graphs_test, dataset, epochs = 50 ):
             loss.backward()
             opt.step()
             b = b + 1
-            
-        print('Epoch',e,'Loss',total_loss/b)
+        if verbose:
+            print('Epoch',e,'Loss',total_loss/b)
     model.eval()
     count = 0
     for data in test_loader:
@@ -92,7 +92,12 @@ def C2ST_GNN(synthetics, graphs_test, dataset, epochs = 50 ):
             pred = 0
         if pred == data.y.long().item():
             count = count + 1
-        
-    print('Acc', count/len(test_loader))
-    print('p-value', C2ST_pvalue(count/len(test_loader), len(test_loader)))
-    print('Test samples:', len(test_loader))
+            
+    acc = count/len(test_loader)
+    p_val = C2ST_pvalue(count/len(test_loader), len(test_loader))
+    test_samples = len(test_loader)
+    if verbose:
+        print('Acc', acc)
+        print('p-value', p_val)
+        print('Test samples:', test_samples)
+    return (acc, p_val, test_samples)

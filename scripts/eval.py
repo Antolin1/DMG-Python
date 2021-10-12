@@ -10,11 +10,12 @@ import sys
 import os
 import glob
 sys.path.append(os.getcwd())
+sys.path.append(os.getcwd()+'/scripts/')
 
-#from utils4scripts import (getSeparator, getMaxLen, 
-#                           getDicNodes, getDicEdges, 
-#                           getDicOperations, getInconsistent,
-#                           getGraph, getPallete)
+import warnings
+warnings.filterwarnings('ignore')
+
+
 from dmg.deeplearning.generativeModel import GenerativeModel
 from dmg.deeplearning.generativeModel import sampleGraph
 from networkx.algorithms.isomorphism import is_isomorphic
@@ -147,12 +148,17 @@ def main():
     print(len(not_inconsistents)/len(samples) * 100, '% Validity among all')
     print(len(uniques(not_inconsistents))/len(not_inconsistents) * 100, '% Uniqueness among valid ones')
     print(len(uniques(clean_new_models))/len(uniques(samples)) * 100, '% Novelty among unique ones')
+    print('Inference duration:', inference_duration)
+    print('Max nodes syn:', np.max([len(G) for G in samples]))
+    print('Max nodes real:', np.max([len(G) for G in graphs_test]))
+    acc, p_val, test_samples = C2ST_GNN(not_inconsistents, graphs_test, dataset, epochs=epochs)
+    print('Acc C2ST:', acc)
+    print('p-value C2ST:', p_val)
+    print('Test samples C2ST:', test_samples)
     
-    C2ST_GNN(not_inconsistents, graphs_test, dataset, epochs=epochs)
-    print('Degree:', wasserstein_distance([np.mean(mt.getListDegree(G)) for G in samples], 
-                     [np.mean(mt.getListDegree(G)) for G in graphs_test]))
-    
-    fig, axs = plt.subplots(ncols=3)
+
+    ##plots 
+    fig, axs = plt.subplots(ncols=4, figsize=(10, 5))
     line_labels = ['DMG', 'Real']
     l1 = None
     l2 = None
@@ -160,41 +166,53 @@ def main():
     l4 = None
     l5 = None
     l6 = None
+    l7 = None
+    l8 = None
+    
+    print('Degree:', wasserstein_distance([np.mean(mt.getListDegree(G)) for G in samples], 
+                     [np.mean(mt.getListDegree(G)) for G in graphs_test]))
     if plot:
-        l1 = sns.distplot([np.mean(mt.getListDegree(G)) for G in samples], hist=False, kde=True, 
-                 bins=int(180/5), color = 'red', label = 'DMG', ax=axs[0])
+        l1 = sns.distplot([np.mean(mt.getListDegree(G)) for G in samples], hist=False, kde=True
+                          , color = 'red', label = 'DMG', ax=axs[0])
         l2 = sns.distplot([np.mean(mt.getListDegree(G)) for G in graphs_test], hist=False, kde=True, 
-                 bins=int(180/5), color = 'blue', label = 'Real', ax=axs[0])
+                  color = 'blue', label = 'Real', ax=axs[0])
         axs[0].title.set_text('Degree')
         axs[0].set_ylabel('')
     print('MPC:', wasserstein_distance([np.mean(list(mt.MPC(G,dims).values())) for G in samples], 
                      [np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test]))
     if plot:
        l3 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in samples], hist=False, kde=True, 
-             bins=int(180/5), color = 'red', label = 'DMG', ax=axs[1])
+             color = 'red', label = 'DMG', ax=axs[1])
        l4 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test], hist=False, kde=True, 
-             bins=int(180/5), color = 'blue', label = 'Real', ax=axs[1])
+              color = 'blue', label = 'Real', ax=axs[1])
        axs[1].title.set_text('MPC')
        axs[1].set_ylabel('')
     print('Node activity:', wasserstein_distance([np.mean(list(mt.nodeActivity(G,dims))) for G in samples], 
                      [np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test]))
     if plot:
        l5 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in samples], hist=False, kde=True, 
-             bins=int(180/5), color = 'red', label = 'DMG', ax=axs[2])
+              color = 'red', label = 'DMG', ax=axs[2])
        l6 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test], hist=False, kde=True, 
-             bins=int(180/5), color = 'blue', label = 'Real', ax=axs[2])
+             color = 'blue', label = 'Real', ax=axs[2])
        axs[2].title.set_text('Node Activity')
        axs[2].set_ylabel('')
+       
+    if plot:
+        l7 = sns.distplot([len(G) for G in samples], hist=False, kde=True
+                          , color = 'red', label = 'DMG', ax=axs[3])
+        l8 = sns.distplot([len(G) for G in graphs_test], hist=False, kde=True, 
+                  color = 'blue', label = 'Real', ax=axs[3])
+        axs[3].title.set_text('Nodes')
+        axs[3].set_ylabel('')
     if plot:
         #fig.legend()
-        fig.legend([l1, l2, l3, l4, l5, l6],     # The line objects
+        fig.legend([l1, l2, l3, l4, l5, l6, l7, l8],     # The line objects
            labels=line_labels,   # The labels for each line
            loc="center right",   # Position of legend
            borderaxespad=0.1    # Small spacing around legend box
            )
         #plt.title('Graph statistics')
         plt.show()
-    print('Inference duration:', inference_duration)
     
 if __name__ == "__main__":
     main()

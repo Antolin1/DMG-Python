@@ -20,3 +20,10 @@ python scripts/eval.py -m models/rds-genmymodel-not-shuffle-tl.m -d rds-genmymod
 python scripts/eval.py -m models/yakindu-exercise-not-shuffle-tl.m -d yakindu-exercise -pd data/yakindu-exercise/ -nm 500 -ms 150 -emf python
 
 ##### KDE
+
+python scripts/kde.py -d yakindu-github -pd data/yakindu-github -emf python -g viatra -ps vsconfigs/yakindu-github/viatra
+python scripts/kde.py -d ecore-github -pd data/ecore-github -emf java -g viatra -ps vsconfigs/ecore-github/viatra
+
+##### Evaluation of baselines
+
+python ./scripts/evalBaseline.py -d yakindu-github -pd data/yakindu-github/ -emf python -g viatra -ps baselines/yakindu-github/viatra
