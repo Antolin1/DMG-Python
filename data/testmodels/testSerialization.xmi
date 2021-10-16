@@ -4,7 +4,7 @@
   <eClassifiers xsi:type="smallEcore:EClass" name="&lt;none&gt;">
     <eStructuralFeatures xsi:type="smallEcore:EReference" name="&lt;none&gt;" eType="//@eClassifiers.1"/>
     <eStructuralFeatures xsi:type="smallEcore:EReference" name="&lt;none&gt;" eType="//@eClassifiers.1"/>
-    <eStructuralFeatures xsi:type="smallEcore:EReference" name="&lt;none&gt;" containment="true" eType="//@eClassifiers.1"/>
+    <eStructuralFeatures xsi:type="smallEcore:EReference" name="&lt;none&gt;" eType="//@eClassifiers.1" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="smallEcore:EDataType" name="&lt;none&gt;"/>
 </smallEcore:EPackage>

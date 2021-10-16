@@ -172,6 +172,24 @@ G_yak_meta.add_edge(1, 3, type = 'vertices')
 G_yak_meta.add_edge(2, 4, type = 'outgoingTransitions')
 G_yak_meta.add_edge(4, 3, type = 'target')
 
+
+#G for yak for shapes
+G_yak_shape = nx.MultiDiGraph()
+
+G_yak_shape.add_node(2, type = 'Entry')
+G_yak_shape.add_node(3, type = 'State')
+G_yak_shape.add_node(4, type = 'Transition')
+G_yak_shape.add_node(5, type = 'Transition')
+G_yak_shape.add_node(6, type = 'Transition')
+G_yak_shape.add_node(7, type = 'State')
+        
+G_yak_shape.add_edge(4, 2, type = 'source')
+G_yak_shape.add_edge(4, 3, type = 'target')
+G_yak_shape.add_edge(5, 3, type = 'source')
+G_yak_shape.add_edge(5, 7, type = 'target')
+G_yak_shape.add_edge(6, 7, type = 'source')
+G_yak_shape.add_edge(6, 3, type = 'target')
+
 #G for rds
 G_rds = nx.MultiDiGraph()
 G_rds.add_node(0, type = 'Database', atts = {'name':'model'})

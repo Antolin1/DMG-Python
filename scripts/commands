@@ -22,8 +22,14 @@ python scripts/eval.py -m models/yakindu-exercise-not-shuffle-tl.m -d yakindu-ex
 ##### KDE
 
 python scripts/kde.py -d yakindu-github -pd data/yakindu-github -emf python -g viatra -ps vsconfigs/yakindu-github/viatra
+python scripts/kde.py -d yakindu-exercise -pd data/yakindu-exercise -emf python -g viatra -ps vsconfigs/yakindu-exercise/viatra
 python scripts/kde.py -d ecore-github -pd data/ecore-github -emf java -g viatra -ps vsconfigs/ecore-github/viatra
+python scripts/kde.py -d rds-genmymodel -pd data/rds-genmymodel -emf python -g viatra -ps vsconfigs/rds-genmymodel/viatra
 
 ##### Evaluation of baselines
 
 python ./scripts/evalBaseline.py -d yakindu-github -pd data/yakindu-github/ -emf python -g viatra -ps baselines/yakindu-github/viatra
+python ./scripts/evalBaseline.py -d yakindu-exercise -pd data/yakindu-exercise/ -emf python -g viatra -ps baselines/yakindu-exercise/viatra
+python ./scripts/evalBaseline.py -d ecore-github -pd data/ecore-github/ -emf python -g viatra -ps baselines/yakindu-github/viatra
+python ./scripts/evalBaseline.py -d rds-genmymodel -pd data/rds-genmymodel/ -emf python -g viatra -ps baselines/rds-genmymodel/viatra
+
