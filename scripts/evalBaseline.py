@@ -30,6 +30,8 @@ from dmg.model2graph.shapes import (getShapesDP, internalDiversityDP, externalDi
                                     internalDiversityShapes, computeMD, getCategoricalDistribution)
 from scipy.stats import mannwhitneyu
 import multiprocess as mp
+from dmg.realism.emd import compute_mmd, gaussian_emd
+import networkx as nx
 
 
 torch.manual_seed(123)
@@ -118,11 +120,18 @@ def main():
     print(inco_prop,'% inconsistent models')
     print(len(not_inconsistents)/len(samples) * 100, '% Validity among all')
     print(len(uniques(not_inconsistents))/len(not_inconsistents) * 100, '% Uniqueness among valid ones')
-    print('Degree:', wasserstein_distance([np.mean(mt.getListDegree(G)) for G in samples], 
+    print('Degree:', wasserstein_distance([np.mean(mt.getListDegree(G)) for G in not_inconsistents], 
                      [np.mean(mt.getListDegree(G)) for G in graphs_test]))
-    print('MPC:', wasserstein_distance([np.mean(list(mt.MPC(G,dims).values())) for G in samples], 
+    
+    hist_degrees_syn = [nx.degree_histogram(G) for G in not_inconsistents]
+    hist_degrees_real = [nx.degree_histogram(G) for G in graphs_test]
+    
+    mmd_dist = compute_mmd(hist_degrees_real, hist_degrees_syn, kernel=gaussian_emd)
+    print('Degree MMD:', mmd_dist)
+    
+    print('MPC:', wasserstein_distance([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], 
                      [np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test]))
-    print('Node activity:', wasserstein_distance([np.mean(list(mt.nodeActivity(G,dims))) for G in samples], 
+    print('Node activity:', wasserstein_distance([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], 
                      [np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test]))
     #print('Node:', wasserstein_distance([len(G) for G in samples], 
     #                 [len(G) for G in graphs_test]))
@@ -142,7 +151,7 @@ def main():
     l7 = None
     l8 = None
     if plot:
-        l1 = sns.distplot([np.mean(mt.getListDegree(G)) for G in samples], hist=False, kde=True
+        l1 = sns.distplot([np.mean(mt.getListDegree(G)) for G in not_inconsistents], hist=False, kde=True
                           , color = 'red', label = generator, ax=axs[0])
         l2 = sns.distplot([np.mean(mt.getListDegree(G)) for G in graphs_test], hist=False, kde=True, 
                   color = 'blue', label = 'Real', ax=axs[0])
@@ -150,7 +159,7 @@ def main():
         axs[0].set_ylabel('')
     
     if plot:
-       l3 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in samples], hist=False, kde=True, 
+       l3 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], hist=False, kde=True, 
              color = 'red', label = generator, ax=axs[1])
        l4 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test], hist=False, kde=True, 
               color = 'blue', label = 'Real', ax=axs[1])
@@ -158,7 +167,7 @@ def main():
        axs[1].set_ylabel('')
     
     if plot:
-       l5 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in samples], hist=False, kde=True, 
+       l5 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], hist=False, kde=True, 
               color = 'red', label = generator, ax=axs[2])
        l6 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test], hist=False, kde=True, 
              color = 'blue', label = 'Real', ax=axs[2])
@@ -166,7 +175,7 @@ def main():
        axs[2].set_ylabel('')
        
     if plot:
-        l7 = sns.distplot([len(G) for G in samples], hist=False, kde=True
+        l7 = sns.distplot([len(G) for G in not_inconsistents], hist=False, kde=True
                           , color = 'red', label = generator, ax=axs[3])
         l8 = sns.distplot([len(G) for G in graphs_test], hist=False, kde=True, 
                   color = 'blue', label = 'Real', ax=axs[3])

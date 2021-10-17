@@ -34,6 +34,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import multiprocess as mp
 from scipy.stats import mannwhitneyu
+from dmg.realism.emd import compute_mmd, gaussian_emd
+import networkx as nx
 
 
 def uniques(Gs):
@@ -159,7 +161,7 @@ def main():
     print(len(uniques(not_inconsistents))/len(not_inconsistents) * 100, '% Uniqueness among valid ones')
     print(len(uniques(clean_new_models))/len(uniques(samples)) * 100, '% Novelty among unique ones')
     print('Inference duration:', inference_duration)
-    print('Max nodes syn:', np.max([len(G) for G in samples]))
+    print('Max nodes syn:', np.max([len(G) for G in not_inconsistents]))
     print('Max nodes real:', np.max([len(G) for G in graphs_test]))
     acc, p_val, test_samples = C2ST_GNN(not_inconsistents, graphs_test, dataset, epochs=epochs)
     print('Acc C2ST:', acc)
@@ -179,28 +181,33 @@ def main():
     l7 = None
     l8 = None
     
-    print('Degree:', wasserstein_distance([np.mean(mt.getListDegree(G)) for G in samples], 
+    print('Degree WS:', wasserstein_distance([np.mean(mt.getListDegree(G)) for G in not_inconsistents], 
                      [np.mean(mt.getListDegree(G)) for G in graphs_test]))
+    hist_degrees_syn = [nx.degree_histogram(G) for G in not_inconsistents]
+    hist_degrees_real = [nx.degree_histogram(G) for G in graphs_test]
+    
+    mmd_dist = compute_mmd(hist_degrees_real, hist_degrees_syn, kernel=gaussian_emd)
+    print('Degree MMD:', mmd_dist)
     if plot:
-        l1 = sns.distplot([np.mean(mt.getListDegree(G)) for G in samples], hist=False, kde=True
+        l1 = sns.distplot([np.mean(mt.getListDegree(G)) for G in not_inconsistents], hist=False, kde=True
                           , color = 'red', label = 'DMG', ax=axs[0])
         l2 = sns.distplot([np.mean(mt.getListDegree(G)) for G in graphs_test], hist=False, kde=True, 
                   color = 'blue', label = 'Real', ax=axs[0])
         axs[0].title.set_text('Degree')
         axs[0].set_ylabel('')
-    print('MPC:', wasserstein_distance([np.mean(list(mt.MPC(G,dims).values())) for G in samples], 
+    print('MPC:', wasserstein_distance([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], 
                      [np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test]))
     if plot:
-       l3 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in samples], hist=False, kde=True, 
+       l3 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], hist=False, kde=True, 
              color = 'red', label = 'DMG', ax=axs[1])
        l4 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test], hist=False, kde=True, 
               color = 'blue', label = 'Real', ax=axs[1])
        axs[1].title.set_text('MPC')
        axs[1].set_ylabel('')
-    print('Node activity:', wasserstein_distance([np.mean(list(mt.nodeActivity(G,dims))) for G in samples], 
+    print('Node activity:', wasserstein_distance([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], 
                      [np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test]))
     if plot:
-       l5 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in samples], hist=False, kde=True, 
+       l5 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], hist=False, kde=True, 
               color = 'red', label = 'DMG', ax=axs[2])
        l6 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test], hist=False, kde=True, 
              color = 'blue', label = 'Real', ax=axs[2])
@@ -208,7 +215,7 @@ def main():
        axs[2].set_ylabel('')
        
     if plot:
-        l7 = sns.distplot([len(G) for G in samples], hist=False, kde=True
+        l7 = sns.distplot([len(G) for G in not_inconsistents], hist=False, kde=True
                           , color = 'red', label = 'DMG', ax=axs[3])
         l8 = sns.distplot([len(G) for G in graphs_test], hist=False, kde=True, 
                   color = 'blue', label = 'Real', ax=axs[3])
@@ -250,8 +257,8 @@ def main():
     with mp.Pool(10) as pool:
         int_div_syn = pool.map(internalDiversityShapes, div_syn)
     
-    print(np.mean(int_div_real))
-    print(np.mean(int_div_syn))
+    print('Mean internal diversity of reals:', np.mean(int_div_real))
+    print('Mean internal diversity of syn:', np.mean(int_div_syn))
     print(mannwhitneyu(int_div_real, int_div_syn))
     
     if plot:
@@ -292,8 +299,8 @@ def main():
         ext_div_syn = pool.map(compMD, pairs)
 
         
-    print(np.mean(ext_div_real))
-    print(np.mean(ext_div_syn))
+    print('Mean external diversity of reals:', np.mean(ext_div_real))
+    print('Mean external diversity of syn:', np.mean(ext_div_syn))
     print(mannwhitneyu(ext_div_real, ext_div_syn))
     if plot:
         data = np.array([ext_div_real, ext_div_syn])
