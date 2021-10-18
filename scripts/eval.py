@@ -19,7 +19,9 @@ warnings.filterwarnings('ignore')
 from dmg.deeplearning.generativeModel import GenerativeModel
 from dmg.deeplearning.generativeModel import sampleGraph
 from networkx.algorithms.isomorphism import is_isomorphic
-from dmg.model2graph.shapes import getShapesDP, internalDiversityDP, externalDiversity, internalDiversityShapes, computeMD, getCategoricalDistribution
+from dmg.model2graph.shapes import (getShapesDP, 
+                                    internalDiversityShapes, computeMD, 
+                                    getCategoricalDistribution)
 import dmg.graphUtils as gu
 import dmg.realism.metrics as mt
 import torch
@@ -59,6 +61,7 @@ np.random.seed(123)
 
 def main():
     
+    #parser
     parser = ArgumentParser(description='Script for evaluating the generator')
 
     parser.add_argument("-m", "--model", dest="model",
@@ -89,14 +92,14 @@ def main():
                         help="if plot distributions.")
     parser.add_argument("-e", "--epochs", dest="epochs",
                     help="max epochs.", type=int, 
-                    required=False, default=50)
+                    required=False, default=100)
     
     parser.add_argument("-ne", "--neighborhoods", dest="neighborhoods", type=int, 
                         required=False, default=5,
                         help="Neighborhoods to compute the diversity.")
     
+    #parse args
     args = parser.parse_args()
-    
     dataset_path = args.path_dataset
     dataset = args.dataset
     model_path = args.model
@@ -108,16 +111,18 @@ def main():
     plot = bool(args.plot)
     neighborhoods = args.neighborhoods
     
+    #train and test paths
     test_path = dataset_path + '/test'
     train_path = dataset_path + '/train'
-
     msetObject = datasets_supported[dataset]
     
+    #load graphs
     graphs_train = [msetObject.getGraphReal(f,backend) 
                 for f in glob.glob(train_path + "/*")]
     graphs_test = [msetObject.getGraphReal(f,backend) 
                 for f in glob.glob(test_path + "/*")]
     
+    #load generative model
     model = GenerativeModel(hidden_dim, msetObject.dic_nodes, 
                         msetObject.dic_edges, 
                         msetObject.operations)
@@ -125,6 +130,7 @@ def main():
     model.load_state_dict(checkpoint['model_state_dict'])
     model.eval()
     
+    #generate samples
     start_time = time.monotonic()
     samples = [sampleGraph(msetObject.pallete.initialGraphs[0], 
                            msetObject.pallete, model, 
@@ -132,26 +138,31 @@ def main():
            for i in range(number_models)]
     inference_duration = time.monotonic() - start_time
     
+    #check inconsistents
     inconsistents = []
     for s in samples:
         if msetObject.inconsistency(s):
             inconsistents.append(s)
     inco_prop = len(inconsistents)*100/len(samples)
+    not_inconsistents = [g for g in samples if not g in inconsistents]
     
+    #check isomorf
     iso = []
     for s in samples:
         for g in graphs_train:
             if (is_isomorphic(s,g,gu.node_match_type, gu.edge_match_type)):
                 iso.append(s)
                 break
-    
-    not_inconsistents = [g for g in samples if not g in inconsistents]    
     iso_prop = len(iso)*100/len(samples)
     
+    #clean models: (not iso and not inconsistents)
     clean_new_models = [g for g in samples if (not g in inconsistents) and (not g in iso)]
     clean_pr = len(clean_new_models)*100/len(samples)
     
+    #dims for MPC and so on
     dims = list(msetObject.dic_edges.keys())
+    
+    #basic stats
     print(len(not_inconsistents), 'consistents')
     print(len(samples), 'total samples')
     print(clean_pr,'% consistent novel models')
@@ -163,65 +174,66 @@ def main():
     print('Inference duration:', inference_duration)
     print('Max nodes syn:', np.max([len(G) for G in not_inconsistents]))
     print('Max nodes real:', np.max([len(G) for G in graphs_test]))
-    acc, p_val, test_samples = C2ST_GNN(not_inconsistents, graphs_test, dataset, epochs=epochs)
+    
+    #C2ST
+    acc, p_val, test_samples = C2ST_GNN(not_inconsistents, graphs_test, 
+                                        msetObject, epochs=epochs, verbose = False)
     print('Acc C2ST:', acc)
     print('p-value C2ST:', p_val)
     print('Test samples C2ST:', test_samples)
     
-
-    ##plots 
-    fig, axs = plt.subplots(ncols=4, figsize=(10, 5))
-    line_labels = ['DMG', 'Real']
-    l1 = None
-    l2 = None
-    l3 = None
-    l4 = None
-    l5 = None
-    l6 = None
-    l7 = None
-    l8 = None
     
+    #WS degree
     print('Degree WS:', wasserstein_distance([np.mean(mt.getListDegree(G)) for G in not_inconsistents], 
                      [np.mean(mt.getListDegree(G)) for G in graphs_test]))
     hist_degrees_syn = [nx.degree_histogram(G) for G in not_inconsistents]
     hist_degrees_real = [nx.degree_histogram(G) for G in graphs_test]
-    
+    #MMD degree
     mmd_dist = compute_mmd(hist_degrees_real, hist_degrees_syn, kernel=gaussian_emd)
     print('Degree MMD:', mmd_dist)
+    
+    #WS MPC
+    print('MPC:', wasserstein_distance([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], 
+                     [np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test]))
+    
+    #WS NA
+    print('Node activity:', wasserstein_distance([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], 
+                     [np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test]))
+    
+    
+    #plot of Degree, MPC, NA, Nodes
     if plot:
+        fig, axs = plt.subplots(ncols=4, figsize=(10, 5))
+        line_labels = ['DMG', 'Real']
+        
         l1 = sns.distplot([np.mean(mt.getListDegree(G)) for G in not_inconsistents], hist=False, kde=True
                           , color = 'red', label = 'DMG', ax=axs[0])
         l2 = sns.distplot([np.mean(mt.getListDegree(G)) for G in graphs_test], hist=False, kde=True, 
                   color = 'blue', label = 'Real', ax=axs[0])
         axs[0].title.set_text('Degree')
         axs[0].set_ylabel('')
-    print('MPC:', wasserstein_distance([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], 
-                     [np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test]))
-    if plot:
-       l3 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], hist=False, kde=True, 
+    
+        l3 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], hist=False, kde=True, 
              color = 'red', label = 'DMG', ax=axs[1])
-       l4 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test], hist=False, kde=True, 
+        l4 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test], hist=False, kde=True, 
               color = 'blue', label = 'Real', ax=axs[1])
-       axs[1].title.set_text('MPC')
-       axs[1].set_ylabel('')
-    print('Node activity:', wasserstein_distance([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], 
-                     [np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test]))
-    if plot:
-       l5 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], hist=False, kde=True, 
+        axs[1].title.set_text('MPC')
+        axs[1].set_ylabel('')
+
+        l5 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], hist=False, kde=True, 
               color = 'red', label = 'DMG', ax=axs[2])
-       l6 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test], hist=False, kde=True, 
+        l6 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test], hist=False, kde=True, 
              color = 'blue', label = 'Real', ax=axs[2])
-       axs[2].title.set_text('Node Activity')
-       axs[2].set_ylabel('')
-       
-    if plot:
+        axs[2].title.set_text('Node Activity')
+        axs[2].set_ylabel('')
+
         l7 = sns.distplot([len(G) for G in not_inconsistents], hist=False, kde=True
                           , color = 'red', label = 'DMG', ax=axs[3])
         l8 = sns.distplot([len(G) for G in graphs_test], hist=False, kde=True, 
                   color = 'blue', label = 'Real', ax=axs[3])
         axs[3].title.set_text('Nodes')
         axs[3].set_ylabel('')
-    if plot:
+
         #fig.legend()
         fig.legend([l1, l2, l3, l4, l5, l6, l7, l8],     # The line objects
            labels=line_labels,   # The labels for each line
@@ -233,8 +245,6 @@ def main():
     
     ##diversity
     i = neighborhoods
-    #def map_f_real(G):
-    #    return getShapesDP(G, i, msetObject.pathsRealMeta)
     def map_f(G):
         return getShapesDP(G, i, msetObject.pathsSynMeta)
     print('Internal Diversity')

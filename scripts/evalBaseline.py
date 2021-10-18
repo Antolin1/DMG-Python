@@ -15,7 +15,6 @@ sys.path.append(os.getcwd()+'/scripts/')
 import warnings
 warnings.filterwarnings('ignore')
 
-import dmg.graphUtils as gu
 import dmg.realism.metrics as mt
 import torch
 import numpy as np
@@ -26,8 +25,9 @@ from c2st_gnn import C2ST_GNN
 from argparse import ArgumentParser
 from eval import uniques
 from modelSet import datasets_supported
-from dmg.model2graph.shapes import (getShapesDP, internalDiversityDP, externalDiversity, 
-                                    internalDiversityShapes, computeMD, getCategoricalDistribution)
+from dmg.model2graph.shapes import (getShapesDP, 
+                                    internalDiversityShapes, computeMD, 
+                                    getCategoricalDistribution)
 from scipy.stats import mannwhitneyu
 import multiprocess as mp
 from dmg.realism.emd import compute_mmd, gaussian_emd
@@ -59,7 +59,7 @@ def main():
                         required=True)
     
     parser.add_argument("-g", "--generator", dest="gen",
-                        choices=['alloy', 'viatra'],
+                        choices=['alloy', 'viatra', 'randomEMF'],
                         help="generator considered.",
                         required=True)
     parser.add_argument("-nm", "--numberModels", dest="number_models",
@@ -73,12 +73,12 @@ def main():
                         required=False, default="True",
                         help="if plot distributions.")
     parser.add_argument("-e", "--epochs", dest="epochs",
-                    help="max epochs.", type=int, default = 50,
+                    help="max epochs.", type=int, default = 100,
                     required=False)
     parser.add_argument("-ne", "--neighborhoods", dest="neighborhoods", type=int, 
                         required=False, default=5,
                         help="Neighborhoods to compute the diversity.")
-
+    #parse args
     args = parser.parse_args()
     dataset_path = args.path_dataset
     dataset = args.dataset
@@ -89,68 +89,62 @@ def main():
     epochs = args.epochs
     neighborhoods = args.neighborhoods
     number_models = args.number_models
-    
     msetObject = datasets_supported[dataset]
 
-    
+    #load graphs    
     test_path = dataset_path + '/test'
-
     graphs_test = [msetObject.getGraphReal(f,backend) 
                 for f in glob.glob(test_path + "/*")]
-    
     samples = []
     for filename in glob.iglob(syn_path + '/**/*.xmi', recursive=True):
         #change this
         samples.append(msetObject.getGraphSyn(filename,backend))
-    
     samples = random.sample(samples, number_models)
     
+    #inconsistency
     inconsistents = []
     for s in samples:
         if msetObject.inconsistency(s):
             inconsistents.append(s)
     inco_prop = len(inconsistents)*100/len(samples)
-    
-
     not_inconsistents = [g for g in samples if not g in inconsistents]    
 
     
-    
+    #basic stats
     dims = list(msetObject.dic_edges.keys())
     print(inco_prop,'% inconsistent models')
     print(len(not_inconsistents)/len(samples) * 100, '% Validity among all')
     print(len(uniques(not_inconsistents))/len(not_inconsistents) * 100, '% Uniqueness among valid ones')
+    
+    
+    #Degree
     print('Degree:', wasserstein_distance([np.mean(mt.getListDegree(G)) for G in not_inconsistents], 
                      [np.mean(mt.getListDegree(G)) for G in graphs_test]))
-    
     hist_degrees_syn = [nx.degree_histogram(G) for G in not_inconsistents]
     hist_degrees_real = [nx.degree_histogram(G) for G in graphs_test]
-    
     mmd_dist = compute_mmd(hist_degrees_real, hist_degrees_syn, kernel=gaussian_emd)
     print('Degree MMD:', mmd_dist)
     
+    #MPC
     print('MPC:', wasserstein_distance([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], 
                      [np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test]))
+    
+    #NA
     print('Node activity:', wasserstein_distance([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], 
                      [np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test]))
-    #print('Node:', wasserstein_distance([len(G) for G in samples], 
-    #                 [len(G) for G in graphs_test]))
-    acc, p_val, test_samples = C2ST_GNN(not_inconsistents, graphs_test, dataset, epochs=epochs)
+
+    #C2ST
+    acc, p_val, test_samples = C2ST_GNN(not_inconsistents, graphs_test, msetObject, epochs=epochs, verbose = True)
     print('Acc C2ST:', acc)
     print('p-value C2ST:', p_val)
     print('Test samples C2ST:', test_samples)
     
-    fig, axs = plt.subplots(ncols=4, figsize=(10, 5))
-    line_labels = [generator, 'Real']
-    l1 = None
-    l2 = None
-    l3 = None
-    l4 = None
-    l5 = None
-    l6 = None
-    l7 = None
-    l8 = None
+    
+    #plots
     if plot:
+        fig, axs = plt.subplots(ncols=4, figsize=(10, 5))
+        line_labels = [generator, 'Real']
+
         l1 = sns.distplot([np.mean(mt.getListDegree(G)) for G in not_inconsistents], hist=False, kde=True
                           , color = 'red', label = generator, ax=axs[0])
         l2 = sns.distplot([np.mean(mt.getListDegree(G)) for G in graphs_test], hist=False, kde=True, 
@@ -158,30 +152,27 @@ def main():
         axs[0].title.set_text('Degree')
         axs[0].set_ylabel('')
     
-    if plot:
-       l3 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], hist=False, kde=True, 
+        l3 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], hist=False, kde=True, 
              color = 'red', label = generator, ax=axs[1])
-       l4 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test], hist=False, kde=True, 
+        l4 = sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test], hist=False, kde=True, 
               color = 'blue', label = 'Real', ax=axs[1])
-       axs[1].title.set_text('MPC')
-       axs[1].set_ylabel('')
+        axs[1].title.set_text('MPC')
+        axs[1].set_ylabel('')
     
-    if plot:
-       l5 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], hist=False, kde=True, 
+        l5 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], hist=False, kde=True, 
               color = 'red', label = generator, ax=axs[2])
-       l6 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test], hist=False, kde=True, 
+        l6 = sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test], hist=False, kde=True, 
              color = 'blue', label = 'Real', ax=axs[2])
-       axs[2].title.set_text('Node Activity')
-       axs[2].set_ylabel('')
+        axs[2].title.set_text('Node Activity')
+        axs[2].set_ylabel('')
        
-    if plot:
         l7 = sns.distplot([len(G) for G in not_inconsistents], hist=False, kde=True
                           , color = 'red', label = generator, ax=axs[3])
         l8 = sns.distplot([len(G) for G in graphs_test], hist=False, kde=True, 
                   color = 'blue', label = 'Real', ax=axs[3])
         axs[3].title.set_text('Nodes')
         axs[3].set_ylabel('')
-    if plot:
+        
         #fig.legend()
         fig.legend([l1, l2, l3, l4, l5, l6, l7, l8],     # The line objects
            labels=line_labels,   # The labels for each line
@@ -197,10 +188,9 @@ def main():
     
     ##diversity
     i = neighborhoods
-    #def map_f_real(G):
-    #    return getShapesDP(G, i, msetObject.pathsRealMeta)
     def map_f(G):
         return getShapesDP(G, i, msetObject.pathsSynMeta)
+    
     print('Internal Diversity')
     div_real = []
     div_syn = []
@@ -211,8 +201,6 @@ def main():
     
     div_real = [[r[-1] for r in d.values()] for d in div_real]
     div_syn = [[r[-1] for r in d.values()] for d in div_syn]
-    #int_div_real = [internalDiversity(G, i, msetObject.pathsRealMeta) for G in graphs_test]
-    #int_div_syn = [internalDiversity(G, i, msetObject.pathsSynMeta) for G in samples]
     
     int_div_real = []
     int_div_syn = []
@@ -221,8 +209,8 @@ def main():
     with mp.Pool(10) as pool:
         int_div_syn = pool.map(internalDiversityShapes, div_syn)
     
-    print(np.mean(int_div_real))
-    print(np.mean(int_div_syn))
+    print('Mean internal diversity of reals:', np.mean(int_div_real))
+    print('Mean internal diversity of syn:', np.mean(int_div_syn))
     print(mannwhitneyu(int_div_real, int_div_syn))
     
     if plot:
@@ -245,27 +233,24 @@ def main():
         for b,G2 in enumerate(cat_real):
             if G1!=G2 and a < b:
                 pairs.append((G1,G2))
-                #ext_div_real.append(computeMD(G1,G2))
     def compMD(p):
         return computeMD(p[0],p[1])
     with mp.Pool(10) as pool:
         ext_div_real = pool.map(compMD, pairs)
 
-    
     ext_div_syn = []
     pairs = []
     for a,G1 in enumerate(cat_syn):
         for b,G2 in enumerate(cat_syn):
             if G1!=G2 and a < b:
                 pairs.append((G1,G2))
-                #ext_div_syn.append(computeMD(G1,G2))
     with mp.Pool(10) as pool:
         ext_div_syn = pool.map(compMD, pairs)
 
-        
-    print(np.mean(ext_div_real))
-    print(np.mean(ext_div_syn))
+    print('Mean external diversity of reals:', np.mean(ext_div_real))
+    print('Mean external diversity of syn:', np.mean(ext_div_syn))
     print(mannwhitneyu(ext_div_real, ext_div_syn))
+    
     if plot:
         data = np.array([ext_div_real, ext_div_syn])
         plot3 = plt.figure(3)
