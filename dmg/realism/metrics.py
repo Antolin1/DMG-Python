@@ -30,7 +30,7 @@ def nodeActivity(G, dims):
     result = []
     for n in G:
         vector = vectors[n]
-        na = np.sum([v != 0 for v in vector])
+        na = float(np.sum([v != 0 for v in vector]))/ float(len(dims))
         result.append(na)
     return result
 

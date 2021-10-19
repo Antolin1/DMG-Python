@@ -55,4 +55,4 @@ class TestMetrics(unittest.TestCase):
          
          nas = m.nodeActivity(g4t.G_testEcore, dims)
          self.assertEqual(len(nas), 4)
-         self.assertEqual(set(nas),{2,3})
+         self.assertEqual(set(nas),{float(2)/len(dims),float(3)/len(dims)})

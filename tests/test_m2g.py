@@ -10,14 +10,13 @@ Created on Thu Jul 29 10:22:58 2021
 import unittest
 import dmg.model2graph.model2graph as m2g
 import dmg.model2graph.metafilter as mf
-from dmg.model2graph.shapes import (compareShapes, 
-                                    internalDiversityDP, 
+from dmg.model2graph.shapes import (internalDiversityDP, 
                                     getShapesDP, externalDiversity)
 import tests.graphs4test as g4t
 from networkx.algorithms.isomorphism import is_isomorphic
 import dmg.graphUtils as gu
-import glob
-from dmg.yakindu.yakinduPreprocess import removeLayout
+
+
 
     
 class Testm2g(unittest.TestCase):
@@ -153,9 +152,9 @@ class Testm2g(unittest.TestCase):
         for i in range(5):
             shape_entry = getShapesDP(G1, i, ['data/metamodels/yakinduSimplified.ecore'])[2][-1]
             shape_statechart = getShapesDP(G1, i, ['data/metamodels/yakinduSimplified.ecore'])[0][-1]
-            self.assertTrue(compareShapes(shape_entry, shape_entry))
-            if i > 0:
-                self.assertFalse(compareShapes(shape_entry, shape_statechart))
+            #self.assertTrue(compareShapes(shape_entry, shape_entry))
+            #if i > 0:
+            #    self.assertFalse(compareShapes(shape_entry, shape_statechart))
                 
         
         G3 = g4t.G_yak_shape

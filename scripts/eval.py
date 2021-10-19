@@ -189,16 +189,32 @@ def main():
     hist_degrees_syn = [nx.degree_histogram(G) for G in not_inconsistents]
     hist_degrees_real = [nx.degree_histogram(G) for G in graphs_test]
     #MMD degree
-    mmd_dist = compute_mmd(hist_degrees_real, hist_degrees_syn, kernel=gaussian_emd)
-    print('Degree MMD:', mmd_dist)
+    mmd_dist_degree = compute_mmd(hist_degrees_real, hist_degrees_syn, kernel=gaussian_emd)
+    print('Degree MMD:', mmd_dist_degree)
     
     #WS MPC
     print('MPC:', wasserstein_distance([np.mean(list(mt.MPC(G,dims).values())) for G in not_inconsistents], 
                      [np.mean(list(mt.MPC(G,dims).values())) for G in graphs_test]))
+    hist_mpc_syn = [np.histogram(list(mt.MPC(G,dims).values()), bins=100, range=(0.0, 1.0), density=False)[0]
+                    for G in not_inconsistents]
+    hist_mpc_real = [np.histogram(list(mt.MPC(G,dims).values()), bins=100, range=(0.0, 1.0), density=False)[0]
+                    for G in graphs_test]
+    #MMD MPC
+    mmd_dist_mpc = compute_mmd(hist_mpc_real, hist_mpc_syn, kernel=gaussian_emd, 
+                                sigma=1.0/10, distance_scaling=100)
+    print('MPC MMD:', mmd_dist_mpc)
     
     #WS NA
     print('Node activity:', wasserstein_distance([np.mean(list(mt.nodeActivity(G,dims))) for G in not_inconsistents], 
                      [np.mean(list(mt.nodeActivity(G,dims))) for G in graphs_test]))
+    hist_na_syn = [np.histogram(list(mt.nodeActivity(G,dims)), bins=100, range=(0.0, 1.0), density=False)[0]
+                    for G in not_inconsistents]
+    hist_na_real = [np.histogram(list(mt.nodeActivity(G,dims)), bins=100, range=(0.0, 1.0), density=False)[0]
+                    for G in graphs_test]
+    #MMD MPC
+    mmd_dist_na = compute_mmd(hist_na_real, hist_na_syn, kernel=gaussian_emd,
+                              sigma=1.0/10, distance_scaling=100)
+    print('NA MMD:', mmd_dist_na)
     
     
     #plot of Degree, MPC, NA, Nodes
