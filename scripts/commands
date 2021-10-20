@@ -31,9 +31,10 @@ python scripts/kde.py -d rds-genmymodel -pd data/rds-genmymodel -emf python -g v
 #VIATRA
 python ./scripts/evalBaseline.py -d yakindu-github -pd data/yakindu-github/ -emf python -g viatra -ps baselines/yakindu-github/viatra
 python ./scripts/evalBaseline.py -d yakindu-exercise -pd data/yakindu-exercise/ -emf python -g viatra -ps baselines/yakindu-exercise/viatra
-python ./scripts/evalBaseline.py -d ecore-github -pd data/ecore-github/ -emf python -g viatra -ps baselines/yakindu-github/viatra
+python ./scripts/evalBaseline.py -d ecore-github -pd data/ecore-github/ -emf java -g viatra -ps baselines/ecore-github/viatra
 python ./scripts/evalBaseline.py -d rds-genmymodel -pd data/rds-genmymodel/ -emf python -g viatra -ps baselines/rds-genmymodel/viatra
 
 #RandomEMF
 python ./scripts/evalBaseline.py -d yakindu-github -pd data/yakindu-github/ -emf python -g randomEMF -ps baselines/yakindu-github/randomEMF
 python ./scripts/evalBaseline.py -d yakindu-exercise -pd data/yakindu-exercise/ -emf python -g randomEMF -ps baselines/yakindu-exercise/randomEMF
+python ./scripts/evalBaseline.py -d ecore-github -pd data/ecore-github/ -emf java -g randomEMF -ps baselines/ecore-github/randomEMF

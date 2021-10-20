@@ -97,8 +97,11 @@ def main():
                 for f in glob.glob(test_path + "/*")]
     samples = []
     for filename in glob.iglob(syn_path + '/**/*.xmi', recursive=True):
-        #change this
-        samples.append(msetObject.getGraphSyn(filename,backend))
+        G1 = msetObject.getGraphSyn(filename,backend)
+        lower, upper = msetObject.bounds
+        if len(G1) < lower or len(G1) > upper:
+            continue
+        samples.append(G1)
     samples = random.sample(samples, number_models)
     
     #inconsistency
