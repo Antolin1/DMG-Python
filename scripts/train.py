@@ -37,7 +37,7 @@ parser.add_argument("-es", "--earlyStopping", dest="earlyStop",
                     help="criteria to stop.", default = 'trainloss')
 parser.add_argument("-sh", "--shuffle", dest="shuffle", 
                     choices=['True', 'False'], 
-                    help="shuffle actions", default = 'True')
+                    help="shuffle actions", default = 'False', required=False)
 parser.add_argument("-sd", "--seed", dest="seed",
                     help="set seed", type=int, default = 123)
 parser.add_argument("-emf", "--emf_backend", dest="emf",
@@ -53,8 +53,14 @@ parser.add_argument("-b", "--batch", dest="batch", type=int,
 parser.add_argument("-hi", "--hidden", dest="hidden_dim", type=int, 
                     required=False, default=128,
                     help="hidden dim of the nn size.")
-parser.add_argument("-mp", "--multiprocess", dest="mp", type=int, 
-                    required=False, default=10,
+#parser.add_argument("-mp", "--multiprocess", dest="mp", type=int, 
+#                    required=False, default=10,
+#                    help="number of processes.")
+parser.add_argument("-k", "--k_samples", dest="k", type=int,
+                    required=False, default=-1,
+                    help="number of processes.")
+parser.add_argument("-lr", "--learningRate", dest="lr", type=float,
+                    required=False, default=0.001,
                     help="number of processes.")
 #add argument to use the easrly stopping over the trainset
 # get inputs
@@ -70,8 +76,11 @@ backend = args.emf
 verbose = (args.verbose_mode == 1)
 hidden_dim = args.hidden_dim
 batch_size = args.batch
-numProcess = args.mp
+lr = args.lr
+#numProcess = args.mp
 path_train_details = args.save_details
+k = args.k
+
 
 #paths
 train_path = path_dataset + '/train'
@@ -143,7 +152,7 @@ model = GenerativeModel(hidden_dim, msetObject.dic_nodes,
                         msetObject.dic_edges, 
                         msetObject.operations)
 #optimizer
-opt = torch.optim.Adam(model.parameters(), lr=0.001)
+opt = torch.optim.Adam(model.parameters(), lr=lr)
 #early stopping object
 
 mode = None
@@ -163,23 +172,34 @@ prop_clean = []
 max_size = np.max([len(g) for g in graphs_train])
 losses = []
 
+listDatasMontecarlo = []
+if k!=-1:
+    for j in range(k):
+        with mp.Pool(10) as pool:
+            listDatas = pool.map(f, graphs_train)
+        listDatas = [r for rr in listDatas for r in rr]
+        listDatasMontecarlo = listDatasMontecarlo + listDatas
+
 start_time = time.monotonic()
 for epoch in range(epochs):
     model.train()
     total_loss = 0
+    
     listDatas = []
-    if numProcess > 1:
-        with mp.Pool(numProcess) as pool:
+    if k == -1:
+        with mp.Pool(10) as pool:
             listDatas = pool.map(f, graphs_train)
+        listDatas = [r for rr in listDatas for r in rr]
+    
+    loader = None
+    if k == -1:
+        loader = DataLoader(listDatas, batch_size=batch_size, 
+                                num_workers = 3, 
+                                shuffle=False)
     else:
-        for g in graphs_train:
-            sequence = pallete.graphToSequence(g)
-            sequence = [(addInvEdges(s[0], pallete, separator),s[1]) for s in sequence]
-            listDatas.append(sequence2data(sequence, pallete, pallete.max_len))
-    listDatas = [r for rr in listDatas for r in rr]
-    loader = DataLoader(listDatas, batch_size=batch_size, 
-                            num_workers = 0, 
-                            shuffle=False)
+        loader = DataLoader(listDatasMontecarlo, batch_size=batch_size, 
+                                num_workers = 3, 
+                                shuffle=False)
     #training
     for data in loader:
         opt.zero_grad()

@@ -18,7 +18,7 @@ import dmg.graphUtils as gu
 from networkx.algorithms.isomorphism import is_isomorphic
 from modelSet import datasets_supported
 from argparse import ArgumentParser
-
+from eval import uniques
 
 def main():
     
@@ -69,6 +69,7 @@ def main():
     
     #CHECK SEQ GENERATION AND BOUNDS
     files = glob.glob(preprodataset_path +'/*')
+    graphs_considered = []
     for f in files:
         #TODO: solve exception in RDS and develop and take a good metamodel for RDS
         #TODO: solve exception in ecore, this is caused by proxy elements. 
@@ -110,7 +111,19 @@ def main():
         if not is_iso:
             print('Remove not iso:', f)
             os.remove(f)
+            continue
         
+        G1.graph['file'] = f
+        graphs_considered.append(G1)
+    
+    #remove isomorf
+    final_graphs = uniques(graphs_considered)
+    for g in graphs_considered:
+        if not g in final_graphs:
+            f = g.graph['file']
+            print('Remove duplicated:', f)
+            os.remove(f)
+    
     #TRAIN TEST SPLIT
     files = glob.glob(preprodataset_path +'/*')
     train, test =  train_test_split(files, test_size=0.4, random_state=42)
