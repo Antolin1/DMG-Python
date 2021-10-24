@@ -44,17 +44,17 @@ from dmg.deeplearning.generativeModel import sampleGraph
 
 def getModelPath(dataset):
     if dataset == 'ecore-github':
-        return 'models/ecore-github-not-shuffle-tl.m'
+        return 'models/ecore-github-finalModel.m'
     elif dataset == 'yakindu-github':
-        return 'models/yakindu-github-not-shuffle-tl.m'
+        return 'models/yakindu-github-finalModel.m'
     elif dataset == 'yakindu-exercise':
-        return 'models/yakindu-exercise-not-shuffle-tl.m'
+        return 'models/yakindu-exercise-finalModel.m'
     elif dataset == 'rds-genmymodel':
-        return 'models/rds-genmymodel-not-shuffle-tl.m'
+        return 'models/rds-genmymodel-finalModel.m'
     
 
 
-generators = ['viatra', 'randomEMF', 'DMG']
+generators = ['viatra' ,'DMG'] # 'randomEMF',
 
 def getSynPath(generator, dataset):
     return 'baselines/' + dataset +'/' + generator
@@ -294,8 +294,6 @@ def main():
         plot2 = plt.figure(2)
         plt.boxplot(data ,labels = generators + ['real'])
         plt.show()
-    
-
 
 if __name__ == "__main__":
     main()

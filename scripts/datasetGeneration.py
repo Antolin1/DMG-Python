@@ -81,14 +81,19 @@ def main():
             G1 = msetObject.getGraphReal(f,backend)
         except: # Exception as e:
             #print(e.with_traceback())
-            print('Remove exception m2g in', f)
+            print('Removed exception m2g in', f)
             os.remove(f)
             continue
         
         lower, upper = msetObject.bounds
         if len(G1) < lower or len(G1) > upper:
             os.remove(f)
-            print('Remove out of bounds in', f)
+            print('Removed out of bounds in', f)
+            continue
+        
+        if msetObject.inconsistency(G1):
+            os.remove(f)
+            print('Removed for insconsistent', f)
             continue
         
         pallete = msetObject.pallete
@@ -97,7 +102,7 @@ def main():
         seq = pallete.graphToSequence(G1)
         is_iso = False
         if len(seq) == 0:
-            print('Remove Seq 0 in', f)
+            print('Removed Seq 0 in', f)
             os.remove(f)
             continue
         
@@ -112,7 +117,7 @@ def main():
             print('Remove not iso:', f)
             os.remove(f)
             continue
-        
+        #TODO: remove inconsistents?
         G1.graph['file'] = f
         graphs_considered.append(G1)
     
@@ -121,7 +126,7 @@ def main():
     for g in graphs_considered:
         if not g in final_graphs:
             f = g.graph['file']
-            print('Remove duplicated:', f)
+            print('Removed duplicated:', f)
             os.remove(f)
     
     #TRAIN TEST SPLIT
