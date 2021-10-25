@@ -43,6 +43,17 @@ icCons.add_edge(1, 2, type = 'indexColumns')
 icCons.add_edge(2, 3, type = 'column')
 icCons.add_edge(4, 3, type = 'columns')
 
+#ref2thesame
+ref2thesame = nx.MultiDiGraph()
+ref2thesame.add_node(0, type = 'Column')
+ref2thesame.add_node(1, type = 'Reference')
+
+ref2thesame.add_edge(0, 1, type = 'primaryReferences')
+ref2thesame.add_edge(1, 0, type = 'foreignKeyColumns')
+ref2thesame.add_edge(1, 0, type = 'primaryKeyColumns')
+ref2thesame.add_edge(0, 1, type = 'foreignReferences')
+
+
 
 def inconsistenceEqualRefs(G):
     GM = GraphMatcher(G, equalRefs, node_match = gu.node_match_type, 
@@ -58,6 +69,13 @@ def inconsistenceIcCons(G):
         return True
     return False
 
+def ref2thesameColumn(G):
+    GM = GraphMatcher(G, ref2thesame, node_match = gu.node_match_type, 
+                                  edge_match = gu.edge_match_type)
+    for subgraph in GM.subgraph_isomorphisms_iter():
+        return True
+    return False
+
 def inconsistent(G):
-    return (inconsistenceEqualRefs(G) or inconsistenceIcCons(G))
+    return (inconsistenceEqualRefs(G) or inconsistenceIcCons(G) or ref2thesameColumn(G))
 

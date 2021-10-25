@@ -54,12 +54,14 @@ def getModelPath(dataset):
     
 
 
-generators = ['viatra' ,'DMG'] # 'randomEMF',
+
 
 def getSynPath(generator, dataset):
     return 'baselines/' + dataset +'/' + generator
 
 def main():
+    
+    generators = ['viatra' ,'DMG', 'randomEMF', 'randomInstantiator']
     #parser
     
     parser = ArgumentParser(description='Script for evaluating all the generators')
@@ -160,12 +162,17 @@ def main():
     print('--'*10)
     for gen in generators:
         print('Consistency',gen,':',(len(generators_not_inconsistents[gen])*100/len(samples)))
+        
+    generators = [gen for gen in generators if len(generators_not_inconsistents[gen]) > 0]
     
     mmds_degree = {}
     hist_degrees_real = [nx.degree_histogram(G) for G in graphs_test]
     for gen in generators:
-        hist_degrees_syn = [nx.degree_histogram(G) for G in generators_not_inconsistents[gen]]
-        mmds_degree[gen] = compute_mmd(hist_degrees_real, hist_degrees_syn, kernel=gaussian_emd)
+        if len(generators_not_inconsistents[gen]) > 0:
+            hist_degrees_syn = [nx.degree_histogram(G) for G in generators_not_inconsistents[gen]]
+            mmds_degree[gen] = compute_mmd(hist_degrees_real, hist_degrees_syn, kernel=gaussian_emd)
+        else:
+            mmds_degree[gen] = 'Not enough consistents'
     
     print('--'*10)
     for gen in generators:
@@ -176,11 +183,14 @@ def main():
                         for G in graphs_test]
     mmds_mpc = {}
     for gen in generators:
-        hist_mpc_syn = [np.histogram(list(mt.MPC(G,dims).values()), bins=100, range=(0.0, 1.0), density=False)[0]
-                        for G in generators_not_inconsistents[gen]]
-        #MMD MPC
-        mmds_mpc[gen] = compute_mmd(hist_mpc_real, hist_mpc_syn, kernel=gaussian_emd, 
-                                    sigma=1.0/10, distance_scaling=100)
+        if len(generators_not_inconsistents[gen]) > 0:
+            hist_mpc_syn = [np.histogram(list(mt.MPC(G,dims).values()), bins=100, range=(0.0, 1.0), density=False)[0]
+                            for G in generators_not_inconsistents[gen]]
+            #MMD MPC
+            mmds_mpc[gen] = compute_mmd(hist_mpc_real, hist_mpc_syn, kernel=gaussian_emd, 
+                                        sigma=1.0/10, distance_scaling=100)
+        else:
+            mmds_mpc[gen] = 'Not enough consistents'
     
     print('--'*10)
     for gen in generators:
@@ -191,11 +201,14 @@ def main():
                         for G in graphs_test]
     mmds_na = {}
     for gen in generators:
-        hist_na_syn = [np.histogram(list(mt.nodeActivity(G,dims)), bins=100, range=(0.0, 1.0), density=False)[0]
-                        for G in generators_not_inconsistents[gen]]
-        #MMD MPC
-        mmds_na[gen] = compute_mmd(hist_na_real, hist_na_syn, kernel=gaussian_emd,
-                                  sigma=1.0/10, distance_scaling=100)
+        if len(generators_not_inconsistents[gen]) > 0:
+            hist_na_syn = [np.histogram(list(mt.nodeActivity(G,dims)), bins=100, range=(0.0, 1.0), density=False)[0]
+                            for G in generators_not_inconsistents[gen]]
+            #MMD MPC
+            mmds_na[gen] = compute_mmd(hist_na_real, hist_na_syn, kernel=gaussian_emd,
+                                      sigma=1.0/10, distance_scaling=100)
+        else:
+            mmds_na[gen] = 'Not enough consistents'
     
     print('--'*10)
     for gen in generators:
@@ -203,9 +216,12 @@ def main():
         
     c2st_generators = {}
     for gen in generators:
-        acc, p_val, test_samples = C2ST_GNN(generators_not_inconsistents[gen], graphs_test, 
-                                            msetObject, epochs=epochs, verbose = False)
-        c2st_generators[gen] = (acc, p_val, test_samples)
+        if len(generators_not_inconsistents[gen]) > 0:
+            acc, p_val, test_samples = C2ST_GNN(generators_not_inconsistents[gen], graphs_test, 
+                                                msetObject, epochs=epochs, verbose = False)
+            c2st_generators[gen] = (acc, p_val, test_samples)
+        else:
+            c2st_generators[gen] = ('NEC', 'NEC', 'NEC')
     
     print('--'*10)
     for gen in generators:
@@ -216,31 +232,32 @@ def main():
     ##plots
     if plot:
         fig, axs = plt.subplots(ncols=4, figsize=(10, 5))
-        colors = ['red', 'blue', 'green']
+        colors = ['red', 'blue', 'green', 'yellow']
         lines_degree_generators = []
         lines_mpc_generators = []
         lines_na_generators = []
         lines_nodes_generators = []
         for j,gen in enumerate(generators):
-            lines_degree_generators.append(sns.distplot([np.mean(mt.getListDegree(G)) for G in generators_not_inconsistents[gen]], hist=False, kde=True
-                          , color = colors[j], label = gen, ax=axs[0]))
-            axs[0].title.set_text('Degree')
-            axs[0].set_ylabel('')
-        
-            lines_mpc_generators.append(sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in generators_not_inconsistents[gen]], hist=False, kde=True, 
-                 color = colors[j], label = gen, ax=axs[1]))
-            axs[1].title.set_text('MPC')
-            axs[1].set_ylabel('')
-        
-            lines_na_generators.append(sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in generators_not_inconsistents[gen]], hist=False, kde=True, 
-                  color = colors[j], label = gen, ax=axs[2]))
-            axs[2].title.set_text('Node Activity')
-            axs[2].set_ylabel('')
-           
-            lines_nodes_generators.append(sns.distplot([len(G) for G in generators_not_inconsistents[gen]], hist=False, kde=True
-                              , color = colors[j], label = gen, ax=axs[3]))
-            axs[3].title.set_text('Nodes')
-            axs[3].set_ylabel('')
+            if len(generators_not_inconsistents[gen]) > 0: 
+                lines_degree_generators.append(sns.distplot([np.mean(mt.getListDegree(G)) for G in generators_not_inconsistents[gen]], hist=False, kde=True
+                              , color = colors[j], label = gen, ax=axs[0]))
+                axs[0].title.set_text('Degree')
+                axs[0].set_ylabel('')
+            
+                lines_mpc_generators.append(sns.distplot([np.mean(list(mt.MPC(G,dims).values())) for G in generators_not_inconsistents[gen]], hist=False, kde=True, 
+                     color = colors[j], label = gen, ax=axs[1]))
+                axs[1].title.set_text('MPC')
+                axs[1].set_ylabel('')
+            
+                lines_na_generators.append(sns.distplot([np.mean(list(mt.nodeActivity(G,dims))) for G in generators_not_inconsistents[gen]], hist=False, kde=True, 
+                      color = colors[j], label = gen, ax=axs[2]))
+                axs[2].title.set_text('Node Activity')
+                axs[2].set_ylabel('')
+               
+                lines_nodes_generators.append(sns.distplot([len(G) for G in generators_not_inconsistents[gen]], hist=False, kde=True
+                                  , color = colors[j], label = gen, ax=axs[3]))
+                axs[3].title.set_text('Nodes')
+                axs[3].set_ylabel('')
         
         l2 = sns.distplot([np.mean(mt.getListDegree(G)) for G in graphs_test], hist=False, kde=True, 
                   color = 'black', label = 'real', ax=axs[0])

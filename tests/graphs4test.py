@@ -228,6 +228,7 @@ rds_inco.add_node(7, type = 'Column')
 rds_inco.add_node(8, type = 'Reference')
 rds_inco.add_edge(0, 5, type = 'columns')
 rds_inco.add_edge(0, 7, type = 'columns')
+rds_inco.add_node(9, type = 'Reference')
 
 rds_inco.add_edge(5, 6, type = 'primaryReferences')
 rds_inco.add_edge(6, 7, type = 'foreignKeyColumns')
@@ -238,6 +239,11 @@ rds_inco.add_edge(5, 8, type = 'primaryReferences')
 rds_inco.add_edge(8, 7, type = 'foreignKeyColumns')
 rds_inco.add_edge(8, 5, type = 'primaryKeyColumns')
 rds_inco.add_edge(7, 8, type = 'foreignReferences')
+
+rds_inco.add_edge(5, 9, type = 'primaryReferences')
+rds_inco.add_edge(9, 5, type = 'foreignKeyColumns')
+rds_inco.add_edge(9, 5, type = 'primaryKeyColumns')
+rds_inco.add_edge(5, 9, type = 'foreignReferences')
 
 #G ecore insconsistent
 G_ecore_inco = nx.MultiDiGraph()
