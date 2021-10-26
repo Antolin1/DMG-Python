@@ -54,7 +54,17 @@ class TestConsistency(unittest.TestCase):
     
     def test_consistency_ecore(self):
         self.assertFalse(conECORE.inconsistent(g4t.G_test_small_ecore))
+        self.assertFalse(conECORE.inconsistent(g4t.G_ecore_inco_correct))
         self.assertTrue(conECORE.inconsistent(g4t.G_ecore_inco))
+        self.assertTrue(conECORE.inconsistent(g4t.G_ecore_inco_2))
+        self.assertTrue(conECORE.restrictionOpposite(g4t.G_ecore_inco))
+        self.assertTrue(conECORE.opositeOfItself(g4t.G_ecore_inco))
+        self.assertTrue(conECORE.restrictionSameClasses(g4t.G_ecore_inco_2))
+        self.assertFalse(conECORE.restrictionSameClasses(g4t.G_ecore_inco_correct))
+        self.assertTrue(conECORE.referenceDoesNotHaveType(g4t.G_ecore_inco))
+        self.assertTrue(conECORE.referenceDoesNotHaveType(g4t.G_ecore_inco_2))
+        self.assertTrue(conECORE.attributeDoesNotHaveType(g4t.G_ecore_inco_2))
+        self.assertTrue(conECORE.attributeDoesNotHaveType(g4t.G_ecore_inco))
         
     
         
