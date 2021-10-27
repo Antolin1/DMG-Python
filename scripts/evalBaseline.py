@@ -85,7 +85,7 @@ def main():
     backend = args.emf    
     generator = args.gen
     syn_path = args.path_syn
-    plot = bool(args.plot)
+    plot = (args.plot == 'True')
     epochs = args.epochs
     neighborhoods = args.neighborhoods
     number_models = args.number_models

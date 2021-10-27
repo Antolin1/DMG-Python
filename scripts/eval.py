@@ -108,7 +108,7 @@ def main():
     max_size = args.maxSize
     hidden_dim = args.hidden_dim
     epochs = args.epochs
-    plot = bool(args.plot)
+    plot = (args.plot == 'True')
     neighborhoods = args.neighborhoods
     
     #train and test paths

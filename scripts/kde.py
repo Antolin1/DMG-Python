@@ -88,7 +88,7 @@ def main():
     number = args.cand
     save_path = args.path_syn
     msetObject = datasets_supported[dataset]
-    plot = bool(args.plot)
+    plot = (args.plot == 'True')
     
     
     train_path = dataset_path + '/train'

@@ -75,7 +75,7 @@ def main():
     samples = args.number_models
     save_path = args.path_syn
     msetObject = datasets_supported[dataset]
-    plot = bool(args.plot)
+    plot = (args.plot == 'True') #bool(args.plot)
     
     
     train_path = dataset_path + '/train'
