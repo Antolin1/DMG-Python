@@ -8,7 +8,14 @@ DMG (Deep Model Generation) is a generator that, given a dataset of models (that
 
 ## Before using it 🛠️
 
-Install requirements:
+Prerequisites:
+
+* Java 11
+* Python 3.X
+* Graphviz
+* Maven
+
+Install requirements.txt:
 
 ```
 $ pip install -r requirements.txt
@@ -21,12 +28,9 @@ $ cd java/model2graph
 $ mvn package
 ```
 
-Download EMF Random Instantiator:
-
-```
-TODO
-```
-
+Download EMF Random Instantiator: 
+* Download this [jar](https://drive.google.com/file/d/1rTuxpTZOcrDLxWjXw0Gln4dcdgdqJ2Hq/view?usp=sharing).
+* Put it in this [folder](https://github.com/Antolin1/DMG-Python/tree/main/java/randomInstantiator).
 
 Execute tests:
 
@@ -87,10 +91,37 @@ scripts/fitRandomInstantiator.sh
 
 #### Evaluating DMG
 
+Once DMG is trained we can evaluate its performance in terms of realism and time of generation:
+
+```
+./scripts/evaluationScript.sh
+```
+
 #### Comparing DMG with the other generators
 
+Once DMG is trained and the generated models of the other generators are in the right folder, we can compare the four generators by executing the following:
+
+```
+scripts/assessmentScript.sh 
+```
 
 ### Step 4: Model generation using DMG ⚙️
+
+To generate models using the trained generator, just execute:
+
+```
+python scripts/generateModels.py -d rds-genmymodel -hi 64 -ms 300 -ps generatedModels/
+python scripts/generateModels.py -d yakindu-github -hi 64 -ms 50 -ps generatedModels/
+python scripts/generateModels.py -d yakindu-exercise -hi 64 -ms 150 -ps generatedModels/
+python scripts/generateModels.py -d ecore-github -hi 64 -ms 200 -ps generatedModels/
+```
+
+where:
+* `-d` establishes the dataset.
+* `-hi` establishes the hidden dimension of the model (our model uses a hidden dim of 64).
+* `-ms` establishes the maximum size of the generated models.
+* `-ps` establishes the folder where the models will be saved.
+
 
 
 
