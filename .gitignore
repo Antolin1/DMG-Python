@@ -229,5 +229,5 @@ notebooks/rdsGenerator.model
 *.m
 *.details
 baselines
-vsconfigs
+vsconfigs/*/*.vsconfig
 
