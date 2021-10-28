@@ -226,8 +226,7 @@ notebooks/ecoreGenerator.model
 notebooks/rdsGenerator.model
 
 *.deta
-*.m
+
 *.details
-baselines
-vsconfigs/*/*.vsconfig
+
 
