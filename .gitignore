@@ -229,4 +229,9 @@ notebooks/rdsGenerator.model
 
 *.details
 
+models/yakindu-exerciseHyper
+tunningYak-Ex
+tunningYak-Ex2
+data/testmodels/testSerialization.xmi
+scripts/tunning.sh
 

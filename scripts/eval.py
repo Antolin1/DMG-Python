@@ -173,6 +173,7 @@ def main():
     print(len(uniques(clean_new_models))/len(uniques(samples)) * 100, '% Novelty among unique ones')
     print('Inference duration:', inference_duration)
     print('Max nodes syn:', np.max([len(G) for G in not_inconsistents]))
+    print('Min nodes syn:', np.min([len(G) for G in not_inconsistents]))
     print('Max nodes real:', np.max([len(G) for G in graphs_test]))
     
     #C2ST
