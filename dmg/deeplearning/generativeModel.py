@@ -85,6 +85,77 @@ def sampleGraph(G_0, pallete, model, max_size, sep, debug = False, debug_trials 
             if trials == max_trials:
                 return G_aux
     return G_aux
+
+
+def sampleGraphLowerBound(G_0, pallete, model,sep, lowerbound, debug = False, 
+                          debug_trials = False, max_trials = 100):
+    G_aux = nx.MultiDiGraph(G_0)
+    finish = False
+    step = 0
+    trials = 0
+    while (len(G_aux) < lowerbound):
+        G_aux_inv = addInvEdges(G_aux, pallete, sep)
+        #sample action
+        data = graph2dataPreAction(G_aux_inv, pallete)
+        batch = torch.tensor([0]*len(G_aux_inv))
+        sampled_action, isLast, h_G, nodeEmbeddings = model.getActionAndFinish(
+            data.x, data.edge_index, 
+            torch.squeeze(data.edge_attr,dim=1),
+                        batch)
+        if debug:
+            print('Step', step)
+            print('Action', sampled_action.item())
+            print('Is last', isLast.item() == 1)
+        
+        if isLast.item() == 1:
+            finish = True
+        sampled_action = sampled_action.item()
+        #sample nodes
+        special_nodes = pallete.getSpecialNodes(sampled_action)
+        for j, idd in enumerate(special_nodes):
+            if idd == 0:
+                data = graph2dataPreAction(G_aux_inv, pallete)
+                sampled_node = model.getNodes(h_G, nodeEmbeddings,
+                batch, None, torch.tensor([sampled_action]), 
+                None, data.nodes)
+                G_aux.nodes[sampled_node.item()]['ids'] = {idd}
+            else:
+                G_aux_inv = addInvEdges(G_aux, pallete, sep)
+                data = graph2dataPostAction(G_aux_inv, pallete, 
+                                            j + 1, 
+                                            j + 1)
+                #print('Sequence:',data.sequence)
+                sampled_node = model.getNodes(h_G, nodeEmbeddings,
+                batch, data.sequence, torch.tensor([sampled_action]), 
+                torch.tensor([j + 1]), data.nodes)
+                if not 'ids' in G_aux.nodes[sampled_node.item()]:
+                    G_aux.nodes[sampled_node.item()]['ids'] = {idd}
+                else:
+                    G_aux.nodes[sampled_node.item()]['ids'].add(idd)
+        if debug:
+            for n in G_aux:
+                if 'ids' in G_aux.nodes[n]:
+                    print('Node type', G_aux.nodes[n]['type'], 'Ids',G_aux.nodes[n]['ids'] )
+                
+        applied = pallete.applyEdit(G_aux, sampled_action)
+        if applied!= None:
+            if (trials > 0) and (debug_trials):
+                print('There have been', trials, 'before')
+            trials = 0
+            G_aux = applied
+            step = step + 1
+            if debug:
+                print()
+        else:
+            #print('Cannot apply')
+            trials = trials + 1
+            for n in G_aux:
+                if ('ids' in G_aux.nodes[n]):
+                    del G_aux.nodes[n]['ids']
+            finish = False
+            if trials == max_trials:
+                return G_aux
+    return G_aux
                     
 
 class GenerativeModel(nn.Module):

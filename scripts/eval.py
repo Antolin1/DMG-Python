@@ -35,7 +35,7 @@ from modelSet import datasets_supported
 import seaborn as sns
 import matplotlib.pyplot as plt
 import multiprocess as mp
-from scipy.stats import mannwhitneyu
+from scipy.stats import mannwhitneyu, ttest_ind, levene
 from dmg.realism.emd import compute_mmd, gaussian_emd
 import networkx as nx
 
@@ -286,7 +286,11 @@ def main():
     
     print('Mean internal diversity of reals:', np.mean(int_div_real))
     print('Mean internal diversity of syn:', np.mean(int_div_syn))
+    
+    p_val_eqvar = levene(int_div_real, int_div_syn).pvalue
     print(mannwhitneyu(int_div_real, int_div_syn))
+    print(ttest_ind(int_div_real, int_div_syn,equal_var=(p_val_eqvar>0.01)))
+    print(levene(int_div_real, int_div_syn))
     
     if plot:
         data = np.array([int_div_real, int_div_syn])
@@ -294,45 +298,64 @@ def main():
         plt.boxplot(data)
         plt.show()
     
-    print('External diversity')
-    cat_real = []
-    cat_syn = []
-    with mp.Pool(10) as pool:
-        cat_real = pool.map(getCategoricalDistribution, div_real)
-    with mp.Pool(10) as pool:
-        cat_syn = pool.map(getCategoricalDistribution, div_syn)
-
-    ext_div_real = []
-    pairs = []
-    for a,G1 in enumerate(cat_real):
-        for b,G2 in enumerate(cat_real):
-            if G1!=G2 and a < b:
-                pairs.append((G1,G2))
-                #ext_div_real.append(computeMD(G1,G2))
-    def compMD(p):
-        return computeMD(p[0],p[1])
-    with mp.Pool(10) as pool:
-        ext_div_real = pool.map(compMD, pairs)
-
-    
-    ext_div_syn = []
-    pairs = []
-    for a,G1 in enumerate(cat_syn):
-        for b,G2 in enumerate(cat_syn):
-            if G1!=G2 and a < b:
-                pairs.append((G1,G2))
-                #ext_div_syn.append(computeMD(G1,G2))
-    with mp.Pool(10) as pool:
-        ext_div_syn = pool.map(compMD, pairs)
-
-        
-    print('Mean external diversity of reals:', np.mean(ext_div_real))
-    print('Mean external diversity of syn:', np.mean(ext_div_syn))
-    print(mannwhitneyu(ext_div_real, ext_div_syn))
     if plot:
-        data = np.array([ext_div_real, ext_div_syn])
-        plot3 = plt.figure(3)
-        plt.boxplot(data)
+        fig, ax = plt.subplots(1,1)
+        line_labels = ['DMG', 'Real']
+        
+        l1 = sns.distplot(int_div_syn, hist=False, kde=True
+                          , color = 'red', label = 'DMG', ax=ax)
+        l2 = sns.distplot(int_div_real, hist=False, kde=True, 
+                  color = 'blue', label = 'Real', ax=ax)
+        ax.title.set_text('Internal diversity')
+        ax.set_ylabel('')
+        fig.legend([l1, l2],     # The line objects
+           labels=line_labels,   # The labels for each line
+           loc="center right",   # Position of legend
+           borderaxespad=0.1    # Small spacing around legend box
+           )
         plt.show()
+    
+# =============================================================================
+#     print('External diversity')
+#     cat_real = []
+#     cat_syn = []
+#     with mp.Pool(10) as pool:
+#         cat_real = pool.map(getCategoricalDistribution, div_real)
+#     with mp.Pool(10) as pool:
+#         cat_syn = pool.map(getCategoricalDistribution, div_syn)
+# 
+#     ext_div_real = []
+#     pairs = []
+#     for a,G1 in enumerate(cat_real):
+#         for b,G2 in enumerate(cat_real):
+#             if G1!=G2 and a < b:
+#                 pairs.append((G1,G2))
+#                 #ext_div_real.append(computeMD(G1,G2))
+#     def compMD(p):
+#         return computeMD(p[0],p[1])
+#     with mp.Pool(10) as pool:
+#         ext_div_real = pool.map(compMD, pairs)
+# 
+#     
+#     ext_div_syn = []
+#     pairs = []
+#     for a,G1 in enumerate(cat_syn):
+#         for b,G2 in enumerate(cat_syn):
+#             if G1!=G2 and a < b:
+#                 pairs.append((G1,G2))
+#                 #ext_div_syn.append(computeMD(G1,G2))
+#     with mp.Pool(10) as pool:
+#         ext_div_syn = pool.map(compMD, pairs)
+# 
+#         
+#     print('Mean external diversity of reals:', np.mean(ext_div_real))
+#     print('Mean external diversity of syn:', np.mean(ext_div_syn))
+#     print(mannwhitneyu(ext_div_real, ext_div_syn))
+#     if plot:
+#         data = np.array([ext_div_real, ext_div_syn])
+#         plot3 = plt.figure(3)
+#         plt.boxplot(data)
+#         plt.show()
+# =============================================================================
 if __name__ == "__main__":
     main()
