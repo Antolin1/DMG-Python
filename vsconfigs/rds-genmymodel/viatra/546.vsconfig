@@ -21,4 +21,5 @@ generate {
 	debug =			"outputs546/debug"
 	log =			"outputs546/log.txt"
 	output =		"outputs546/models"
+	statistics =		"outputs546/stats.csv" 
 }

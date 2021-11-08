@@ -21,4 +21,5 @@ generate {
 	debug =			"outputs264/debug"
 	log =			"outputs264/log.txt"
 	output =		"outputs264/models"
+	statistics =		"outputs264/stats.csv" 
 }

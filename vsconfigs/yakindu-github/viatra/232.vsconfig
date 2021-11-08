@@ -21,4 +21,5 @@ generate {
 	debug =			"outputs232/debug"
 	log =			"outputs232/log.txt"
 	output =		"outputs232/models"
+	statistics =		"outputs232/stats.csv" 
 }
