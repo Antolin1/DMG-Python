@@ -303,8 +303,8 @@ def main():
     
     print('--'*10)
     for gen in generators:
-        print('Internal diversity',gen,':',np.mean(int_div_generators[gen]))
-    print('Internal diversity real:', np.mean(int_div_real))
+        print('Internal diversity',gen,':',np.mean(int_div_generators[gen]), '+-', np.std(int_div_generators[gen]))
+    print('Internal diversity real:', np.mean(int_div_real),'+-', np.std(int_div_real))
     
     if plot:
         data = [int_div_generators[gen] for gen in generators] + [int_div_real]

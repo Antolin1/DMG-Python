@@ -284,9 +284,10 @@ def main():
     with mp.Pool(10) as pool:
         int_div_syn = pool.map(internalDiversityShapes, div_syn)
     
-    print('Mean internal diversity of reals:', np.mean(int_div_real))
-    print('Mean internal diversity of syn:', np.mean(int_div_syn))
+    print('Mean internal diversity of reals:', np.mean(int_div_real),'+-', np.std(int_div_real))
+    print('Mean internal diversity of syn:', np.mean(int_div_syn),'+-', np.std(int_div_syn))
     
+    print('Tests')
     p_val_eqvar = levene(int_div_real, int_div_syn).pvalue
     print(mannwhitneyu(int_div_real, int_div_syn))
     print(ttest_ind(int_div_real, int_div_syn,equal_var=(p_val_eqvar>0.01)))

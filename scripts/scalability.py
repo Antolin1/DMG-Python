@@ -50,7 +50,7 @@ np.random.seed(123)
 
 import pandas as pd
 
-def getTime(pathStats):
+def getTimeViatra(pathStats):
     df = pd.read_csv(pathStats)
     columns = list(df.columns)
     columns_time = [c for c in columns if 'time' in c.lower()]
@@ -78,9 +78,9 @@ def main():
                         required=True)
     parser.add_argument("-nm", "--numberModels", dest="number_models",
                         help="number of models to generate.", type=int, default = 500)
-    parser.add_argument("-ps", "--pathsyn", dest="path_syn",
-                        help="Path of stats.", metavar="DIR", 
-                        required=True)
+    # parser.add_argument("-ps", "--pathsyn", dest="path_syn",
+    #                     help="Path of stats.", metavar="DIR", 
+    #                     required=True)
     parser.add_argument("-emf", "--emf_backend", dest="emf",
                         choices=['python', 'java'],
                         help="backend to parse the models.",
@@ -93,27 +93,12 @@ def main():
     hidden_dim = args.hidden_dim
     max_size = args.maxSize
     number_models = args.number_models
-    save_path = args.path_syn
+    #save_path = args.path_syn
     backend = args.emf
 
     msetObject = datasets_supported[dataset]
     
-    times_baseline = []
-    lens_baseline = []
-    for root, subFolder, files in os.walk(save_path):
-        for item in files:
-            if item.endswith(".xmi") :
-                fileNamePath = str(os.path.join(root,item))
-                path = Path(fileNamePath)    
-                statsFile = str(path.parent.parent.absolute()) + '/stats.csv'
-                time_ms = getTime(statsFile)/1000.
-                #print(fileNamePath)
-                G = msetObject.getGraphSyn(fileNamePath,backend)
-                times_baseline.append([len(G), time_ms])
-                lens_baseline.append(len(G))
-    
-    times_baseline = np.array(times_baseline)
-    
+    # dmg
     #load generative model
     model = GenerativeModel(hidden_dim, msetObject.dic_nodes, 
                         msetObject.dic_edges, 
@@ -134,8 +119,66 @@ def main():
         lens.append(len(G))
         if k%100 == 0:
             print('Generated',k+1)
-    #print(times)
     times = np.array(times)
+    
+    
+    #viatra
+    times_baseline = []
+
+    for root, subFolder, files in os.walk('./stats/'+dataset+'/viatra/'):
+        for item in files:
+            if item.endswith(".xmi") :
+                fileNamePath = str(os.path.join(root,item))
+                path = Path(fileNamePath)    
+                statsFile = str(path.parent.parent.absolute()) + '/stats.csv'
+                time_ms = getTimeViatra(statsFile)/1000.
+                #print(fileNamePath)
+                G = msetObject.getGraphSyn(fileNamePath,backend)
+                
+                lower, upper = msetObject.bounds
+                if len(G) < lower: #or len(G1) > upper:
+                    continue
+                
+                times_baseline.append([len(G), time_ms])
+
+    
+    if len(times_baseline) > number_models:
+        times_baseline = random.sample(times_baseline, number_models)
+    times_baseline = np.array(times_baseline)
+    lens_baseline = times_baseline[:,0]
+    
+    
+    
+    ## randomEMF
+    df = pd.read_csv('./stats/'+dataset+'/randomEMF/stats.csv', names = ['size','time'])
+    times_randomEMF = df.values
+    new_times_randomEMF = []
+    for r in times_randomEMF:
+        lower, upper = msetObject.bounds
+        if r[0]<lower:
+            continue
+        new_times_randomEMF.append(r)
+    if len(new_times_randomEMF) > number_models:
+        times_randomEMF = random.sample(new_times_randomEMF, number_models)
+    else:
+        times_randomEMF = new_times_randomEMF
+    times_randomEMF = np.array(times_randomEMF)
+    
+    ##randomInstantiator
+    df = pd.read_csv('./stats/'+dataset+'/randomInstantiator/stats.csv', names = ['size','time'])
+    times_randomInstantiator = df.values
+    new_times_randomInstantiator = []
+    for r in times_randomInstantiator:
+        lower, upper = msetObject.bounds
+        if r[0]<lower:
+            continue
+        new_times_randomInstantiator.append(r)
+    if len(new_times_randomInstantiator) > number_models:
+        times_randomInstantiator = random.sample(new_times_randomInstantiator, number_models)
+    else:
+        times_randomInstantiator = new_times_randomInstantiator
+    times_randomInstantiator = np.array(times_randomInstantiator)
+    
     #linregress
     slope, intercept, r, p, se = linregress(np.log10(times[:,0]),np.log10(times[:,1]))
     print('Slope', slope)
@@ -147,19 +190,55 @@ def main():
     print('Intercept', intercept_v)
     print('R^2',r_v**2)
     
-    minn = np.min(lens + lens_baseline)
-    maxx = np.max(lens + lens_baseline)
-    domain = np.array(list(range(minn,maxx)))
+    
     plot2 = plt.figure(2)
     ax = plt.gca()
+    #ax.set_ylim([-1, 10**3])
+    ax.scatter(times[:,0],times[:,1], label = 'DMG')
+    ax.scatter(times_baseline[:,0], times_baseline[:,1], label = 'VIATRA')
+    ax.scatter(times_randomEMF[:,0], times_randomEMF[:,1]/1000, label = 'rEMF')
+    ax.scatter(times_randomInstantiator[:,0], times_randomInstantiator[:,1]/1000, label = 'RANDOM')
+    #plt.plot(domain, np.power(domain,slope) * (10**intercept), color='black')
+    #plt.plot(domain, np.power(10, domain * slope_v) * (10**intercept_v), color='black')
+    ax.set_yscale('symlog')
+    ax.set_xscale('symlog')
+    ax.set_xlabel('Number of elements')
+    ax.set_ylabel('Time (seconds)')
+    ax.legend(loc="upper left")
+    #ax.set_title('Log-Log plot of the p')
+    plt.show()
+    
+    plot2 = plt.figure(3)
+    ax = plt.gca()
+    #ax.set_ylim([-1, 10**3])
     ax.scatter(times[:,0],times[:,1])
     ax.scatter(times_baseline[:,0], times_baseline[:,1], color = 'green')
-    plt.plot(domain, np.power(domain,slope) * (10**intercept), color='red')
-    plt.plot(domain, np.power(10, domain * slope_v) * (10**intercept_v), color='red')
+    ax.scatter(times_randomEMF[:,0], times_randomEMF[:,1]/1000, color = 'yellow')
+    ax.scatter(times_randomInstantiator[:,0], times_randomInstantiator[:,1]/1000, color = 'red')
+    #ax.set_yscale('symlog')
+    #ax.set_xscale('symlog')
+    ax.set_xlabel('Number of elements')
+    ax.set_ylabel('Time (seconds)')
+    #ax.set_title('Log-Log plot of the p')
+    plt.show()
+    
+    minn = np.min(np.concatenate([lens, lens_baseline]))
+    maxx = np.max(np.concatenate([lens, lens_baseline]))
+    domain = np.array(list(range(int(minn),int(maxx))))
+    plot2 = plt.figure(4)
+    ax = plt.gca()
+    #ax.set_ylim([-1, 10**3])
+    ax.scatter(times[:,0],times[:,1], label = 'DMG')
+    ax.scatter(times_baseline[:,0], times_baseline[:,1], label = 'VIATRA')
+    #ax.scatter(times_randomEMF[:,0], times_randomEMF[:,1]/1000, color = 'yellow')
+    #ax.scatter(times_randomInstantiator[:,0], times_randomInstantiator[:,1]/1000, color = 'red')
+    plt.plot(domain, np.power(domain,slope) * (10**intercept), color = 'black')
+    plt.plot(domain, np.power(10, domain * slope_v) * (10**intercept_v), color='black')
     ax.set_yscale('log')
     ax.set_xscale('log')
     ax.set_xlabel('Number of elements')
     ax.set_ylabel('Time (seconds)')
+    ax.legend(loc="upper left")
     #ax.set_title('Log-Log plot of the p')
     plt.show()
     
