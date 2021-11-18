@@ -99,10 +99,16 @@ Once DMG is trained we can evaluate its performance in terms of realism and time
 
 #### Comparing DMG with the other generators
 
-Once DMG is trained and the generated models of the other generators are in the right folder, we can compare the four generators by executing the following:
+Once DMG is trained and the generated models of the other generators are in the right folder, we can compare the four generators by executing the following (consistency, diversity and realism):
 
 ```
 scripts/assessmentScript.sh 
+```
+
+To evaluate the scalability just execute the following:
+
+```
+scripts/scalabilityScript.sh
 ```
 
 ### Step 4: Model generation using DMG ⚙️
