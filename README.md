@@ -5,7 +5,7 @@ DMG (Deep Model Generation) is a generator that, given a dataset of models (that
 * To generate realistic models. For example, in the context of autonomous cars, unrealistic test cases are considered false positives.
 * Benchmarking and stress testing.
 * Data augmentation of datasets of models.
-* Dealing with privacy issues
+* Dealing with privacy issues (as a form of obfuscation)
 
 ## Before using it 🛠️
 
