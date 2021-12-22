@@ -171,6 +171,10 @@ def main():
     print(len(not_inconsistents)/len(samples) * 100, '% Validity among all')
     print(len(uniques(not_inconsistents))/len(not_inconsistents) * 100, '% Uniqueness among valid ones')
     print(len(uniques(clean_new_models))/len(uniques(samples)) * 100, '% Novelty among unique ones')
+    
+    print('For novelty, we remove inconsistent models:')
+    print('P. models unique novel:', len(uniques(clean_new_models))/len(not_inconsistents))
+    
     print('Inference duration:', inference_duration)
     print('Max nodes syn:', np.max([len(G) for G in not_inconsistents]))
     print('Min nodes syn:', np.min([len(G) for G in not_inconsistents]))
