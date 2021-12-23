@@ -40,6 +40,17 @@ pattern_ar.add_node(1, type = 'Region')
 pattern_ar.add_edge(0, 1, type = 'regions')
 addRegion = ed.EditOperation([pattern_ar], [0])
 
+
+################ addRegionWE
+
+pattern_arwe = nx.MultiDiGraph()
+pattern_arwe.add_node(0, type = ['State'], ids = {0})
+pattern_arwe.add_node(1, type = 'Region')
+pattern_arwe.add_edge(0, 1, type = 'regions')
+pattern_arwe.add_node(2, type = 'Entry')
+pattern_arwe.add_edge(1, 2, type = 'vertices')
+addRegionwe = ed.EditOperation([pattern_arwe], [0])
+
 ############### addState
 
 pattern_as = nx.MultiDiGraph()
@@ -115,20 +126,22 @@ addTransition = ed.EditOperation([pattern_ati, pattern_at], [0,1])
 
 
 dic_operations_yak = {
-    0: addRegion,
+    0: addRegionwe,
     1: addState,
-    2: addEntry,
-    3: addSynchronization,
-    4: addChoice,
-    5: addExit,
-    6: addFinalState,
-    7: addTransition
+    #2: addEntry,
+    2: addSynchronization,
+    3: addChoice,
+    4: addExit,
+    5: addFinalState,
+    6: addTransition
     }
 
 G_initial_yak = nx.MultiDiGraph()
 G_initial_yak.add_node(0, type = 'Statechart')
 G_initial_yak.add_node(1, type = 'Region')
 G_initial_yak.add_edge(0, 1, type = 'regions')
+G_initial_yak.add_node(2, type = 'Entry')
+G_initial_yak.add_edge(1, 2, type = 'vertices')
 
 yakindu_separator = '_'
 
