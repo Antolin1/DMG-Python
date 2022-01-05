@@ -44,13 +44,13 @@ from dmg.deeplearning.generativeModel import sampleGraph
 
 def getModelPath(dataset):
     if dataset == 'ecore-github':
-        return 'models/ecore-github-finalModel.m'
+        return 'models/ecore-github-finalModel-cuda.m'
     elif dataset == 'yakindu-github':
-        return 'models/yakindu-github-finalModel.m'
+        return 'models/yakindu-github-finalModel-cuda.m'
     elif dataset == 'yakindu-exercise':
-        return 'models/yakindu-exercise-finalModel.m'
+        return 'models/yakindu-exercise-finalModel-cuda.m'
     elif dataset == 'rds-genmymodel':
-        return 'models/rds-genmymodel-finalModel.m'
+        return 'models/rds-genmymodel-finalModel-cuda.m'
     
 
 

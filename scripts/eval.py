@@ -168,9 +168,9 @@ def main():
     print(clean_pr,'% consistent novel models')
     print(iso_prop,'% isomorfic models')
     print(inco_prop,'% inconsistent models')
-    print(len(not_inconsistents)/len(samples) * 100, '% Validity among all')
-    print(len(uniques(not_inconsistents))/len(not_inconsistents) * 100, '% Uniqueness among valid ones')
-    print(len(uniques(clean_new_models))/len(uniques(samples)) * 100, '% Novelty among unique ones')
+    #print(len(not_inconsistents)/len(samples) * 100, '% Validity among all')
+    #print(len(uniques(not_inconsistents))/len(not_inconsistents) * 100, '% Uniqueness among valid ones')
+    #print(len(uniques(clean_new_models))/len(uniques(samples)) * 100, '% Novelty among unique ones')
     
     print('For novelty, we remove inconsistent models:')
     print('P. models unique novel:', len(uniques(clean_new_models))/len(not_inconsistents))

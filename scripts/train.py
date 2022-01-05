@@ -62,6 +62,9 @@ parser.add_argument("-k", "--k_samples", dest="k", type=int,
 parser.add_argument("-lr", "--learningRate", dest="lr", type=float,
                     required=False, default=0.001,
                     help="number of processes.")
+parser.add_argument("-dev", "--device", dest="device", 
+                    choices=['cuda','cpu'], 
+                    help="gpu or cpu training.", default = 'cpu')
 #add argument to use the easrly stopping over the trainset
 # get inputs
 args = parser.parse_args()
@@ -80,6 +83,7 @@ lr = args.lr
 #numProcess = args.mp
 path_train_details = args.save_details
 k = args.k
+device = args.device
 
 
 #paths
@@ -150,7 +154,7 @@ criterion_finish = nn.BCELoss(reduction = 'mean')
 #model
 model = GenerativeModel(hidden_dim, msetObject.dic_nodes, 
                         msetObject.dic_edges, 
-                        msetObject.operations)
+                        msetObject.operations).to(device)
 #optimizer
 opt = torch.optim.Adam(model.parameters(), lr=lr)
 #early stopping object
@@ -172,6 +176,7 @@ prop_clean = []
 max_size = np.max([len(g) for g in graphs_train])
 losses = []
 
+start_time = time.monotonic()
 listDatasMontecarlo = []
 if k!=-1:
     for j in range(k):
@@ -179,6 +184,7 @@ if k!=-1:
             listDatas = pool.map(f, graphs_train)
         listDatas = [r for rr in listDatas for r in rr]
         listDatasMontecarlo = listDatasMontecarlo + listDatas
+preparing_duration = time.monotonic() - start_time
 
 start_time = time.monotonic()
 for epoch in range(epochs):
@@ -203,18 +209,19 @@ for epoch in range(epochs):
     #training
     for data in loader:
         opt.zero_grad()
-        action, nodes, finish = model(data.x, data.edge_index, 
-                        torch.squeeze(data.edge_attr,dim=1), 
-                data.batch, data.sequence, data.nodes, data.len_seq, data.action)
+        action, nodes, finish = model(data.x.to(device), data.edge_index.to(device), 
+                        torch.squeeze(data.edge_attr,dim=1).to(device), 
+                data.batch.to(device), data.sequence.to(device), 
+                data.nodes.to(device), data.len_seq.to('cpu'), data.action.to(device))
         
         nodes = torch.unsqueeze(nodes, dim = 2).repeat(1,1,2)
         nodes[:,:,0] = 1 - nodes[:,:,1]
             
         L = torch.max(data.len_seq).item()
         gTruth = data.sequence_masked[:,0:L]
-        loss = (criterion_node(nodes.reshape(-1,2), gTruth.flatten()) +
-                    criterion_action(action, data.action) +
-                    criterion_finish(finish.flatten(), data.finished.float())) / 3
+        loss = (criterion_node(nodes.reshape(-1,2), gTruth.flatten().to(device)) +
+                    criterion_action(action, data.action.to(device)) +
+                    criterion_finish(finish.flatten(), data.finished.float().to(device))) / 3
         total_loss += loss.item()
         loss.backward()
         opt.step()
@@ -276,7 +283,9 @@ dic_details = {
     "isomorfic" : prop_isomorfic,
     "clean" : prop_clean,
     "loss" : losses,
-    "time" : train_duration
+    "time_training" : train_duration,
+    "time_preparing" : preparing_duration,
+    "total_time": (train_duration + preparing_duration)
     }
 
 import json
