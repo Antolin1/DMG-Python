@@ -85,6 +85,9 @@ def main():
                         choices=['python', 'java'],
                         help="backend to parse the models.",
                         required=True)
+    parser.add_argument("-pd", "--pathdataset", dest="path_dataset",
+                        help="folder of the dataset.", metavar="DIR", 
+                        required=True)
     
     #parse args
     args = parser.parse_args()
@@ -92,6 +95,7 @@ def main():
     model_path = args.model
     hidden_dim = args.hidden_dim
     max_size = args.maxSize
+    dataset_path = args.path_dataset
     number_models = args.number_models
     #save_path = args.path_syn
     backend = args.emf
@@ -148,36 +152,55 @@ def main():
     lens_baseline = times_baseline[:,0]
     
     
+    #train and test paths
+    test_path = dataset_path + '/test'
+    msetObject = datasets_supported[dataset]
+    
+    #load graphs
+    graphs_test = [msetObject.getGraphReal(f,backend) 
+                for f in glob.glob(test_path + "/*")]
+    
+    #match the bounds
+    min_bound = int(np.min([len(G) for G in graphs_test]))
+    max_bound = int(np.max([len(G) for G in graphs_test]))
+    
+    times = times[np.array([(row[0] <=max_bound) and (row[0]>=min_bound) for row in times])]
+    times_baseline = times_baseline[np.array([(row[0] <=max_bound) and (row[0]>=min_bound) 
+                                                                  for row in times_baseline])]
+    
+    
     
     ## randomEMF
-    df = pd.read_csv('./stats/'+dataset+'/randomEMF/stats.csv', names = ['size','time'])
-    times_randomEMF = df.values
-    new_times_randomEMF = []
-    for r in times_randomEMF:
-        lower, upper = msetObject.bounds
-        if r[0]<lower:
-            continue
-        new_times_randomEMF.append(r)
-    if len(new_times_randomEMF) > number_models:
-        times_randomEMF = random.sample(new_times_randomEMF, number_models)
-    else:
-        times_randomEMF = new_times_randomEMF
-    times_randomEMF = np.array(times_randomEMF)
-    
-    ##randomInstantiator
-    df = pd.read_csv('./stats/'+dataset+'/randomInstantiator/stats.csv', names = ['size','time'])
-    times_randomInstantiator = df.values
-    new_times_randomInstantiator = []
-    for r in times_randomInstantiator:
-        lower, upper = msetObject.bounds
-        if r[0]<lower:
-            continue
-        new_times_randomInstantiator.append(r)
-    if len(new_times_randomInstantiator) > number_models:
-        times_randomInstantiator = random.sample(new_times_randomInstantiator, number_models)
-    else:
-        times_randomInstantiator = new_times_randomInstantiator
-    times_randomInstantiator = np.array(times_randomInstantiator)
+# =============================================================================
+#     df = pd.read_csv('./stats/'+dataset+'/randomEMF/stats.csv', names = ['size','time'])
+#     times_randomEMF = df.values
+#     new_times_randomEMF = []
+#     for r in times_randomEMF:
+#         lower, upper = msetObject.bounds
+#         if r[0]<lower:
+#             continue
+#         new_times_randomEMF.append(r)
+#     if len(new_times_randomEMF) > number_models:
+#         times_randomEMF = random.sample(new_times_randomEMF, number_models)
+#     else:
+#         times_randomEMF = new_times_randomEMF
+#     times_randomEMF = np.array(times_randomEMF)
+#     
+#     ##randomInstantiator
+#     df = pd.read_csv('./stats/'+dataset+'/randomInstantiator/stats.csv', names = ['size','time'])
+#     times_randomInstantiator = df.values
+#     new_times_randomInstantiator = []
+#     for r in times_randomInstantiator:
+#         lower, upper = msetObject.bounds
+#         if r[0]<lower:
+#             continue
+#         new_times_randomInstantiator.append(r)
+#     if len(new_times_randomInstantiator) > number_models:
+#         times_randomInstantiator = random.sample(new_times_randomInstantiator, number_models)
+#     else:
+#         times_randomInstantiator = new_times_randomInstantiator
+#     times_randomInstantiator = np.array(times_randomInstantiator)
+# =============================================================================
     
     #linregress
     slope, intercept, r, p, se = linregress(np.log10(times[:,0]),np.log10(times[:,1]))
@@ -191,39 +214,41 @@ def main():
     print('R^2',r_v**2)
     
     
-    plot2 = plt.figure(2)
-    ax = plt.gca()
-    #ax.set_ylim([-1, 10**3])
-    ax.scatter(times[:,0],times[:,1], label = 'M2')
-    ax.scatter(times_baseline[:,0], times_baseline[:,1], label = 'VIATRA')
-    ax.scatter(times_randomEMF[:,0], times_randomEMF[:,1]/1000, label = 'rEMF')
-    ax.scatter(times_randomInstantiator[:,0], times_randomInstantiator[:,1]/1000, label = 'RANDOM')
-    #plt.plot(domain, np.power(domain,slope) * (10**intercept), color='black')
-    #plt.plot(domain, np.power(10, domain * slope_v) * (10**intercept_v), color='black')
-    ax.set_yscale('symlog')
-    ax.set_xscale('symlog')
-    ax.set_xlabel('Number of elements')
-    ax.set_ylabel('Time (seconds)')
-    ax.legend(loc="upper left")
-    #ax.set_title('Log-Log plot of the p')
-    plt.show()
+# =============================================================================
+#     plot2 = plt.figure(2)
+#     ax = plt.gca()
+#     #ax.set_ylim([-1, 10**3])
+#     ax.scatter(times[:,0],times[:,1], label = 'M2')
+#     ax.scatter(times_baseline[:,0], times_baseline[:,1], label = 'VIATRA')
+#     ax.scatter(times_randomEMF[:,0], times_randomEMF[:,1]/1000, label = 'rEMF')
+#     ax.scatter(times_randomInstantiator[:,0], times_randomInstantiator[:,1]/1000, label = 'RANDOM')
+#     #plt.plot(domain, np.power(domain,slope) * (10**intercept), color='black')
+#     #plt.plot(domain, np.power(10, domain * slope_v) * (10**intercept_v), color='black')
+#     ax.set_yscale('symlog')
+#     ax.set_xscale('symlog')
+#     ax.set_xlabel('Number of elements')
+#     ax.set_ylabel('Time (seconds)')
+#     ax.legend(loc="upper left")
+#     #ax.set_title('Log-Log plot of the p')
+#     plt.show()
+#     
+#     plot2 = plt.figure(3)
+#     ax = plt.gca()
+#     #ax.set_ylim([-1, 10**3])
+#     ax.scatter(times[:,0],times[:,1])
+#     ax.scatter(times_baseline[:,0], times_baseline[:,1], color = 'green')
+#     ax.scatter(times_randomEMF[:,0], times_randomEMF[:,1]/1000, color = 'yellow')
+#     ax.scatter(times_randomInstantiator[:,0], times_randomInstantiator[:,1]/1000, color = 'red')
+#     #ax.set_yscale('symlog')
+#     #ax.set_xscale('symlog')
+#     ax.set_xlabel('Number of elements')
+#     ax.set_ylabel('Time (seconds)')
+#     #ax.set_title('Log-Log plot of the p')
+#     plt.show()
+# =============================================================================
     
-    plot2 = plt.figure(3)
-    ax = plt.gca()
-    #ax.set_ylim([-1, 10**3])
-    ax.scatter(times[:,0],times[:,1])
-    ax.scatter(times_baseline[:,0], times_baseline[:,1], color = 'green')
-    ax.scatter(times_randomEMF[:,0], times_randomEMF[:,1]/1000, color = 'yellow')
-    ax.scatter(times_randomInstantiator[:,0], times_randomInstantiator[:,1]/1000, color = 'red')
-    #ax.set_yscale('symlog')
-    #ax.set_xscale('symlog')
-    ax.set_xlabel('Number of elements')
-    ax.set_ylabel('Time (seconds)')
-    #ax.set_title('Log-Log plot of the p')
-    plt.show()
-    
-    minn = np.min(np.concatenate([lens, lens_baseline]))
-    maxx = np.max(np.concatenate([lens, lens_baseline]))
+    minn = min_bound
+    maxx = max_bound
     domain = np.array(list(range(int(minn),int(maxx))))
     plot2 = plt.figure(4)
     ax = plt.gca()
@@ -241,31 +266,6 @@ def main():
     ax.legend(loc="upper left")
     #ax.set_title('Log-Log plot of the p')
     plt.show()
-    
-# =============================================================================
-#     minn = np.min(lens)
-#     maxx = np.max(lens)
-#     plot2 = plt.figure(3)
-#     ax = plt.gca()
-#     ax.scatter(times[:,0],times[:,1])
-#     ax.scatter(times_baseline[:,0], times_baseline[:,1], color = 'green')
-#     #plt.plot(list(range(minn,maxx)), np.power(np.array(list(range(minn,maxx))),slope) * (math.e**intercept), color='red')
-#     ax.set_xlabel('Number of elements')
-#     ax.set_ylabel('Time (seconds)')
-#     plt.show()
-#     
-#     plot2 = plt.figure(3)
-#     ax = plt.gca()
-#     ax.scatter(times[:,0],times[:,1])
-#     ax.scatter(times_baseline[:,0], times_baseline[:,1], color = 'green')
-#     #plt.plot(times[:,0], np.power(times[:,0],slope) * (math.e**intercept), color='red')
-#     ax.set_yscale('log')
-#     #ax.set_xscale('log')
-#     ax.set_xlabel('Number of elements')
-#     ax.set_ylabel('Time (seconds)')
-#     #ax.set_title('Log-Log plot of the p')
-#     plt.show()
-# =============================================================================
 
 if __name__ == "__main__":
     main()

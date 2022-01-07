@@ -84,12 +84,13 @@ def main():
         candidate = int(round(n))
         if candidate < lower or candidate > upper:
             continue
+        print('Expected output size:', candidate)
         subprocess.call(['java', '-jar', 'java/randomInstantiator/instantiateStats.jar', 
                      '-m',msetObject.pathsSynMeta[0],
                     '-f','-n','2','-s',str(candidate),'-o',
                      '/tmp',
                     '-e',str(i),
-                    '-k','/tmp/stats.csv'])
+                    '-k','/tmp/stats.csv','-p','0'])
         rounded.append(candidate)
         times.append(pd.read_csv('/tmp/stats.csv', names = ['size','time']).values[1,:])
     times = np.array(times)
