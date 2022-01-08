@@ -1,11 +1,6 @@
-# Deep Model Generation
+# Model Mime
 
-DMG (Deep Model Generation) is a generator that, given a dataset of models (that conform a meta-model) and a set of addition edit operations, generates models that are similar to the dataset under consideration. It could have the following applications:
-
-* To generate realistic models. For example, in the context of autonomous cars, unrealistic test cases are considered false positives.
-* Benchmarking and stress testing.
-* Data augmentation of datasets of models.
-* Dealing with privacy issues (as a form of obfuscation)
+M2 (Model Mime) is a generator that, given a dataset of models (that conform a meta-model) and a set of addition edit operations, generates models that are similar to the dataset under consideration. 
 
 ## Before using it 🛠️
 
@@ -39,7 +34,24 @@ Execute tests:
 $ python -m unittest discover
 ```
 
+## Organization of the repository 📌
+
+The repository contains the following folders and files:
+
+* Folder [baselines](https://github.com/Antolin1/DMG-Python/tree/main/baselines) - It contains the synthetic models for each dataset and baseline generator (VIATRA, RANDOM and RandomEMF).
+* Folder [data](https://github.com/Antolin1/DMG-Python/tree/main/data) - It contains the datasets, meta-models, and data used for testing.
+* Folder [dmg](https://github.com/Antolin1/DMG-Python/tree/main/dmg) - All the Python code.
+* Folder [java](https://github.com/Antolin1/DMG-Python/tree/main/java) - All the Java code.
+* Folder [models](https://github.com/Antolin1/DMG-Python/tree/main/models) - Neural networks used to obtain the results presented in the paper.
+* Folder [scripts](https://github.com/Antolin1/DMG-Python/tree/main/scripts) - Some useful scripts.
+* Folder [stats](https://github.com/Antolin1/DMG-Python/tree/main/stats) - It contains statistics used to assess the scalability for each dataset and baseline generator (VIATRA, RANDOM and RandomEMF)..
+* Folder [tests](https://github.com/Antolin1/DMG-Python/tree/main/tests) - It contains the test cases associated to the Python code.
+* Folder [vsconfigs](https://github.com/Antolin1/DMG-Python/tree/main/vsconfigs) - It contains the VIATRA config files. 
+* File [requirements.txt](https://github.com/Antolin1/DMG-Python/blob/main/requirements.txt) - Python libraries.
+
 ## Procedure 🚀
+
+Steps 1 and 2 are already executed. To obtain the results of the paper, go directly to Step 3. If you want to generate models using the trained generators to see some examples, go to Step 4.
 
 ### Step 1: Dataset generation
 
@@ -49,7 +61,7 @@ First of all, we have to preprocess all the datasets and split them into train a
 $ ./scripts/generateDatasets.sh
 ```
 
-In this repository, we consider four:
+We consider four datasets:
 
 * *yakindu-github*: Dataset of Yakindu Statecharts crawled from GitHub. It was used in this [paper](http://sanchezcuadrado.es/papers/models21-realistic-model-generators.pdf).
 * *yakindu-exercise*: Dataset of Yakindu Statecharts used in this [paper](https://link.springer.com/article/10.1007/s10270-021-00884-z).
@@ -58,7 +70,7 @@ In this repository, we consider four:
 
 ### Step 2: Fitting and generation process
 
-#### Case DMG
+#### Case M2
 
 To train the neural networks for each one of the datasets execute the following script:
 
@@ -90,17 +102,7 @@ scripts/fitRandomInstantiator.sh
 
 ### Step 3: Assessment 📋
 
-#### Evaluating DMG
-
-Once DMG is trained we can evaluate its performance in terms of realism and time of generation:
-
-```
-./scripts/evaluationScript.sh
-```
-
-#### Comparing DMG with the other generators
-
-Once DMG is trained and the generated models of the other generators are in the right folder, we can compare the four generators by executing the following (consistency, diversity and realism):
+Once M2 is trained and the generated models of the other generators are in the right folder, we can compare the four generators by executing the following (consistency, diversity and realism):
 
 ```
 scripts/assessmentScript.sh 
@@ -109,10 +111,10 @@ scripts/assessmentScript.sh
 To evaluate the scalability just execute the following:
 
 ```
-scripts/scalabilityScript.sh
+scripts/quartileScript.sh
 ```
 
-### Step 4: Model generation using DMG ⚙️
+### Step 4: Model generation using M2 ⚙️
 
 To generate models using the trained generator, just execute:
 
