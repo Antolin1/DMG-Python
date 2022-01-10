@@ -119,10 +119,10 @@ scripts/quartileScript.sh
 To generate models using the trained generator, just execute:
 
 ```
-python scripts/generateModels.py -d rds-genmymodel -hi 64 -ms 300 -ps generatedModels/
-python scripts/generateModels.py -d yakindu-github -hi 64 -ms 50 -ps generatedModels/
-python scripts/generateModels.py -d yakindu-exercise -hi 64 -ms 150 -ps generatedModels/
-python scripts/generateModels.py -d ecore-github -hi 64 -ms 200 -ps generatedModels/
+python scripts/generateModels.py -d rds-genmymodel -hi 64 -ms 300 -ps generatedModels/ -nm 100
+python scripts/generateModels.py -d yakindu-github -hi 64 -ms 50 -ps generatedModels/ -nm 100
+python scripts/generateModels.py -d yakindu-exercise -hi 64 -ms 150 -ps generatedModels/ -nm 100
+python scripts/generateModels.py -d ecore-github -hi 64 -ms 200 -ps generatedModels/ -nm 100
 ```
 
 where:
@@ -130,6 +130,7 @@ where:
 * `-hi` establishes the hidden dimension of the model (our model uses a hidden dim of 64).
 * `-ms` establishes the maximum size of the generated models.
 * `-ps` establishes the folder where the models will be saved.
+* `-nm` establishes the number of models that will be generated.
 
 
 

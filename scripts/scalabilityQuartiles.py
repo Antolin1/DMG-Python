@@ -222,6 +222,12 @@ def main():
     print('Q1 M2:',np.mean(times_q1[:,1]),'+-',np.std(times_q1[:,1]))
     print('Q2 M2:',np.mean(times_q2[:,1]),'+-',np.std(times_q2[:,1]))
     print('Q3 M2:',np.mean(times_q3[:,1]),'+-',np.std(times_q3[:,1]))
+# =============================================================================
+#     print('Q1 M2:',times_q1.shape)
+#     print('Q2 M2:',times_q2.shape)
+#     print('Q3 M2:',times_q3.shape)
+# =============================================================================
+    
     #print('Q4 M2:',np.mean(times_q4[:,1]),'+-',np.std(times_q4[:,1]))
     
     times_baseline_q1 = times_baseline[np.array([(row[0] <=a1)for row in times_baseline])]
@@ -231,6 +237,11 @@ def main():
     print('Q1 VIATRA:',np.mean(times_baseline_q1[:,1]),'+-',np.std(times_baseline_q1[:,1]))
     print('Q2 VIATRA:',np.mean(times_baseline_q2[:,1]),'+-',np.std(times_baseline_q2[:,1]))
     print('Q3 VIATRA:',np.mean(times_baseline_q3[:,1]),'+-',np.std(times_baseline_q3[:,1]))
+# =============================================================================
+#     print('Q1 VIATRA:',times_baseline_q1.shape)
+#     print('Q2 VIATRA:',times_baseline_q2.shape)
+#     print('Q3 VIATRA:',times_baseline_q3.shape)
+# =============================================================================
     #print('Q4 VIATRA:',np.mean(times_baseline_q4[:,1]),'+-',np.std(times_baseline_q4[:,1]))
     
     times_randomInstantiator_q1 = times_randomInstantiator[np.array([(row[0] <=a1)for row in times_randomInstantiator])]
@@ -241,6 +252,11 @@ def main():
     print('Q1 random:',np.mean(times_randomInstantiator_q1[:,1]),'+-',np.std(times_randomInstantiator_q1[:,1]))
     print('Q2 random:',np.mean(times_randomInstantiator_q2[:,1]),'+-',np.std(times_randomInstantiator_q2[:,1]))
     print('Q3 random:',np.mean(times_randomInstantiator_q3[:,1]),'+-',np.std(times_randomInstantiator_q3[:,1]))
+# =============================================================================
+#     print('Q1 random:',times_randomInstantiator_q1.shape)
+#     print('Q2 random:',times_randomInstantiator_q2.shape)
+#     print('Q3 random:',times_randomInstantiator_q3.shape)
+# =============================================================================
     #print('Q4 random:',np.mean(times_randomInstantiator_q4[:,1]),'+-',np.std(times_randomInstantiator_q4[:,1]))
     
     times_randomEMF_q1 = times_randomEMF[np.array([(row[0] <=a1)for row in times_randomEMF])]
@@ -251,7 +267,33 @@ def main():
     print('Q1 RANDOMEMF:',np.mean(times_randomEMF_q1[:,1]),'+-',np.std(times_randomEMF_q1[:,1]))
     print('Q2 RANDOMEMF:',np.mean(times_randomEMF_q2[:,1]),'+-',np.std(times_randomEMF_q2[:,1]))
     print('Q3 RANDOMEMF:',np.mean(times_randomEMF_q3[:,1]),'+-',np.std(times_randomEMF_q3[:,1]))
+# =============================================================================
+#     print('Q1 RANDOMEMF:',times_randomEMF_q1.shape)
+#     print('Q2 RANDOMEMF:',times_randomEMF_q2.shape)
+#     print('Q3 RANDOMEMF:',times_randomEMF_q3.shape)
+# =============================================================================
     #print('Q4 RANDOMEMF:',np.mean(times_randomEMF_q4[:,1]),'+-',np.std(times_randomEMF_q4[:,1]))
+    
+
+    fig, ax = plt.subplots(1,1)
+    line_labels = ['M2', 'VIATRA', 'RANDOM','rEMF']
+        
+    l1 = sns.distplot(times[:,0], hist=False, kde=True
+                          , color = 'red', label = 'M2', ax=ax)
+    l2 = sns.distplot(times_baseline[:,0], hist=False, kde=True, 
+                  color = 'blue', label = 'VIATRA', ax=ax)
+    l3 = sns.distplot(times_randomInstantiator[:,0], hist=False, kde=True, 
+                  color = 'green', label = 'RANDOM', ax=ax)
+    l4 = sns.distplot(times_randomEMF[:,0], hist=False, kde=True, 
+                  color = 'black', label = 'rEMF', ax=ax)
+    ax.title.set_text('Sizes')
+    ax.set_ylabel('')
+    fig.legend([l1,l2,l3,l4],     # The line objects
+           labels=line_labels,   # The labels for each line
+           loc="center right",   # Position of legend
+           borderaxespad=0.1    # Small spacing around legend box
+           )
+    plt.show()
     
 if __name__ == "__main__":
     main()
