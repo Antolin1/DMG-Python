@@ -111,7 +111,7 @@ scripts/assessmentScript.sh
 To evaluate the scalability just execute the following:
 
 ```
-scripts/quartileScript.sh
+scripts/quantileScript.sh
 ```
 
 ### Step 4: Model generation using M2 ⚙️
