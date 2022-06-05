@@ -137,6 +137,7 @@ data/yakinduDataset/train
 data/yakinduDataset/test
 data/yakinduDataset/val
 
+.idea
 
 # data/yakindu-exercise/preprocess
 # data/yakindu-exercise/train

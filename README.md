@@ -1,8 +1,8 @@
-# Model Mime
+# Model Mime Experiments
 
 M2 (Model Mime) is a generator that, given a dataset of models (that conform a meta-model) and a set of addition edit operations, generates models that are similar to the dataset under consideration. 
 
-## Before using it 🛠️
+## Before running the experiments 🛠️
 
 Prerequisites:
 
@@ -132,7 +132,8 @@ where:
 * `-ps` establishes the folder where the models will be saved.
 * `-nm` establishes the number of models that will be generated.
 
-
+If you want to use M2 in new use cases, please go to this [repository](https://github.com/Antolin1/M2). There M2 is
+coded as a Python library.
 
 
 
